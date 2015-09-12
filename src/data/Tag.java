@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Tag {
 
-	private int identifier;
+	private long identifier;
 	private String name;
 	private String thumbnailArtworkPath;
 	private String backgroundArtworkPath;
@@ -15,7 +15,7 @@ public class Tag {
 		this.tags = new ArrayList<Tag>();
 	}
 	
-	public int getIdentifier() {
+	public long getIdentifier() {
 		return identifier;
 	}
 	
@@ -38,7 +38,6 @@ public class Tag {
 	public String getBackgroundArtworkPath() {
 		return backgroundArtworkPath;
 	}
-
 	public void setBackgroundArtworkPath(String backgroundArtworkPath) {
 		this.backgroundArtworkPath = backgroundArtworkPath;
 	}
