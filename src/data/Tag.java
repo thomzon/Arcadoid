@@ -60,12 +60,8 @@ public class Tag {
 		return this.backgroundArtworkPath;
 	}
 	
-	public void addTag(Tag tag) {
-		this.assignedTags.add(tag);
-	}
-	
-	public void removeTag(Tag tag) {
-		this.assignedTags.remove(tag);
+	public ObservableList<Tag> getAssignedTags() {
+		return this.assignedTags;
 	}
 	
 	@Override

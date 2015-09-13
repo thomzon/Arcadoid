@@ -2,6 +2,7 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -24,6 +25,16 @@ public class TagsAccessor {
 	
 	public ObservableList<Tag> getAllTags() {
 		return this.allTags;
+	}
+	
+	public ObservableList<Tag> getAllTagsExcept(List<Tag> tagsToIgnore) {
+		ObservableList<Tag> relevantTags = FXCollections.observableArrayList();
+		for (Tag tag : this.allTags) {
+			if (!tagsToIgnore.contains(tag)) {
+				relevantTags.add(tag);
+			}
+		}
+		return relevantTags;
 	}
 	
 	public Tag createNewTag() {

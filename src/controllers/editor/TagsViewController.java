@@ -8,13 +8,14 @@ import data.Tag;
 import data.TagsAccessor;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
 public class TagsViewController implements Initializable {
 	
@@ -26,13 +27,23 @@ public class TagsViewController implements Initializable {
 	private Label thumbnailArtworkPathLabel;
 	@FXML
 	private Label backgroundArtworkPathLabel;
+	@FXML
+	private ListView<Tag> availableTagsListView;
+	@FXML
+	private ListView<Tag> assignedTagsListView;
 	
 	private final TagsAccessor tagsAccessor = new TagsAccessor();
 	private Tag editedTag;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.setupTagsAssignmentLists();
 		this.initializeTagsList();
+	}
+	
+	private void setupTagsAssignmentLists() {
+		this.availableTagsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		this.assignedTagsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	}
 	
 	private void initializeTagsList() {
@@ -51,6 +62,8 @@ public class TagsViewController implements Initializable {
 			this.tagNameField.setText(this.editedTag.getName());
 			this.thumbnailArtworkPathLabel.setText(this.editedTag.getThumbnailArtworkPath());
 			this.backgroundArtworkPathLabel.setText(this.editedTag.getBackgroundArtworkPath());
+			this.availableTagsListView.setItems(this.tagsAccessor.getAllTagsExcept(this.editedTag.getAssignedTags()));
+			this.assignedTagsListView.setItems(this.editedTag.getAssignedTags());
 		}
 	}
 	
@@ -97,6 +110,17 @@ public class TagsViewController implements Initializable {
 	@FXML
 	private void backgroundPathAction() {
 		System.out.println("Back");
+	}
+	
+	@FXML
+	private void assignTagsAction() {
+//		this.availableTagsListView.getSelectionModel().get
+		System.out.println("yes");
+	}
+	
+	@FXML
+	private void unassignTagsAction() {
+		System.out.println("no");
 	}
 	
 }

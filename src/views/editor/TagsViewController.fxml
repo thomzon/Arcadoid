@@ -53,12 +53,36 @@
                         </Label>
                      </children>
                   </GridPane>
-                  <TableView layoutX="5.0" layoutY="131.0" prefHeight="422.0" prefWidth="547.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="Assign" />
-                      <TableColumn prefWidth="471.0" text="Tag" />
-                    </columns>
-                  </TableView>
+                  <HBox alignment="CENTER" layoutX="1.0" layoutY="125.0" prefHeight="419.0" prefWidth="557.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="150.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="200.0" prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Label text="Available tags">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ListView fx:id="availableTagsListView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#assignTagsAction" text="&gt;" />
+                              <Button mnemonicParsing="false" onAction="#unassignTagsAction" text="&lt;" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Label text="Assigned tags">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ListView fx:id="assignedTagsListView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                   <ButtonBar layoutX="352.0" layoutY="558.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <buttons>
                       <Button mnemonicParsing="false" onAction="#saveAction" text="Save" />
