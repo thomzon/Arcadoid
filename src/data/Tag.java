@@ -1,18 +1,20 @@
 package data;
 
-import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Tag {
 
 	private long identifier;
-	private String name;
-	private String thumbnailArtworkPath;
-	private String backgroundArtworkPath;
-	private Tag parentTag;
-	private ArrayList<Tag> tags;
-
-	public Tag() {
-		this.tags = new ArrayList<Tag>();
+	private final StringProperty name = new SimpleStringProperty();
+	private final StringProperty thumbnailArtworkPath = new SimpleStringProperty();
+	private final StringProperty backgroundArtworkPath = new SimpleStringProperty();
+	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
+	
+	protected Tag(long identifier) {
+		this.identifier = identifier;
 	}
 	
 	public long getIdentifier() {
@@ -20,42 +22,47 @@ public class Tag {
 	}
 	
 	public String getName() {
-		return name;
+		return name.getValue();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name.setValue(name);
+	}
+	
+	public StringProperty nameProperty() {
+		return this.name;
 	}
 
 	public String getThumbnailArtworkPath() {
-		return thumbnailArtworkPath;
+		return thumbnailArtworkPath.getValue();
 	}
 
 	public void setThumbnailArtworkPath(String thumbnailArtworkPath) {
-		this.thumbnailArtworkPath = thumbnailArtworkPath;
+		this.thumbnailArtworkPath.setValue(thumbnailArtworkPath);
+	}
+	
+	public StringProperty thumbnailArtworkPathProperty() {
+		return this.thumbnailArtworkPath;
 	}
 
 	public String getBackgroundArtworkPath() {
-		return backgroundArtworkPath;
+		return backgroundArtworkPath.getValue();
 	}
+	
 	public void setBackgroundArtworkPath(String backgroundArtworkPath) {
-		this.backgroundArtworkPath = backgroundArtworkPath;
+		this.backgroundArtworkPath.setValue(backgroundArtworkPath);
 	}
-
-	public Tag getParentTag() {
-		return parentTag;
-	}
-
-	public void setParentTag(Tag parentTag) {
-		this.parentTag = parentTag;
+	
+	public StringProperty backgroundArtworkPathProperty() {
+		return this.backgroundArtworkPath;
 	}
 	
 	public void addTag(Tag tag) {
-		this.tags.add(tag);
+		this.assignedTags.add(tag);
 	}
 	
 	public void removeTag(Tag tag) {
-		this.tags.remove(tag);
+		this.assignedTags.remove(tag);
 	}
 	
 	@Override
