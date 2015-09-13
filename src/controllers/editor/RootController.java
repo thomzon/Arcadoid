@@ -16,6 +16,7 @@ public class RootController {
 
 	public RootController(Stage stage) {
 		this.primaryStage = stage;
+		stage.setTitle("Arcadoid Editor");
 	}
 	
 	public void show() {

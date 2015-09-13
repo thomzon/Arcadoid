@@ -2,7 +2,6 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -13,22 +12,30 @@ public class TagsAccessor {
 	private final ObservableList<Tag> allTags = FXCollections.observableArrayList();
 
 	public TagsAccessor() {
-		
+		for (int index = 0; index < 5; ++index) {
+			Tag tag = this.createNewTag();
+			tag.setName("Tag " + index);
+		}
 	}
 	
 	public void addTagsListListener(ListChangeListener<Tag> listener) {
 		this.allTags.addListener(listener);
 	}
 	
-	public Iterator<Tag> getAllTags() {
-		return this.allTags.iterator();
+	public ObservableList<Tag> getAllTags() {
+		return this.allTags;
 	}
 	
 	public Tag createNewTag() {
 		long newIdentifier = this.firstAvailableTagIdentifier();
 		Tag newTag = new Tag(newIdentifier);
+		newTag.setName("New tag");
 		this.allTags.add(newTag);
 		return newTag;
+	}
+	
+	public void deleteTag(Tag tag) {
+		this.allTags.remove(tag);
 	}
 	
 	private long firstAvailableTagIdentifier() {

@@ -15,6 +15,9 @@ public class Tag {
 	
 	protected Tag(long identifier) {
 		this.identifier = identifier;
+		this.setName("");
+		this.setThumbnailArtworkPath("");
+		this.setBackgroundArtworkPath("");
 	}
 	
 	public long getIdentifier() {
@@ -75,6 +78,11 @@ public class Tag {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 	
 }
