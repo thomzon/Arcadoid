@@ -1,22 +1,29 @@
 package controllers.editor;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import application.ArcadoidEditor;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class RootController {
+public class RootController implements Initializable {
 
     private BorderPane rootLayout;
 	private Stage primaryStage;
 
-	public RootController(Stage stage) {
-		this.primaryStage = stage;
-		stage.setTitle("Arcadoid Editor");
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	}
+	
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		primaryStage.setTitle("Arcadoid Editor");
 	}
 	
 	public void show() {
@@ -47,5 +54,7 @@ public class RootController {
             e.printStackTrace();
         }
     }
+	
+	
 	
 }

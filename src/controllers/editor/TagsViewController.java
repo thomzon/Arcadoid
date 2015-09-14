@@ -1,11 +1,14 @@
 package controllers.editor;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import data.Tag;
 import data.TagsAccessor;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -63,7 +66,9 @@ public class TagsViewController implements Initializable {
 			this.thumbnailArtworkPathLabel.setText(this.editedTag.getThumbnailArtworkPath());
 			this.backgroundArtworkPathLabel.setText(this.editedTag.getBackgroundArtworkPath());
 			this.availableTagsListView.setItems(this.tagsAccessor.getAllTagsExcept(this.editedTag.getAssignedTags()));
-			this.assignedTagsListView.setItems(this.editedTag.getAssignedTags());
+			ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
+			assignedTags.addAll(this.editedTag.getAssignedTags());
+			this.assignedTagsListView.setItems(assignedTags);
 		}
 	}
 	
@@ -79,6 +84,8 @@ public class TagsViewController implements Initializable {
 		this.editedTag.setName(this.tagNameField.getText());
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
+		List<Tag> assignedTags = this.assignedTagsListView.getItems();
+		this.editedTag.getAssignedTags().setAll(assignedTags);
 		this.allTagsListView.fireEvent(new ListView.EditEvent<>(this.allTagsListView, ListView.editCommitEvent(), this.editedTag, this.allTagsListView.getSelectionModel().getSelectedIndex()));
 	}
 	
@@ -114,13 +121,16 @@ public class TagsViewController implements Initializable {
 	
 	@FXML
 	private void assignTagsAction() {
-//		this.availableTagsListView.getSelectionModel().get
-		System.out.println("yes");
+		List<Tag> selectedTags = this.availableTagsListView.getSelectionModel().getSelectedItems();
+		this.assignedTagsListView.getItems().addAll(selectedTags);
+		this.availableTagsListView.getItems().removeAll(selectedTags);
 	}
 	
 	@FXML
 	private void unassignTagsAction() {
-		System.out.println("no");
+		List<Tag> selectedTags = this.assignedTagsListView.getSelectionModel().getSelectedItems();
+		this.availableTagsListView.getItems().addAll(selectedTags);
+		this.assignedTagsListView.getItems().removeAll(selectedTags);
 	}
 	
 }

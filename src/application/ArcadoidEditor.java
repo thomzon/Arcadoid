@@ -1,7 +1,10 @@
 package application;
 	
+import java.io.IOException;
+
 import controllers.editor.RootController;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 
@@ -11,8 +14,16 @@ public class ArcadoidEditor extends Application {
     
 	@Override
 	public void start(Stage primaryStage) {
-		this.rootController = new RootController(primaryStage);
-		this.rootController.show();
+		try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ArcadoidEditor.class.getResource("/views/editor/RootController.fxml"));
+            loader.load();
+            this.rootController = loader.getController();
+            this.rootController.setPrimaryStage(primaryStage);
+            this.rootController.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 	
 	public static void main(String[] args) {
