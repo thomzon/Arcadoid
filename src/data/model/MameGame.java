@@ -1,4 +1,4 @@
-package data;
+package data.model;
 
 public class MameGame extends Game {
 

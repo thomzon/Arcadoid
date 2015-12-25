@@ -1,8 +1,8 @@
-package data;
+package data.model;
 
 public class Tag extends BaseItem {
 
-	protected Tag(long identifier) {
+	public Tag(long identifier) {
 		super(identifier);
 	}
 

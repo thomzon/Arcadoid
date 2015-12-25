@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import data.Tag;
 import data.TagsAccessor;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import data.model.Tag;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -65,10 +63,10 @@ public class TagsViewController implements Initializable {
 			this.tagNameField.setText(this.editedTag.getName());
 			this.thumbnailArtworkPathLabel.setText(this.editedTag.getThumbnailArtworkPath());
 			this.backgroundArtworkPathLabel.setText(this.editedTag.getBackgroundArtworkPath());
-			this.availableTagsListView.setItems(this.tagsAccessor.getAllTagsExcept(this.editedTag.getAssignedTags()));
-			ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
-			assignedTags.addAll(this.editedTag.getAssignedTags());
-			this.assignedTagsListView.setItems(assignedTags);
+//			this.availableTagsListView.setItems(this.tagsAccessor.getAllTagsExcept(this.editedTag.getAssignedTags()));
+//			ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
+//			assignedTags.addAll(this.editedTag.getAssignedTags());
+//			this.assignedTagsListView.setItems(assignedTags);
 		}
 	}
 	
@@ -85,7 +83,7 @@ public class TagsViewController implements Initializable {
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
 		List<Tag> assignedTags = this.assignedTagsListView.getItems();
-		this.editedTag.getAssignedTags().setAll(assignedTags);
+//		this.editedTag.getAssignedTags().setAll(assignedTags);
 		this.allTagsListView.fireEvent(new ListView.EditEvent<>(this.allTagsListView, ListView.editCommitEvent(), this.editedTag, this.allTagsListView.getSelectionModel().getSelectedIndex()));
 	}
 	

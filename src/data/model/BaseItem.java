@@ -1,27 +1,19 @@
-package data;
+package data.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-public abstract class BaseItem {
+public abstract class BaseItem extends IdentifiableItem {
 
-	private long identifier;
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty thumbnailArtworkPath = new SimpleStringProperty();
 	private final StringProperty backgroundArtworkPath = new SimpleStringProperty();
-	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 	
 	protected BaseItem(long identifier) {
-		this.identifier = identifier;
+		super(identifier);
 		this.setName("");
 		this.setThumbnailArtworkPath("");
 		this.setBackgroundArtworkPath("");
-	}
-	
-	public long getIdentifier() {
-		return identifier;
 	}
 	
 	public String getName() {
@@ -58,22 +50,6 @@ public abstract class BaseItem {
 	
 	public StringProperty backgroundArtworkPathProperty() {
 		return this.backgroundArtworkPath;
-	}
-	
-	public ObservableList<Tag> getAssignedTags() {
-		return this.assignedTags;
-	}
-	
-	@Override
-	public boolean equals(Object anObject) {
-		if (this == anObject) {
-			return true;
-		} else if (anObject instanceof Tag) {
-			Tag otherTag = (Tag)anObject;
-			return otherTag.getIdentifier() == this.getIdentifier();
-		} else {
-			return false;
-		}
 	}
 	
 	@Override

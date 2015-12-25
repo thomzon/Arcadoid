@@ -2,6 +2,7 @@ package data;
 
 import java.io.IOException;
 
+import data.model.Game;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
