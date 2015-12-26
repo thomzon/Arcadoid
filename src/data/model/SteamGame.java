@@ -1,8 +1,7 @@
-package data;
+package data.model;
 
 import java.io.IOException;
 
-import data.model.Game;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,9 +11,9 @@ public class SteamGame extends Game {
 	private final StringProperty processName = new SimpleStringProperty();
 	
 	public SteamGame(long identifier) {
-		super(identifier); 
+		super(identifier);
 	}
-	
+
 	public void setAppId(String appId) {
 		this.appId.setValue(appId);
 	}
@@ -40,8 +39,7 @@ public class SteamGame extends Game {
 	}
 
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		if (this.process != null) return;
 //		String executable = AppSettings.getSetting(AppSettings.PropertyId.STEAM_PATH) + " -applaunch " + _appId;
 //		try {
@@ -51,12 +49,12 @@ public class SteamGame extends Game {
 //			System.exit(4);
 //		}
 	}
-	
+
 	@Override
-	public void terminate()
-	{
+	public void terminate() {
 		if (this.process != null) this.process.destroy();
 		this.process = null;
+		if (this.processName() == null) return;
 		try {
 			Runtime.getRuntime().exec("taskkill /im " + this.processName() +" /f");
 		} catch (IOException e) {
@@ -64,5 +62,5 @@ public class SteamGame extends Game {
 			System.exit(4);
 		}
 	}
-	
+
 }

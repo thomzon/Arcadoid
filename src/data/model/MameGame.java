@@ -1,9 +1,26 @@
 package data.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class MameGame extends Game {
 
+	private StringProperty gameName = new SimpleStringProperty();
+	
 	public MameGame(long identifier) {
 		super(identifier);
+	}
+	
+	public void setGameName(String gameName) {
+		this.gameName.setValue(gameName);
+	}
+	
+	public String gameName() {
+		return this.gameName.getValue();
+	}
+	
+	public StringProperty getGameNameProperty() {
+		return this.gameName;
 	}
 
 	@Override
