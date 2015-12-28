@@ -14,14 +14,11 @@ import javafx.scene.layout.AnchorPane;
 public class TabsController implements Initializable {
 
 	@FXML
-	private Tab gamesTab;
-	@FXML
-	private Tab navigationTab;
-	@FXML
-	private Tab tagsTab;
+	private Tab settingsTab, gamesTab, navigationTab, tagsTab;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.setupTabForController(this.settingsTab, "SettingsViewController");
 		this.setupTabForController(this.gamesTab, "GamesViewController");
 		this.setupTabForController(this.navigationTab, "NavigationViewController");
 		this.setupTabForController(this.tagsTab, "TagsViewController");

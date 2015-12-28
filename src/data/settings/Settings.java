@@ -1,15 +1,11 @@
-package data.access;
+package data.settings;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
-
-import org.jnativehook.keyboard.NativeKeyEvent;
 
 /**
  * Static methods for access to application settings
@@ -17,54 +13,32 @@ import org.jnativehook.keyboard.NativeKeyEvent;
  *
  */
 public class Settings
-{
-
-	/**
-	 * Separator used for multiple-values settings
-	 */
-	public static final int 	SETTING_LIST_SEPARATOR_CODE = NativeKeyEvent.VK_SLASH;
-	public static final String 	SETTING_LIST_SEPARATOR 		= "/";
+{	
 	
-	/**
-	 * Access to properties file
-	 */
-	private static Properties prop;
-	/**
-	 * Access to message file
-	 */
-	private static ResourceBundle messages;
-	/**
-	 * Initial settings indicator
-	 */
-	private static boolean initial;
-	/**
-	 * Path to properties file
-	 */
 	private static final String CONFIG_FILE_PATH = "config.properties";
-	/**
-	 * Path to items file
-	 */
-	private static final String ITEMS_FILE_PATH = "items.json";
-	/**
-	 * Name of messages bundle
-	 */
-	private static final String MESSAGES_BUNDLE_NAME = "messages";
+	private static final String DATA_FILE_PATH = "items.json";
+	private static final String SETTING_LIST_SEPARATOR = "";
+	
+	private static Properties prop;
+	private static boolean initial;
 	
 	/**
 	 * Enum for list of supported settings
 	 * @author Thomas
 	 *
 	 */
-	public enum PropertyId
-	{
+	public enum PropertyId {
+		REPOSITORY_FTP_ADDRESS("repo_ftp_address"),
+		REPOSITORY_FTP_PORT_NUMBER("repo_ftp_port"),
+		REPOSITORY_FTP_USER("repo_ftp_user"),
+		REPOSITORY_FTP_PASSWORD("repo_ftp_password"),
+		REPOSITORY_DATA_PATH("repo_base_path"),
+		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path"),
 		MAME_PATH("mame_path"),
-		STEAM_PATH("steam_path"),
-		SHUTDOWN_COMB("st_comb"),
-		QUIT_GAME_COMB("qg_comb");
+		STEAM_PATH("steam_path");
 		
 		private final String stringValue;
-		private PropertyId(final String s)
-		{
+		private PropertyId(final String s) {
 			stringValue = s;
 		}
 	}
@@ -73,29 +47,22 @@ public class Settings
 	 * Try to read properties file, and create it if it does not exist yet
 	 * Also retrieve message bundle for user locale (for now always English)
 	 */
-	static
-	{
+	static {
 		prop = new Properties();
-		try
-		{
+		try	{
 			prop.load(new FileInputStream(CONFIG_FILE_PATH));
 			initial = false;
-		} catch (IOException e)
-		{
+		} catch (IOException e)	{
 			initial = true;
-			for (PropertyId property : PropertyId.values())
-			{
+			for (PropertyId property : PropertyId.values())	{
 				setSetting(property, "");
 			}
-			try
-			{
+			try	{
 				saveSettings();
-			} catch (IOException e1)
-			{
+			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
-		messages = ResourceBundle.getBundle(MESSAGES_BUNDLE_NAME, new Locale("en"));
 	}
 	
 	/**
@@ -164,14 +131,12 @@ public class Settings
 	 * @param property Property for which list must be returned
 	 * @return List of integer for given property
 	 */
-	public static List<Integer> getSettingAsIntegerList(PropertyId property)
-	{
+	public static List<Integer> getSettingAsIntegerList(PropertyId property) {
 		String strValue = getSetting(property);
 		List<Integer> list = new ArrayList<Integer>();
 		if (strValue == null || strValue.isEmpty()) return list;
 		String[] tokens = strValue.split(SETTING_LIST_SEPARATOR);
-		for (String token : tokens)
-		{
+		for (String token : tokens) {
 			list.add(new Integer(token));
 		}
 		return list;
@@ -183,11 +148,9 @@ public class Settings
 	 * @param property Property for which value must be set
 	 * @param values List of values to be saved as one string
 	 */
-	public static void setSettingForList(PropertyId property, Object[] values)
-	{
+	public static void setSettingForList(PropertyId property, Object[] values) {
 		String strValue = "";
-		for (Object value : values)
-		{
+		for (Object value : values)	{
 			if (!strValue.isEmpty()) strValue += SETTING_LIST_SEPARATOR;
 			strValue += value.toString();
 		}
@@ -199,8 +162,7 @@ public class Settings
 	 * @param property Property for which value must be returned
 	 * @return Value of given property
 	 */
-	public static String getSetting(PropertyId property)
-	{
+	public static String getSetting(PropertyId property) {
 		return prop.getProperty(property.stringValue);
 	}
 	
@@ -209,8 +171,7 @@ public class Settings
 	 * @param property Property for which value must be set
 	 * @param value Value to set
 	 */
-	public static void setSetting(PropertyId property, String value)
-	{
+	public static void setSetting(PropertyId property, String value) {
 		prop.setProperty(property.stringValue, value);
 	}
 	
@@ -218,35 +179,15 @@ public class Settings
 	 * Saves settings to configuration file
 	 * @throws IOException If any error occurs while saving
 	 */
-	public static void saveSettings() throws IOException
-	{
+	public static void saveSettings() throws IOException {
 		prop.store(new FileOutputStream(CONFIG_FILE_PATH), null);
 	}
 	
 	/**
 	 * @return True if settings file is initial
 	 */
-	public static boolean initialSettings()
-	{
+	public static boolean initialSettings() {
 		return initial;
-	}
-	
-	/**
-	 * Returns text message for given key
-	 * @param key Key of text message to return
-	 * @return Text message for given key
-	 */
-	public static String getMessage(String key, String... parameters)
-	{
-		String message = messages.getString(key);
-		if (parameters != null)
-		{
-			for (int i=0; i<parameters.length; i++)
-			{
-				message = message.replace("&"+(i+1), parameters[i]);
-			}
-		}
-		return message;
 	}
 
 }

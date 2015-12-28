@@ -9,6 +9,7 @@
    <children>
       <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
+            <Tab fx:id="settingsTab" text="Settings" />
             <Tab fx:id="gamesTab" text="Games" />
             <Tab fx:id="navigationTab" text="Navigation" />
           <Tab fx:id="tagsTab" closable="false" text="Tags" />

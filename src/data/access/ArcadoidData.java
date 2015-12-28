@@ -60,6 +60,11 @@ public class ArcadoidData {
 		return this.allGames;
 	}
 	
+	public Game createNewGame() {
+//		long newIdentifier = IdentifierProvider.newIdentifier();
+		return null;
+	}
+	
 	public ObservableList<NavigationItem> getRootNavigationItems() {
 		return this.rootNavigationItems;
 	}
