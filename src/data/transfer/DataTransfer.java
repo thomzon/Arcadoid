@@ -1,13 +1,13 @@
 package data.transfer;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.net.UnknownHostException;
 
 import com.enterprisedt.net.ftp.FTPException;
 import com.enterprisedt.net.ftp.FileTransferClient;
 
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.transfer.CompletionCallable.ErrorType;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
@@ -20,10 +20,10 @@ public class DataTransfer {
 	private FileTransferClient ftpClient;
 	
 	public DataTransfer() {
-		this.ftpAddress = Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS);
-		this.ftpPort = Settings.getSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER);
-		this.ftpUser = Settings.getSetting(PropertyId.REPOSITORY_FTP_USER);
-		this.ftpPassword = Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD);
+		this.setFtpAddress(Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS));
+		this.setFtpPort(Settings.getSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER));
+		this.setFtpUser(Settings.getSetting(PropertyId.REPOSITORY_FTP_USER));
+		this.setFtpPassword(Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD));
 	}
 	
 	public String getFtpAddress() {
@@ -58,14 +58,14 @@ public class DataTransfer {
 		this.ftpPassword = ftpPassword;
 	}
 
-	public void connectWithCompletion(Callable<Void> completion) {
+	public void connectWithCompletion(CompletionCallable completion) {
 		Task<Void> task = new Task<Void>() {
-			protected Void call() throws Exception {
-				doConnect();
+			protected Void call() {
+				final CompletionResult connectResult = doConnect();
 				Platform.runLater(new Runnable() {
 					public void run() {
 						try {
-							completion.call();
+							completion.call(connectResult);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -77,19 +77,28 @@ public class DataTransfer {
 		new Thread(task).start();
 	}
 	
-	private void doConnect() throws Exception {
+	private CompletionResult doConnect() {
+		CompletionResult result = new CompletionResult();
+		result.success = false;
+		result.errorType = ErrorType.NONE;
 		try {
 			this.ftpClient = new FileTransferClient();
 			this.ftpClient.setRemoteHost(this.ftpAddress);
-			this.ftpClient.setRemotePort(Integer.parseInt(this.ftpPort));
+			if (this.ftpPort.length() > 0) {
+				this.ftpClient.setRemotePort(Integer.parseInt(this.ftpPort));
+			}
 			this.ftpClient.setUserName(this.ftpUser);
 			this.ftpClient.setPassword(this.ftpPassword);
 			this.ftpClient.connect();
-		} catch (FTPException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			result.success = true;
+		} catch (UnknownHostException e1) {
+			result.errorType = ErrorType.UNKNOWN_HOST;
+		} catch (FTPException e1) {
+			result.errorType = ErrorType.WRONG_LOGIN;
+		} catch (Exception e1) {
+			result.errorType = ErrorType.OTHER_ERROR;
 		}
+		return result;
 	}
 
 }
