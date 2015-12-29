@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.editor.SettingsViewController">
    <children>
-      <TitledPane animated="false" collapsible="false" layoutX="232.0" layoutY="236.0" prefHeight="225.0" text="FTP Repository" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <TitledPane animated="false" collapsible="false" layoutX="232.0" layoutY="236.0" prefHeight="225.0" text="%title.ftpRepository" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -27,17 +27,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Address" />
-                        <Label text="Data Path" GridPane.rowIndex="2" />
-                        <Label text="MAME Roms Path" GridPane.rowIndex="3" />
-                        <Label text="User" GridPane.rowIndex="4" />
-                        <Label text="Password" GridPane.rowIndex="5" />
+                        <Label text="%field.address" />
+                        <Label text="%field.catalogDataPath" GridPane.rowIndex="2" />
+                        <Label text="%field.mameDataPath" GridPane.rowIndex="3" />
+                        <Label text="%field.username" GridPane.rowIndex="4" />
+                        <Label text="%field.password" GridPane.rowIndex="5" />
                         <TextField fx:id="ftpAddressField" GridPane.columnIndex="1" />
                         <TextField fx:id="ftpDataPathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="ftpMameRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="ftpUserField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <PasswordField fx:id="ftpPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label text="Port Number" GridPane.rowIndex="1" />
+                        <Label text="%field.portNumber" GridPane.rowIndex="1" />
                         <TextField fx:id="ftpPortNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
@@ -47,8 +47,8 @@
       </TitledPane>
       <ButtonBar layoutX="580.0" layoutY="546.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="20.0">
         <buttons>
-          <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetAction" text="Reset" />
-            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+          <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetAction" text="%common.reset" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveAction" text="%common.save" />
         </buttons>
       </ButtonBar>
    </children>

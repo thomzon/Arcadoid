@@ -4,8 +4,8 @@ import data.transfer.CompletionCallable.ErrorType;
 
 public class CompletionResult {
 
-	public boolean success;
-	public ErrorType errorType;
+	public boolean success = false;
+	public ErrorType errorType = ErrorType.NONE;
 	
 	public CompletionResult() {
 	}

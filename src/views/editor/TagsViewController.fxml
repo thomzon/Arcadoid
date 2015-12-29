@@ -18,7 +18,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Label layoutX="14.0" layoutY="14.0" text="Tag details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <Label layoutX="14.0" layoutY="14.0" text="%title.tagDetails" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -35,10 +35,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Tag name" />
+                        <Label text="%field.tagName" />
                         <TextField fx:id="tagNameField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
-                        <Label text="Thumbnail artwork path" GridPane.rowIndex="1" />
-                        <Label text="Background artwork path" GridPane.rowIndex="2" />
+                        <Label text="%field.thumbnailArtworkPath" GridPane.rowIndex="1" />
+                        <Label text="%field.backgroundArtworkPath" GridPane.rowIndex="2" />
                         <Button mnemonicParsing="false" onAction="#thumbnailPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" onAction="#backgroundPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Label fx:id="thumbnailArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
@@ -55,9 +55,9 @@
                   </GridPane>
                   <ButtonBar layoutX="352.0" layoutY="558.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <buttons>
-                      <Button mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                        <Button mnemonicParsing="false" onAction="#newAction" text="New" />
-                        <Button mnemonicParsing="false" onAction="#deleteAction" text="Delete" />
+                      <Button mnemonicParsing="false" onAction="#saveAction" text="%common.save" />
+                        <Button mnemonicParsing="false" onAction="#newAction" text="%common.new" />
+                        <Button mnemonicParsing="false" onAction="#deleteAction" text="%common.delete" />
                     </buttons>
                   </ButtonBar>
                </children>

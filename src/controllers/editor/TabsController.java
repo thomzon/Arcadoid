@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.ArcadoidEditor;
+import data.settings.Messages;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,6 +28,7 @@ public class TabsController implements Initializable {
 	private void setupTabForController(Tab tab, String controllerName) {
 		try {
             FXMLLoader loader = new FXMLLoader();
+            Messages.setupLoader(loader);
             loader.setLocation(ArcadoidEditor.class.getResource("/views/editor/" + controllerName + ".fxml"));
             AnchorPane tagsPane = (AnchorPane) loader.load();
             tab.setContent(tagsPane);
