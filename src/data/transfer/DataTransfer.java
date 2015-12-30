@@ -30,7 +30,7 @@ public class DataTransfer {
 	public void connectWithCompletion(CompletionCallable completion) {
 		Task<Void> task = new Task<Void>() {
 			protected Void call() {
-				final CompletionResult connectResult = doConnect();
+				final CompletionResult connectResult = connect();
 				completion.call(connectResult);
 				return null;
 			}
@@ -41,7 +41,7 @@ public class DataTransfer {
 	public void goToDirectoryWithCompletion(String fullPath, CompletionCallable completion) {
 		Task<Void> task = new Task<Void>() {
 			protected Void call() {
-				final CompletionResult result = doGoToDirectory(fullPath);
+				final CompletionResult result = goToDirectory(fullPath);
 				completion.call(result);
 				return null;
 			}
@@ -52,7 +52,7 @@ public class DataTransfer {
 	public void createDirectoryWithCompletion(String fullPath, CompletionCallable completion) {
 		Task<Void> task = new Task<Void>() {
 			protected Void call() {
-				final CompletionResult result = doCreateDirectory(fullPath);
+				final CompletionResult result = createDirectory(fullPath);
 				completion.call(result);
 				return null;
 			}
@@ -60,7 +60,7 @@ public class DataTransfer {
 		new Thread(task).start();
 	}
 	
-	private CompletionResult doConnect() {
+	public CompletionResult connect() {
 		CompletionResult result = new CompletionResult();
 		try {
 			this.ftpClient = new FileTransferClient();
@@ -82,7 +82,7 @@ public class DataTransfer {
 		return result;
 	}
 	
-	private CompletionResult doGoToDirectory(String fullPath) {
+	public CompletionResult goToDirectory(String fullPath) {
 		CompletionResult result = new CompletionResult();
 		try {
 			this.ftpClient.changeDirectory(this.fixPath(fullPath));
@@ -93,7 +93,29 @@ public class DataTransfer {
 		return result;
 	}
 	
-	private CompletionResult doCreateDirectory(String fullPath) {
+	public CompletionResult transferFile(String filePath) {
+		CompletionResult result = new CompletionResult();
+		try {
+			this.ftpClient.uploadFile(filePath, filePath);
+			result.success = true;
+		} catch (FTPException | IOException e) {
+			result.errorType = ErrorType.CANNOT_WRITE_REMOTE_FILE;
+		}
+		return result;
+	}
+	
+	public CompletionResult getFile(String filePath) {
+		CompletionResult result = new CompletionResult();
+		try {
+			this.ftpClient.downloadFile(filePath, filePath);
+			result.success = true;
+		} catch (FTPException | IOException e) {
+			result.errorType = ErrorType.CANNOT_READ_REMOTE_FILE;
+		}
+		return result;
+	}
+	
+	private CompletionResult createDirectory(String fullPath) {
 		CompletionResult result = new CompletionResult();
 		try {
 			this.ftpClient.createDirectory(this.fixPath(fullPath));

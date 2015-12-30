@@ -12,6 +12,8 @@ public class CompletionCallable implements Callable<Void> {
 		WRONG_LOGIN,
 		UNKNOWN_DIRECTORY,
 		INCOMPLETE_PATHS_CHECK,
+		CANNOT_WRITE_REMOTE_FILE,
+		CANNOT_READ_REMOTE_FILE,
 		OTHER_ERROR;
 	}
 	

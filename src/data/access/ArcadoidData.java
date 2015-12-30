@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
 public class ArcadoidData {
 
 	private static ArcadoidData sharedInstance = null;
-	private static final String DATA_FILE_PATH = "data.json";
+	public static final String DATA_FILE_PATH = "data.json";
 	
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
 	private ObservableList<Game> allGames = FXCollections.observableArrayList();
