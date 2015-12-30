@@ -16,7 +16,6 @@ public class Settings
 {	
 	
 	private static final String CONFIG_FILE_PATH = "config.properties";
-	private static final String DATA_FILE_PATH = "items.json";
 	private static final String SETTING_LIST_SEPARATOR = "";
 	
 	private static Properties prop;
@@ -64,67 +63,6 @@ public class Settings
 			}
 		}
 	}
-	
-	/**
-	 * Retrieve all UbercadeItems from JSON file items.json and return them
-	 * @return All UbercadeItems from local items.json file
-	 */
-	/*public static List<UbercadeItem> getAllItems()
-	{
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(UbercadeItem.class, new UbercadeItemDeserializer());
-		Gson gson = builder.create();
-		List<UbercadeItem> items = new ArrayList<UbercadeItem>();
-		try {
-			InputStreamReader reader = new InputStreamReader(new FileInputStream(ITEMS_FILE_PATH), "UTF-8");
-			JsonReader jsonReader = new JsonReader(reader);
-			jsonReader.beginArray();
-			while (jsonReader.hasNext())
-			{
-				UbercadeItem item = gson.fromJson(jsonReader, UbercadeItem.class);
-				items.add(item);
-			}
-			jsonReader.endArray();
-			jsonReader.close();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			System.exit(4);
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
-		return items;
-	}*/
-	
-	/**
-	 * Saves all given UbercadeItems to JSON file items.json
-	 * @param items Items to save
-	 */
-	/*public static void saveAllItems(Iterable<UbercadeItem> items)
-	{
-		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-		try {
-			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(ITEMS_FILE_PATH), "UTF-8");
-			JsonWriter jsonWriter = new JsonWriter(writer);
-			jsonWriter.beginArray();
-			for (UbercadeItem ubercadeItem : items)
-			{
-				gson.toJson(ubercadeItem, ubercadeItem.getClass(), jsonWriter);
-			}
-			jsonWriter.endArray();
-			jsonWriter.close();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			System.exit(4);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.exit(4);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
-	}*/
 	
 	/**
 	 * Returns value for given property as a list of Integer

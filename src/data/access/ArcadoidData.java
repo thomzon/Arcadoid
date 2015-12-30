@@ -1,7 +1,11 @@
 package data.access;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import data.json.DataPersistence;
 import data.model.Game;
 import data.model.NavigationItem;
 import data.model.Tag;
@@ -11,16 +15,13 @@ import javafx.collections.ObservableList;
 public class ArcadoidData {
 
 	private static ArcadoidData sharedInstance = null;
+	private static final String DATA_FILE_PATH = "data.json";
 	
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
 	private ObservableList<Game> allGames = FXCollections.observableArrayList();
 	private ObservableList<NavigationItem> rootNavigationItems = FXCollections.observableArrayList();
 	
 	private ArcadoidData() {
-		for (int index = 0; index < 5; ++index) {
-			Tag tag = this.createNewTag();
-			tag.setName("Tag " + index);
-		}
 	}
 	
 	public static ArcadoidData sharedInstance() {
@@ -56,6 +57,11 @@ public class ArcadoidData {
 		this.allTags.remove(tag);
 	}
 	
+	public void setAllTags(List<Tag> tags) {
+		this.allTags.clear();
+		this.allTags.addAll(tags);
+	}
+	
 	public ObservableList<Game> getAllGames() {
 		return this.allGames;
 	}
@@ -65,8 +71,26 @@ public class ArcadoidData {
 		return null;
 	}
 	
+	public void deleteGame(Game game) {
+		this.allGames.remove(game);
+	}
+	
+	public void setAllGames(List<Game> games) {
+		this.allGames.clear();
+		this.allGames.addAll(games);
+	}
+	
 	public ObservableList<NavigationItem> getRootNavigationItems() {
 		return this.rootNavigationItems;
+	}
+	
+	public void saveData() throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
+		DataPersistence.saveDataToFile(this, DATA_FILE_PATH);
+	}
+	
+	public void loadData() throws UnsupportedEncodingException, FileNotFoundException, IOException, NullPointerException {
+		DataPersistence.loadDataFromFile(DATA_FILE_PATH);
+		IdentifierProvider.updateHighestIdentifier();
 	}
 
 }
