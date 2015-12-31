@@ -13,6 +13,10 @@ public class SteamGame extends Game {
 	public SteamGame(long identifier) {
 		super(identifier);
 	}
+	
+	public SteamGame(Game model) {
+		super(model);
+	}
 
 	public void setAppId(String appId) {
 		this.appId.setValue(appId);
@@ -36,6 +40,11 @@ public class SteamGame extends Game {
 	
 	public StringProperty getProcessNameProperty() {
 		return this.processName;
+	}
+	
+	@Override
+	public Platform getPlatform() {
+		return Platform.STEAM;
 	}
 
 	@Override

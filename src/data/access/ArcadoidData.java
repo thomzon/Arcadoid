@@ -7,8 +7,12 @@ import java.util.List;
 
 import data.json.DataPersistence;
 import data.model.Game;
+import data.model.Game.Platform;
+import data.model.MameGame;
 import data.model.NavigationItem;
+import data.model.SteamGame;
 import data.model.Tag;
+import data.settings.Messages;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -48,7 +52,7 @@ public class ArcadoidData {
 	public Tag createNewTag() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Tag newTag = new Tag(newIdentifier);
-		newTag.setName("New tag");
+		newTag.setName(Messages.get("default.tagName"));
 		this.allTags.add(newTag);
 		return newTag;
 	}
@@ -62,13 +66,37 @@ public class ArcadoidData {
 		this.allTags.addAll(tags);
 	}
 	
+	public void triggerTagUpdateNotification() {
+		Tag newTag = new Tag(0);
+		this.allTags.add(newTag);
+		this.allTags.remove(newTag);
+	}
+	
 	public ObservableList<Game> getAllGames() {
 		return this.allGames;
 	}
 	
 	public Game createNewGame() {
-//		long newIdentifier = IdentifierProvider.newIdentifier();
-		return null;
+		long newIdentifier = IdentifierProvider.newIdentifier();
+		Game newGame = new MameGame(newIdentifier);
+		newGame.setName(Messages.get("default.gameName"));
+		this.allGames.add(newGame);
+		return newGame;
+	}
+	
+	public Game changeGamePlatform(Game currentGame, Platform newPlatform) {
+		Game newGame = null;
+		this.allGames.indexOf(currentGame);
+		switch (newPlatform) {
+		case MAME:
+			newGame = new MameGame(currentGame);
+			break;
+		case STEAM:
+			newGame = new SteamGame(currentGame);
+			break;		
+		}
+		this.allGames.set(this.allGames.indexOf(currentGame), newGame);
+		return newGame;
 	}
 	
 	public void deleteGame(Game game) {

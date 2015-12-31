@@ -1,16 +1,12 @@
 package controllers.editor;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import data.access.ArcadoidData;
 import data.model.Tag;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -67,6 +63,7 @@ public class TagsViewController implements Initializable {
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
 		this.allTagsListView.fireEvent(new ListView.EditEvent<>(this.allTagsListView, ListView.editCommitEvent(), this.editedTag, this.allTagsListView.getSelectionModel().getSelectedIndex()));
+		this.dataAccessor.triggerTagUpdateNotification();
 	}
 	
 	@FXML
@@ -77,14 +74,7 @@ public class TagsViewController implements Initializable {
 	
 	@FXML
 	private void deleteAction() {
-		Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
-		confirmationAlert.setTitle("Delete " + this.editedTag.getName());
-		confirmationAlert.setHeaderText(null);
-		confirmationAlert.setContentText("Are you sure you want to delete this tag ?");
-		Optional<ButtonType> result = confirmationAlert.showAndWait();
-		if (result.get() == ButtonType.OK){
-		   this.doDeleteCurrentTag();
-		}
+		this.doDeleteCurrentTag();
 	}
 
 	@FXML

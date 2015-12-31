@@ -18,46 +18,50 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Label layoutX="14.0" layoutY="14.0" text="Game details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <Label layoutX="14.0" layoutY="14.0" text="%title.gameDetails" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <GridPane layoutY="31.0" maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="547.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
+                  <GridPane layoutY="31.0" maxHeight="120.0" minHeight="120.0" prefHeight="120.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
                     </columnConstraints>
                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Tag name" />
-                        <TextField fx:id="gameNameField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
-                        <Label text="Thumbnail artwork path" GridPane.rowIndex="1" />
-                        <Label text="Background artwork path" GridPane.rowIndex="2" />
-                        <Button mnemonicParsing="false" onAction="#thumbnailPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#backgroundPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Label fx:id="thumbnailArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <Label text="%field.gameName" GridPane.rowIndex="1" />
+                        <TextField fx:id="gameNameField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                        <Label text="%field.thumbnailArtworkPath" GridPane.rowIndex="2" />
+                        <Label text="%field.backgroundArtworkPath" GridPane.rowIndex="3" />
+                        <Button mnemonicParsing="false" onAction="#thumbnailPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Button mnemonicParsing="false" onAction="#backgroundPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label fx:id="thumbnailArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label fx:id="backgroundArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <Label fx:id="backgroundArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
                         </Label>
+                        <Label text="%field.gamePlatform" />
+                        <ComboBox fx:id="gameTypeDropdown" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="RIGHT" />
                      </children>
                   </GridPane>
-                  <HBox alignment="CENTER" layoutX="1.0" layoutY="125.0" prefHeight="419.0" prefWidth="557.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="150.0">
+                  <BorderPane fx:id="platformSpecificFieldsContainer" layoutX="179.0" layoutY="154.0" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="150.0" />
+                  <HBox alignment="CENTER" layoutX="1.0" layoutY="125.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="240.0">
                      <children>
                         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="200.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <Label text="Available tags">
+                              <Label text="%field.availableTags">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -73,7 +77,7 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <Label text="Assigned tags">
+                              <Label text="%field.assignedTags">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -85,9 +89,9 @@
                   </HBox>
                   <ButtonBar layoutX="352.0" layoutY="558.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <buttons>
-                      <Button mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                        <Button mnemonicParsing="false" onAction="#newAction" text="New" />
-                        <Button mnemonicParsing="false" onAction="#deleteAction" text="Delete" />
+                      <Button mnemonicParsing="false" onAction="#saveAction" text="%common.save" />
+                        <Button mnemonicParsing="false" onAction="#newAction" text="%common.new" />
+                        <Button mnemonicParsing="false" onAction="#deleteAction" text="%common.delete" />
                     </buttons>
                   </ButtonBar>
                </children>

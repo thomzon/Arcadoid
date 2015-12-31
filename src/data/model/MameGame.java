@@ -11,6 +11,10 @@ public class MameGame extends Game {
 		super(identifier);
 	}
 	
+	public MameGame(Game model) {
+		super(model);
+	}
+	
 	public void setGameName(String gameName) {
 		this.gameName.setValue(gameName);
 	}
@@ -23,6 +27,11 @@ public class MameGame extends Game {
 		return this.gameName;
 	}
 
+	@Override
+	public Platform getPlatform() {
+		return Platform.MAME;
+	}
+	
 	@Override
 	public void execute() {
 		if (this.process != null) return;
