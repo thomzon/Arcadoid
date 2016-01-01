@@ -20,6 +20,7 @@ public class ArcadoidData {
 
 	private static ArcadoidData sharedInstance = null;
 	public static final String DATA_FILE_PATH = "data.json";
+	public static final String TAG_MODIFIED_NOTIFICATION = "TAG_MODIFIED_NOTIFICATION";
 	
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
 	private ObservableList<Game> allGames = FXCollections.observableArrayList();
@@ -64,12 +65,6 @@ public class ArcadoidData {
 	public void setAllTags(List<Tag> tags) {
 		this.allTags.clear();
 		this.allTags.addAll(tags);
-	}
-	
-	public void triggerTagUpdateNotification() {
-		Tag newTag = new Tag(0);
-		this.allTags.add(newTag);
-		this.allTags.remove(newTag);
 	}
 	
 	public ObservableList<Game> getAllGames() {

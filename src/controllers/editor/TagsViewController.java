@@ -4,13 +4,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import data.access.ArcadoidData;
+import data.access.NotificationCenter;
 import data.model.Tag;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 
 public class TagsViewController implements Initializable {
 	
@@ -28,7 +28,14 @@ public class TagsViewController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.initializeValueChangesListening();
 		this.initializeTagsList();
+	}
+	
+	private void initializeValueChangesListening() {
+		this.tagNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+		    this.saveAction();
+		});
 	}
 	
 	private void initializeTagsList() {
@@ -63,7 +70,7 @@ public class TagsViewController implements Initializable {
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
 		this.allTagsListView.fireEvent(new ListView.EditEvent<>(this.allTagsListView, ListView.editCommitEvent(), this.editedTag, this.allTagsListView.getSelectionModel().getSelectedIndex()));
-		this.dataAccessor.triggerTagUpdateNotification();
+		NotificationCenter.sharedInstance().postNotification(ArcadoidData.TAG_MODIFIED_NOTIFICATION, this.editedTag);
 	}
 	
 	@FXML
@@ -79,14 +86,13 @@ public class TagsViewController implements Initializable {
 
 	@FXML
 	private void thumbnailPathAction() {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
-		fileChooser.showOpenDialog(null);
+//		FileChooser fileChooser = new FileChooser();
+//		fileChooser.setTitle("Open Resource File");
+//		fileChooser.showOpenDialog(null);
 	}
 	
 	@FXML
 	private void backgroundPathAction() {
-		System.out.println("Back");
 	}
 	
 }

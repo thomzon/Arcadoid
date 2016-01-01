@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import data.access.ArcadoidData;
+import data.access.NotificationCenter;
 import data.model.Game;
 import data.model.Game.Platform;
 import data.model.Tag;
@@ -40,9 +41,17 @@ public class GamesViewController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.initializeValueChangeListening();
 		this.setupTagsAssignmentLists();
 		this.setupGameTypeDropdown();
 		this.initializeGamesList();
+	}
+	
+	private void initializeValueChangeListening() {
+		NotificationCenter.sharedInstance().addObserver(ArcadoidData.TAG_MODIFIED_NOTIFICATION, this, "tagModifiedNotification");
+		this.gameNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+			this.saveAction();
+		});
 	}
 	
 	private void setupTagsAssignmentLists() {
@@ -72,6 +81,10 @@ public class GamesViewController implements Initializable {
 		}
 	}
 	
+	public void tagModifiedNotification(Tag tag) {
+		this.showSelectedGame(this.editedGame);
+	}
+	
 	private void changeGamePlatform(Platform platform) {
 		this.editedGame = ArcadoidData.sharedInstance().changeGamePlatform(this.editedGame, platform);
 	}
@@ -83,11 +96,12 @@ public class GamesViewController implements Initializable {
 		this.gameNameField.setText(this.editedGame.getName());
 		this.thumbnailArtworkPathLabel.setText(this.editedGame.getThumbnailArtworkPath());
 		this.backgroundArtworkPathLabel.setText(this.editedGame.getBackgroundArtworkPath());
+		this.availableTagsListView.setItems(null);
 		this.availableTagsListView.setItems(ArcadoidData.sharedInstance().getAllTagsExcept(this.editedGame.getAssignedTags()));
 		ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 		assignedTags.addAll(this.editedGame.getAssignedTags());
+		this.assignedTagsListView.setItems(null);
 		this.assignedTagsListView.setItems(assignedTags);
-		System.out.println("Test");
 	}
 	
 	private void doDeleteCurrentGame() {
@@ -135,6 +149,7 @@ public class GamesViewController implements Initializable {
 		List<Tag> selectedTags = this.availableTagsListView.getSelectionModel().getSelectedItems();
 		this.assignedTagsListView.getItems().addAll(selectedTags);
 		this.availableTagsListView.getItems().removeAll(selectedTags);
+		this.saveAction();
 	}
 	
 	@FXML
@@ -142,6 +157,7 @@ public class GamesViewController implements Initializable {
 		List<Tag> selectedTags = this.assignedTagsListView.getSelectionModel().getSelectedItems();
 		this.availableTagsListView.getItems().addAll(selectedTags);
 		this.assignedTagsListView.getItems().removeAll(selectedTags);
+		this.saveAction();
 	}
 
 }
