@@ -78,8 +78,13 @@ public class RootController implements Initializable {
 	
 	@FXML
 	private void saveToFileAction() {
+		this.doSaveToFile();
+	}
+	
+	private boolean doSaveToFile() {
 		try {
 			ArcadoidData.sharedInstance().saveData();
+			return true;
 		} catch (FileNotFoundException e) {
 			this.showFileSaveErrorForMessage(Messages.get("error.body.cannotAccessFile"));
 		} catch (IOException e) {
@@ -87,6 +92,7 @@ public class RootController implements Initializable {
 		} catch (Exception e) {
 			this.showFileSaveErrorForMessage(Messages.get("error.body.unexpectedFileError"));
 		}
+		return false;
 	}
 	
 	@FXML
@@ -96,6 +102,7 @@ public class RootController implements Initializable {
 	
 	@FXML
 	private void sendToRepositoryAction() {
+		if (!this.doSaveToFile()) return;
 		CompletionCallable sendCompletion = new CompletionCallable() {
 			@Override public Void call() throws Exception {
 				handleSendToRepositoryResult(this.result);

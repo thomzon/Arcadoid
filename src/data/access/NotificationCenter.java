@@ -62,14 +62,26 @@ public class NotificationCenter {
 		}
 		
 		private void call(Object argument) {
+			if (argument == null || !this.callWithArgument(argument)) {
+				this.callWithoutArgument();
+			}
+		}
+		
+		private boolean callWithArgument(Object argument) {
 			try {
 				this.observer.getClass().getMethod(this.methodName, argument.getClass()).invoke(this.observer, argument);
-				return;
+				return true;
 			} catch (Exception e) {
+				return false;
 			}
+		}
+		
+		private boolean callWithoutArgument() {
 			try {
 				this.observer.getClass().getMethod(this.methodName).invoke(this.observer);
+				return true;
 			} catch (Exception e) {
+				return false;
 			}
 		}
 		

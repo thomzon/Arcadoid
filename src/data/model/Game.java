@@ -10,12 +10,14 @@ public abstract class Game extends BaseItem {
 	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 
 	public enum Platform {
-		MAME(Messages.get("platform.MAME")),
-		STEAM(Messages.get("platform.Steam"));
+		MAME(1, Messages.get("platform.MAME")),
+		STEAM(2, Messages.get("platform.Steam"));
 		
+		public final int intValue;
 		public final String stringValue;
 		
-		private Platform(final String s) {
+		private Platform(final int i, final String s) {
+			intValue = i;
 			stringValue = s;
 		}
 		

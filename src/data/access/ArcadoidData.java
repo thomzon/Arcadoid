@@ -20,6 +20,7 @@ public class ArcadoidData {
 
 	private static ArcadoidData sharedInstance = null;
 	public static final String DATA_FILE_PATH = "data.json";
+	public static final String DATA_LOADED_NOTIFICATION = "DATA_LOADED_NOTIFICATION";
 	public static final String TAG_MODIFIED_NOTIFICATION = "TAG_MODIFIED_NOTIFICATION";
 	
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
@@ -114,6 +115,7 @@ public class ArcadoidData {
 	public void loadData() throws UnsupportedEncodingException, FileNotFoundException, IOException, NullPointerException {
 		DataPersistence.loadDataFromFile(DATA_FILE_PATH);
 		IdentifierProvider.updateHighestIdentifier();
+		NotificationCenter.sharedInstance().postNotification(DATA_LOADED_NOTIFICATION, null);
 	}
 
 }

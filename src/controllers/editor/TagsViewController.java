@@ -33,9 +33,14 @@ public class TagsViewController implements Initializable {
 	}
 	
 	private void initializeValueChangesListening() {
+		NotificationCenter.sharedInstance().addObserver(ArcadoidData.DATA_LOADED_NOTIFICATION, this, "dataLoadedNotification");
 		this.tagNameField.textProperty().addListener((observable, oldValue, newValue) -> {
 		    this.saveAction();
 		});
+	}
+	
+	public void dataLoadedNotification() {
+		this.initializeTagsList();
 	}
 	
 	private void initializeTagsList() {

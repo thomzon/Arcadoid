@@ -19,7 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
 public class GamesViewController implements Initializable {
@@ -33,11 +33,12 @@ public class GamesViewController implements Initializable {
 	@FXML
 	private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
 	@FXML
-	private BorderPane platformSpecificFieldsContainer;
-	@FXML
 	private ListView<Tag> availableTagsListView, assignedTagsListView;
+	@FXML
+	private GridPane gameFieldsGridPane;
 	
 	private Game editedGame;
+	private PlatformSpecificGameFieldsHandler platformSpecificFieldsHandler;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -49,6 +50,7 @@ public class GamesViewController implements Initializable {
 	
 	private void initializeValueChangeListening() {
 		NotificationCenter.sharedInstance().addObserver(ArcadoidData.TAG_MODIFIED_NOTIFICATION, this, "tagModifiedNotification");
+		NotificationCenter.sharedInstance().addObserver(ArcadoidData.DATA_LOADED_NOTIFICATION, this, "dataLoadedNotification");
 		this.gameNameField.textProperty().addListener((observable, oldValue, newValue) -> {
 			this.saveAction();
 		});
@@ -81,27 +83,41 @@ public class GamesViewController implements Initializable {
 		}
 	}
 	
+	public void dataLoadedNotification() {
+		this.initializeGamesList();
+	}
+	
 	public void tagModifiedNotification(Tag tag) {
 		this.showSelectedGame(this.editedGame);
 	}
 	
 	private void changeGamePlatform(Platform platform) {
-		this.editedGame = ArcadoidData.sharedInstance().changeGamePlatform(this.editedGame, platform);
+		int selectedIndex = this.allGamesListView.getSelectionModel().getSelectedIndex();
+		if (this.editedGame.getPlatform() != platform) {
+			this.editedGame = ArcadoidData.sharedInstance().changeGamePlatform(this.editedGame, platform);
+		}
+		if (this.platformSpecificFieldsHandler != null) {
+			this.platformSpecificFieldsHandler.teardownForGridPane(this.gameFieldsGridPane);
+		}
+		this.platformSpecificFieldsHandler = PlatformSpecificGameFieldsHandler.handlerForPlatform(platform);
+		this.platformSpecificFieldsHandler.setupInGridPane(this.gameFieldsGridPane);
+		this.platformSpecificFieldsHandler.setEditedGame(this.editedGame);
+		this.allGamesListView.getSelectionModel().select(selectedIndex);
 	}
 	
 	private void showSelectedGame(Game selectedGame) {
 		if (selectedGame == null) return;
 		this.editedGame = selectedGame;
-		this.gameTypeDropdown.getSelectionModel().select(this.editedGame.getPlatform());
-		this.gameNameField.setText(this.editedGame.getName());
-		this.thumbnailArtworkPathLabel.setText(this.editedGame.getThumbnailArtworkPath());
-		this.backgroundArtworkPathLabel.setText(this.editedGame.getBackgroundArtworkPath());
 		this.availableTagsListView.setItems(null);
 		this.availableTagsListView.setItems(ArcadoidData.sharedInstance().getAllTagsExcept(this.editedGame.getAssignedTags()));
 		ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 		assignedTags.addAll(this.editedGame.getAssignedTags());
 		this.assignedTagsListView.setItems(null);
 		this.assignedTagsListView.setItems(assignedTags);
+		this.gameTypeDropdown.getSelectionModel().select(this.editedGame.getPlatform());
+		this.gameNameField.setText(this.editedGame.getName());
+		this.thumbnailArtworkPathLabel.setText(this.editedGame.getThumbnailArtworkPath());
+		this.backgroundArtworkPathLabel.setText(this.editedGame.getBackgroundArtworkPath());
 	}
 	
 	private void doDeleteCurrentGame() {
@@ -118,7 +134,9 @@ public class GamesViewController implements Initializable {
 		this.editedGame.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
 		List<Tag> assignedTags = this.assignedTagsListView.getItems();
 		this.editedGame.getAssignedTags().setAll(assignedTags);
-		this.allGamesListView.fireEvent(new ListView.EditEvent<>(this.allGamesListView, ListView.editCommitEvent(), this.editedGame, this.allGamesListView.getSelectionModel().getSelectedIndex()));
+		int selectedIndex = this.allGamesListView.getSelectionModel().getSelectedIndex();
+		this.allGamesListView.fireEvent(new ListView.EditEvent<>(this.allGamesListView, ListView.editCommitEvent(), this.editedGame, selectedIndex));
+		this.allGamesListView.getSelectionModel().select(selectedIndex);
 	}
 	
 	@FXML

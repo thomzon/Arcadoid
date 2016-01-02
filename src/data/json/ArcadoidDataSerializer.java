@@ -28,5 +28,14 @@ public class ArcadoidDataSerializer implements JsonSerializer<ArcadoidData> {
 		}
 		jsonObject.add(JsonConstants.PROPERTY_TAGS, array);
 	}
+	
+	private void serializeGames(ArcadoidData src, JsonObject jsonObject, JsonSerializationContext context) {
+		JsonArray array = new JsonArray();
+		TagSerializer serializer = new TagSerializer();
+		for (Tag tag : src.getAllTags()) {
+			array.add(serializer.serialize(tag, Tag.class, context));
+		}
+		jsonObject.add(JsonConstants.PROPERTY_TAGS, array);
+	}
 
 }
