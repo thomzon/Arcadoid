@@ -9,5 +9,9 @@ public class JsonConstants {
 	static final String PROPERTY_THUMBNAIL_PATH = "thumbnail";
 	static final String PROPERTY_BACKGROUND_PATH = "background";
 	static final String PROPERTY_GAMES = "games";
+	static final String PROPERTY_PLATFORM = "platform";
+	static final String PROPERTY_MAME_ROM_NAME = "mame_rom_name";
+	static final String PROPERTY_STEAM_APP_ID = "steam_app_id";
+	static final String PROPERTY_STEAM_PROCESS_NAME = "steam_process_name";
 
 }

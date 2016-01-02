@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import data.access.ArcadoidData;
+import data.model.Game;
 import data.model.Tag;
 
 public class ArcadoidDataDeserializer implements JsonDeserializer<ArcadoidData> {
@@ -19,6 +20,7 @@ public class ArcadoidDataDeserializer implements JsonDeserializer<ArcadoidData> 
 	@Override
 	public ArcadoidData deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
 		ArcadoidData.sharedInstance().setAllTags(this.deserializeTags(element.getAsJsonObject(), context));
+		ArcadoidData.sharedInstance().setAllGames(this.deserializeGames(element.getAsJsonObject(), context));
 		return ArcadoidData.sharedInstance();
 	}
 	
@@ -30,6 +32,16 @@ public class ArcadoidDataDeserializer implements JsonDeserializer<ArcadoidData> 
 			tagList.add(deserializer.deserialize(jsonElement, Tag.class, context));
 		}
 		return tagList;
+	}
+	
+	private List<Game> deserializeGames(JsonObject object, JsonDeserializationContext context) {
+		GameDeserializer deserializer = new GameDeserializer();
+		ArrayList<Game> gameList = new ArrayList<Game>();
+		JsonArray array = object.get(JsonConstants.PROPERTY_GAMES).getAsJsonArray();
+		for (JsonElement jsonElement : array) {
+			gameList.add(deserializer.deserialize(jsonElement, Game.class, context));
+		}
+		return gameList;
 	}
 
 }

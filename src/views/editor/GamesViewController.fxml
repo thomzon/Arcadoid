@@ -44,12 +44,12 @@
                         <Label text="%field.backgroundArtworkPath" GridPane.rowIndex="3" />
                         <Button mnemonicParsing="false" onAction="#thumbnailPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Button mnemonicParsing="false" onAction="#backgroundPathAction" text="..." GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Label fx:id="thumbnailArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <Label fx:id="thumbnailArtworkPathLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label fx:id="backgroundArtworkPathLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Label fx:id="backgroundArtworkPathLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>

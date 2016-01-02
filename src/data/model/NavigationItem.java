@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 public class NavigationItem extends BaseItem {
 
-	private Tag tag;
+	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 	private NavigationItem parentItem;
 	private final ObservableList<NavigationItem> subItems = FXCollections.observableArrayList();
 	
@@ -17,16 +17,20 @@ public class NavigationItem extends BaseItem {
 		return this.subItems;
 	}
 
-	public Tag getTag() {
-		return tag;
-	}
-
-	public void setTag(Tag tag) {
-		this.tag = tag;
+	public ObservableList<Tag> getAssignedTags() {
+		return this.assignedTags;
 	}
 
 	public NavigationItem getParentItem() {
 		return parentItem;
+	}
+	
+	public Tag getMainTag() {
+		if (this.assignedTags.size() > 0) {
+			return this.assignedTags.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	public void setParentItem(NavigationItem parentItem) {
@@ -37,8 +41,8 @@ public class NavigationItem extends BaseItem {
 	public String getName() {
 		if (super.getName() != null) {
 			return super.getName();
-		} else if (this.tag != null) {
-			return this.tag.getName();
+		} else if (this.getMainTag() != null) {
+			return this.getMainTag().getName();
 		} else {
 			return null;
 		}
@@ -48,8 +52,8 @@ public class NavigationItem extends BaseItem {
 	public String getThumbnailArtworkPath() {
 		if (super.getThumbnailArtworkPath() != null) {
 			return super.getThumbnailArtworkPath();
-		} else if (this.tag != null) {
-			return this.tag.getThumbnailArtworkPath();
+		} else if (this.getMainTag() != null) {
+			return this.getMainTag().getThumbnailArtworkPath();
 		} else {
 			return null;
 		}
@@ -59,8 +63,8 @@ public class NavigationItem extends BaseItem {
 	public String getBackgroundArtworkPath() {
 		if (super.getBackgroundArtworkPath() != null) {
 			return super.getBackgroundArtworkPath();
-		} else if (this.tag != null) {
-			return this.tag.getBackgroundArtworkPath();
+		} else if (this.getMainTag() != null) {
+			return this.getMainTag().getBackgroundArtworkPath();
 		} else {
 			return null;
 		}

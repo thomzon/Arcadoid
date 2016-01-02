@@ -101,7 +101,6 @@ public class GamesViewController implements Initializable {
 		}
 		this.platformSpecificFieldsHandler = PlatformSpecificGameFieldsHandler.handlerForPlatform(platform);
 		this.platformSpecificFieldsHandler.setupInGridPane(this.gameFieldsGridPane);
-		this.platformSpecificFieldsHandler.setEditedGame(this.editedGame);
 		this.allGamesListView.getSelectionModel().select(selectedIndex);
 	}
 	
@@ -118,6 +117,7 @@ public class GamesViewController implements Initializable {
 		this.gameNameField.setText(this.editedGame.getName());
 		this.thumbnailArtworkPathLabel.setText(this.editedGame.getThumbnailArtworkPath());
 		this.backgroundArtworkPathLabel.setText(this.editedGame.getBackgroundArtworkPath());
+		this.platformSpecificFieldsHandler.setEditedGame(this.editedGame);
 	}
 	
 	private void doDeleteCurrentGame() {

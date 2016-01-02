@@ -3,7 +3,9 @@ package data.access;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import data.json.DataPersistence;
 import data.model.Game;
@@ -24,6 +26,7 @@ public class ArcadoidData {
 	public static final String TAG_MODIFIED_NOTIFICATION = "TAG_MODIFIED_NOTIFICATION";
 	
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
+	private Map<Number, Tag> tagsByIdentifier = new HashMap<Number, Tag>();
 	private ObservableList<Game> allGames = FXCollections.observableArrayList();
 	private ObservableList<NavigationItem> rootNavigationItems = FXCollections.observableArrayList();
 	
@@ -51,11 +54,16 @@ public class ArcadoidData {
 		return relevantTags;
 	}
 	
+	public Tag getTagByIdentifier(long identifier) {
+		return this.tagsByIdentifier.get(identifier);
+	}
+	
 	public Tag createNewTag() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Tag newTag = new Tag(newIdentifier);
 		newTag.setName(Messages.get("default.tagName"));
 		this.allTags.add(newTag);
+		this.tagsByIdentifier.put(newTag.getIdentifier(), newTag);
 		return newTag;
 	}
 	
@@ -66,6 +74,10 @@ public class ArcadoidData {
 	public void setAllTags(List<Tag> tags) {
 		this.allTags.clear();
 		this.allTags.addAll(tags);
+		this.tagsByIdentifier.clear();
+		for (Tag tag : tags) {
+			this.tagsByIdentifier.put(tag.getIdentifier(), tag);
+		}
 	}
 	
 	public ObservableList<Game> getAllGames() {
