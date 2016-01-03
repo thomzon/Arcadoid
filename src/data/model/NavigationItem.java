@@ -8,6 +8,8 @@ public class NavigationItem extends BaseItem {
 	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 	private NavigationItem parentItem;
 	private final ObservableList<NavigationItem> subItems = FXCollections.observableArrayList();
+	private boolean showEligibleGames = true;
+	private boolean gamesMustMatchAllTags = true;
 	
 	public NavigationItem(long identifier) {
 		super(identifier);
@@ -34,12 +36,46 @@ public class NavigationItem extends BaseItem {
 	}
 
 	public void setParentItem(NavigationItem parentItem) {
+		if (this.parentItem != null) {
+			this.parentItem.getSubItems().remove(this);
+		}
 		this.parentItem = parentItem;
+		if (this.parentItem != null) {
+			this.parentItem.getSubItems().add(this);
+		}
+	}
+	
+	public boolean getShowEligibleGames() {
+		return showEligibleGames;
+	}
+
+	public void setShowEligibleGames(boolean showEligibleGames) {
+		this.showEligibleGames = showEligibleGames;
+	}
+
+	public boolean getGamesMustMatchAllTags() {
+		return gamesMustMatchAllTags;
+	}
+
+	public void setGamesMustMatchAllTags(boolean gamesMustMatchAllTags) {
+		this.gamesMustMatchAllTags = gamesMustMatchAllTags;
+	}
+
+	public boolean hasOwnName() {
+		return super.getName() != null && !super.getName().isEmpty();
+	}
+	
+	public boolean hasOwnThumbnailArtworkPath() {
+		return super.getThumbnailArtworkPath() != null && !super.getThumbnailArtworkPath().isEmpty();
+	}
+	
+	public boolean hasOwnBackgroundArtworkPath() {
+		return super.getBackgroundArtworkPath() != null && !super.getBackgroundArtworkPath().isEmpty();
 	}
 	
 	@Override
 	public String getName() {
-		if (super.getName() != null) {
+		if (this.hasOwnName()) {
 			return super.getName();
 		} else if (this.getMainTag() != null) {
 			return this.getMainTag().getName();
@@ -50,7 +86,7 @@ public class NavigationItem extends BaseItem {
 	
 	@Override
 	public String getThumbnailArtworkPath() {
-		if (super.getThumbnailArtworkPath() != null) {
+		if (this.hasOwnThumbnailArtworkPath()) {
 			return super.getThumbnailArtworkPath();
 		} else if (this.getMainTag() != null) {
 			return this.getMainTag().getThumbnailArtworkPath();
@@ -61,7 +97,7 @@ public class NavigationItem extends BaseItem {
 	
 	@Override
 	public String getBackgroundArtworkPath() {
-		if (super.getBackgroundArtworkPath() != null) {
+		if (this.hasOwnBackgroundArtworkPath()) {
 			return super.getBackgroundArtworkPath();
 		} else if (this.getMainTag() != null) {
 			return this.getMainTag().getBackgroundArtworkPath();

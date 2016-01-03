@@ -120,6 +120,30 @@ public class ArcadoidData {
 		return this.rootNavigationItems;
 	}
 	
+	public NavigationItem createNewNavigationItemWithParent(NavigationItem parent) {
+		long newIdentifier = IdentifierProvider.newIdentifier();
+		NavigationItem item = new NavigationItem(newIdentifier);
+		item.setName(Messages.get("default.navigationItemName"));
+		item.setParentItem(parent);
+		if (parent == null) {
+			this.rootNavigationItems.add(item);
+		}
+		return item;
+	}
+	
+	public void deleteNavigationItem(NavigationItem navigationItem) {
+		if (navigationItem.getParentItem() == null) {
+			this.rootNavigationItems.remove(navigationItem);
+		} else {
+			navigationItem.setParentItem(null);
+		}
+	}
+	
+	public void setRootNavigationItems(List<NavigationItem> rootItems) {
+		this.rootNavigationItems.clear();
+		this.rootNavigationItems.addAll(rootItems);
+	}
+	
 	public void saveData() throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
 		DataPersistence.saveDataToFile(this, DATA_FILE_PATH);
 	}
