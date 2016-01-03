@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import data.access.NotificationCenter;
+
 /**
  * Static methods for access to application settings
  * @author Thomas
@@ -17,6 +19,7 @@ public class Settings
 	
 	private static final String CONFIG_FILE_PATH = "config.properties";
 	private static final String SETTING_LIST_SEPARATOR = "";
+	public static final String SETTINGS_VALIDITY_CHANGED_NOTIFICATION = "SETTINGS_VALIDITY_CHANGED_NOTIFICATION";
 	
 	private static Properties prop;
 	private static boolean initial;
@@ -27,12 +30,15 @@ public class Settings
 	 *
 	 */
 	public enum PropertyId {
+		EDITOR_SETTINGS_VALID("editor_settings_valid"),
 		REPOSITORY_FTP_ADDRESS("repo_ftp_address"),
 		REPOSITORY_FTP_PORT_NUMBER("repo_ftp_port"),
 		REPOSITORY_FTP_USER("repo_ftp_user"),
 		REPOSITORY_FTP_PASSWORD("repo_ftp_password"),
 		REPOSITORY_DATA_PATH("repo_base_path"),
 		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path"),
+		ARTWORKS_FOLDER_PATH("artworks_folder_path"),
+		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path"),
 		MAME_PATH("mame_path"),
 		STEAM_PATH("steam_path");
 		
@@ -105,12 +111,38 @@ public class Settings
 	}
 	
 	/**
+	 * Returns boolean value for given property
+	 * @param property Property for which value must be returned
+	 * @return Boolean value of given property
+	 */
+	public static boolean getSettingAsBoolean(PropertyId property) {
+		return Boolean.parseBoolean(getSetting(property));
+	}
+	
+	/**
 	 * Sets value for given property
 	 * @param property Property for which value must be set
 	 * @param value Value to set
 	 */
 	public static void setSetting(PropertyId property, String value) {
 		prop.setProperty(property.stringValue, value);
+	}
+	
+	/**
+	 * Sets boolean value for given property
+	 * @param property Property for which value must be set
+	 * @param value Boolean value to set
+	 */
+	public static void setSetting(PropertyId property, boolean value) {
+		prop.setProperty(property.stringValue, new Boolean(value).toString());
+	}
+	
+	/**
+	 * Mark editor settings as being valid and trigger appropriate notification
+	 */
+	public static void validateEditorSettings() {
+		setSetting(PropertyId.EDITOR_SETTINGS_VALID, true);
+		NotificationCenter.sharedInstance().postNotification(SETTINGS_VALIDITY_CHANGED_NOTIFICATION, null);
 	}
 	
 	/**

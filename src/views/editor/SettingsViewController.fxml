@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.editor.SettingsViewController">
    <children>
-      <TitledPane animated="false" collapsible="false" layoutX="232.0" layoutY="236.0" prefHeight="225.0" text="%title.ftpRepository" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <TitledPane animated="false" collapsible="false" layoutX="232.0" layoutY="236.0" prefHeight="225.0" text="%title.ftpRepository" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="140.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -51,5 +51,35 @@
             <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveAction" text="%common.save" />
         </buttons>
       </ButtonBar>
+      <TitledPane animated="false" collapsible="false" layoutX="20.0" layoutY="262.0" maxHeight="105.0" minHeight="105.0" prefHeight="105.0" text="%title.localFolders" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <GridPane layoutX="14.0" layoutY="14.0" prefHeight="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.0" minWidth="10.0" prefWidth="292.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="492.0" minWidth="10.0" prefWidth="347.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="%field.artworksFolderPath" />
+                        <Label text="%field.mameRomsFolderPath" GridPane.rowIndex="1" />
+                        <Button fx:id="clearArtworksFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearArtworksFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" />
+                        <Button fx:id="pickArtworksFolderButton" mnemonicParsing="false" onAction="#pickArtworksFolderAction" prefHeight="25.0" prefWidth="15.0" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" />
+                        <Label fx:id="artworksFolderLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                        <Label fx:id="mameRomsFolderLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Button fx:id="pickMameRomsFolderButton" mnemonicParsing="false" onAction="#pickMameRomsFolderAction" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                        <Button fx:id="clearMameRomsFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearMameRomsFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
    </children>
 </AnchorPane>

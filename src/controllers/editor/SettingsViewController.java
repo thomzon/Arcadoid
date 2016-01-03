@@ -1,7 +1,9 @@
 package controllers.editor;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -20,8 +22,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
 
 public class SettingsViewController implements Initializable {
 
@@ -30,7 +34,9 @@ public class SettingsViewController implements Initializable {
 	@FXML
 	private PasswordField ftpPasswordField;
 	@FXML
-	private Button resetButton, saveButton;
+	private Button resetButton, saveButton, pickArtworksFolderButton, clearArtworksFolderButton, pickMameRomsFolderButton, clearMameRomsFolderButton;
+	@FXML
+	private Label artworksFolderLabel, mameRomsFolderLabel;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -52,17 +58,44 @@ public class SettingsViewController implements Initializable {
 		);
 	}
 	
-	@FXML
-	private void resetAction() {
+	@FXML private void pickArtworksFolderAction() {
+		DirectoryChooser folderChooser = new DirectoryChooser();
+		folderChooser.setTitle(Messages.get("title.selectFolder"));
+		File folder = folderChooser.showDialog(this.artworksFolderLabel.getScene().getWindow());
+		if (folder != null) {
+			this.artworksFolderLabel.setText(folder.getAbsolutePath());
+		}
+	}
+	
+	@FXML private void clearArtworksFolderAction() {
+		this.artworksFolderLabel.setText("");
+	}
+	
+	@FXML private void pickMameRomsFolderAction() {
+		DirectoryChooser folderChooser = new DirectoryChooser();
+		folderChooser.setTitle(Messages.get("title.selectFolder"));
+		File folder = folderChooser.showDialog(this.mameRomsFolderLabel.getScene().getWindow());
+		if (folder != null) {
+			this.mameRomsFolderLabel.setText(folder.getAbsolutePath());
+		}
+	}
+	
+	@FXML private void clearMameRomsFolderAction() {
+		this.mameRomsFolderLabel.setText("");
+	}
+	
+	@FXML private void resetAction() {
 		this.ftpAddressField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS));
 		this.ftpDataPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_DATA_PATH));
 		this.ftpMameRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH));
 		this.ftpUserField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_USER));
 		this.ftpPasswordField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD));
+		this.artworksFolderLabel.setText(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH));
+		this.mameRomsFolderLabel.setText(Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH));
 	}
 	
-	@FXML
-	private void saveAction() {
+	@FXML private void saveAction() {
+		if (!this.checkAndSaveMandatorySettings()) return;
 		this.changeInterfaceState(false);
 		ConfirmationDialogCallable folderCreationCallback = new ConfirmationDialogCallable() {
 			@Override public Boolean call() throws Exception {
@@ -77,6 +110,21 @@ public class SettingsViewController implements Initializable {
 		};
 		FTPSettingsValidator validator = new FTPSettingsValidator(folderCreationCallback, completion, this.setupFTPSettings());
 		validator.validate();
+	}
+	
+	private boolean checkAndSaveMandatorySettings() {
+		if (this.artworksFolderLabel.getText() == null || this.artworksFolderLabel.getText().isEmpty() || !new File(this.artworksFolderLabel.getText()).exists()) {
+			this.handleErrorForLocalPathsCheckWithMessage(Messages.get("error.body.artworksPathNotFound"));
+			return false;
+		}
+		if (this.mameRomsFolderLabel.getText() == null || this.mameRomsFolderLabel.getText().isEmpty() || !new File(this.mameRomsFolderLabel.getText()).exists()) {
+			this.handleErrorForLocalPathsCheckWithMessage(Messages.get("error.body.mameRomsPathNotFound"));
+			return false;
+		}
+		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderLabel.getText());
+		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderLabel.getText());
+		Settings.validateEditorSettings();
+		return true;
 	}
 	
 	private boolean askToCreatePath(String path) {
@@ -117,7 +165,7 @@ public class SettingsViewController implements Initializable {
 			this.handleSaveSuccess();
 		} else {
 			this.changeInterfaceState(true);
-			this.handleErrorForResult(result);
+			this.handleErrorForFtpResult(result);
 		}
 	}
 	
@@ -137,7 +185,15 @@ public class SettingsViewController implements Initializable {
 		alert.show();
 	}
 	
-	private void handleErrorForResult(CompletionResult result) {
+	private void handleErrorForLocalPathsCheckWithMessage(String message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(Messages.get("alert.title"));
+		alert.setHeaderText(Messages.get("error.header.localPathCheckError"));
+		alert.setContentText(message);
+		alert.show();
+	}
+	
+	private void handleErrorForFtpResult(CompletionResult result) {
 		String message = null;
 		String header = Messages.get("error.header.ftpCheckError");
 		switch (result.errorType) {

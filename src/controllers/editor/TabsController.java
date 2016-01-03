@@ -5,7 +5,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.ArcadoidEditor;
+import data.access.NotificationCenter;
 import data.settings.Messages;
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +26,14 @@ public class TabsController implements Initializable {
 		this.setupTabForController(this.gamesTab, "GamesViewController");
 		this.setupTabForController(this.navigationTab, "NavigationViewController");
 		this.setupTabForController(this.tagsTab, "TagsViewController");
+		NotificationCenter.sharedInstance().addObserver(Settings.SETTINGS_VALIDITY_CHANGED_NOTIFICATION, this, "updateTabsState");
+		this.updateTabsState();
+	}
+	
+	public void updateTabsState() {
+		this.gamesTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
+		this.navigationTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
+		this.tagsTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
 	}
 	
 	private void setupTabForController(Tab tab, String controllerName) {

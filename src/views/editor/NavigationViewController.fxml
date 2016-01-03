@@ -89,9 +89,10 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <ButtonBar buttonMinWidth="150.0" layoutX="352.0" layoutY="558.0" prefHeight="40.0" prefWidth="150.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                  <ButtonBar buttonMinWidth="120.0" layoutX="352.0" layoutY="558.0" prefHeight="40.0" prefWidth="150.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                     <buttons>
-                        <Button maxWidth="200.0" minWidth="200.0" mnemonicParsing="false" onAction="#newUnderSelectedAction" prefWidth="200.0" text="%common.newUnderSelected" />
+                        <Button maxWidth="200.0" minWidth="200.0" mnemonicParsing="false" onAction="#newChildAction" prefWidth="200.0" text="%common.newChild" />
+                        <Button mnemonicParsing="false" onAction="#newSiblingAction" text="%common.newSibling" />
                         <Button mnemonicParsing="false" onAction="#newRootAction" text="%common.newRoot" />
                         <Button maxWidth="50.0" mnemonicParsing="false" onAction="#deleteAction" text="%common.delete" />
                     </buttons>

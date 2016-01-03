@@ -88,6 +88,12 @@ public class NavigationViewController implements Initializable {
 		this.navigationItemNameField.textProperty().addListener((observable, oldValue, newValue) -> {
 			this.saveAction();
 		});
+		this.showEligibleGamesCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.saveAction();
+		});
+		this.mustMatchAllTagsCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.saveAction();
+		});
 	}
 	
 	private void setupTagsAssignmentLists() {
@@ -117,11 +123,15 @@ public class NavigationViewController implements Initializable {
 		assignedTags.addAll(this.editedItem.getValue().getAssignedTags());
 		this.assignedTagsListView.setItems(null);
 		this.assignedTagsListView.setItems(assignedTags);
-		this.navigationItemNameField.setText(this.editedItem.getValue().getName());
 		this.thumbnailArtworkPathLabel.setText(this.editedItem.getValue().getThumbnailArtworkPath());
 		this.backgroundArtworkPathLabel.setText(this.editedItem.getValue().getBackgroundArtworkPath());
-		this.showEligibleGamesCheckbox.setSelected(this.editedItem.getValue().getShowEligibleGames());
-		this.mustMatchAllTagsCheckbox.setSelected(this.editedItem.getValue().getGamesMustMatchAllTags());
+		// Get current values before setting fields to avoid side effects due to fields change listeners
+		String currentName = this.editedItem.getValue().getName();
+		boolean currentShowEligibleGames = this.editedItem.getValue().getShowEligibleGames();
+		boolean currentMustMatchAllTags = this.editedItem.getValue().getGamesMustMatchAllTags();
+		this.navigationItemNameField.setText(currentName);
+		this.showEligibleGamesCheckbox.setSelected(currentShowEligibleGames);
+		this.mustMatchAllTagsCheckbox.setSelected(currentMustMatchAllTags);
 	}
 	
 	private void updateViewFromValues() {
@@ -153,6 +163,7 @@ public class NavigationViewController implements Initializable {
 		} else {
 			this.backgroundArtworkPathLabel.setTextFill(Color.RED);
 		}
+		this.mustMatchAllTagsCheckbox.setDisable(!navigationItem.getShowEligibleGames());
 	}
 	
 	private void doDeleteCurrentItem() {
@@ -169,21 +180,34 @@ public class NavigationViewController implements Initializable {
 		this.editedItem.getValue().setName(this.navigationItemNameField.getText());
 		this.editedItem.getValue().setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedItem.getValue().setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
+		this.editedItem.getValue().setShowEligibleGames(this.showEligibleGamesCheckbox.isSelected());
+		this.editedItem.getValue().setGamesMustMatchAllTags(this.mustMatchAllTagsCheckbox.isSelected());
 		List<Tag> assignedTags = this.assignedTagsListView.getItems();
 		this.editedItem.getValue().getAssignedTags().setAll(assignedTags);
 		this.updateViewFromValues();
 	}
 	
-	@FXML private void newUnderSelectedAction() {
+	@FXML private void newChildAction() {
 		NavigationItem item = ArcadoidData.sharedInstance().createNewNavigationItemWithParent(this.editedItem.getValue());
 		TreeItem<NavigationItem> treeItem = this.createTreeItem(item, this.editedItem);
 		this.navigationTreeView.getSelectionModel().select(treeItem);
 	}
 	
+	@FXML private void newSiblingAction() {
+		TreeItem<NavigationItem> commonParent = this.editedItem.getParent();
+		NavigationItem navigationItemParent = null;
+		if (commonParent != this.dummyRoot) {
+			navigationItemParent = commonParent.getValue();
+		}
+		NavigationItem item = ArcadoidData.sharedInstance().createNewNavigationItemWithParent(navigationItemParent);
+		TreeItem<NavigationItem> treeItem = this.createTreeItem(item, commonParent);
+		this.navigationTreeView.getSelectionModel().select(treeItem);
+	}
+	
 	@FXML private void newRootAction() {
 		NavigationItem item = ArcadoidData.sharedInstance().createNewNavigationItemWithParent(null);
-		this.createTreeItem(item, this.dummyRoot);
-		this.navigationTreeView.getSelectionModel().selectLast();
+		TreeItem<NavigationItem> treeItem = this.createTreeItem(item, this.dummyRoot);
+		this.navigationTreeView.getSelectionModel().select(treeItem);
 	}
 	
 	@FXML private void deleteAction() {
