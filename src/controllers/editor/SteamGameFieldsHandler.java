@@ -21,9 +21,9 @@ public class SteamGameFieldsHandler extends PlatformSpecificGameFieldsHandler {
 	@Override
 	void setupInGridPane(GridPane gridPane) {
 		gridPane.add(this.appIdLabel, 0, 4);
-		gridPane.add(this.appIdField, 1, 4, 2, 1);
+		gridPane.add(this.appIdField, 1, 4, 3, 1);
 		gridPane.add(this.processNameLabel, 0, 5);
-		gridPane.add(this.processNameField, 1, 5, 2, 1);
+		gridPane.add(this.processNameField, 1, 5, 3, 1);
 		this.appIdLabel.setText(Messages.get("field.steamAppId"));
 		this.processNameLabel.setText(Messages.get("field.steamProcessName"));
 		this.appIdField.textProperty().addListener((observable, oldValue, newValue) -> appIdChanged(newValue));

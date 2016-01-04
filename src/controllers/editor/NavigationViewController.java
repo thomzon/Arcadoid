@@ -1,5 +1,6 @@
 package controllers.editor;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -225,10 +226,28 @@ public class NavigationViewController implements Initializable {
 		}
 	}
 	
-	@FXML private void thumbnailPathAction() {
+	@FXML private void pickThumbnailPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+		}
 	}
 	
-	@FXML private void backgroundPathAction() {
+	@FXML private void pickBackgroundPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+		}
+	}
+	
+	@FXML private void clearThumbnailPathAction() {
+		this.thumbnailArtworkPathLabel.setText("");
+		this.saveAction();
+	}
+	
+	@FXML private void clearBackgroundPathAction() {
+		this.backgroundArtworkPathLabel.setText("");
+		this.saveAction();
 	}
 	
 	@FXML private void assignTagsAction() {

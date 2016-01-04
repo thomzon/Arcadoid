@@ -39,6 +39,10 @@ public class SendToRepositoryService extends Service<Void> {
 	        }
 		}
 		
+		private void prepareFileTracker() {
+			
+		}
+		
 		private void goToCatalogDirectory() {
 	        updateProgress(10, 100);
 	        CompletionResult result = this.transfer.goToDirectory(this.transfer.getFtpSettings().catalogDataPath);

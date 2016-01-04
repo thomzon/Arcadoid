@@ -1,5 +1,6 @@
 package controllers.editor;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -14,14 +15,9 @@ import javafx.scene.control.TextField;
 
 public class TagsViewController implements Initializable {
 	
-	@FXML
-	private ListView<Tag> allTagsListView;
-	@FXML
-	private TextField tagNameField;	
-	@FXML
-	private Label thumbnailArtworkPathLabel;
-	@FXML
-	private Label backgroundArtworkPathLabel;
+	@FXML private ListView<Tag> allTagsListView;
+	@FXML private TextField tagNameField;	
+	@FXML private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
 	
 	private final ArcadoidData dataAccessor = ArcadoidData.sharedInstance();
 	private Tag editedTag;
@@ -69,8 +65,7 @@ public class TagsViewController implements Initializable {
 		}
 	}
 	
-	@FXML
-	private void saveAction() {
+	@FXML private void saveAction() {
 		this.editedTag.setName(this.tagNameField.getText());
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
@@ -78,26 +73,37 @@ public class TagsViewController implements Initializable {
 		NotificationCenter.sharedInstance().postNotification(ArcadoidData.TAG_MODIFIED_NOTIFICATION, this.editedTag);
 	}
 	
-	@FXML
-	private void newAction() {
+	@FXML private void newAction() {
 		this.dataAccessor.createNewTag();
 		this.allTagsListView.getSelectionModel().selectLast();
 	}
 	
-	@FXML
-	private void deleteAction() {
+	@FXML private void deleteAction() {
 		this.doDeleteCurrentTag();
 	}
 
-	@FXML
-	private void thumbnailPathAction() {
-//		FileChooser fileChooser = new FileChooser();
-//		fileChooser.setTitle("Open Resource File");
-//		fileChooser.showOpenDialog(null);
+	@FXML private void pickThumbnailPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+		}
 	}
 	
-	@FXML
-	private void backgroundPathAction() {
+	@FXML private void pickBackgroundPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+		}
+	}
+	
+	@FXML private void clearThumbnailPathAction() {
+		this.thumbnailArtworkPathLabel.setText("");
+		this.saveAction();
+	}
+	
+	@FXML private void clearBackgroundPathAction() {
+		this.backgroundArtworkPathLabel.setText("");
+		this.saveAction();
 	}
 	
 }

@@ -21,7 +21,7 @@ class MameGameFieldsHandler extends PlatformSpecificGameFieldsHandler {
 	@Override
 	void setupInGridPane(GridPane gridPane) {
 		gridPane.add(this.label, 0, 4);
-		gridPane.add(this.textField, 1, 4, 2, 1);
+		gridPane.add(this.textField, 1, 4, 3, 1);
 		this.label.setText(Messages.get("field.mameRomName"));
 		this.textField.textProperty().addListener((observable, oldValue, newValue) -> textFieldChanged(newValue));
 	}

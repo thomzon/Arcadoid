@@ -36,6 +36,7 @@ public class Settings
 		REPOSITORY_FTP_USER("repo_ftp_user"),
 		REPOSITORY_FTP_PASSWORD("repo_ftp_password"),
 		REPOSITORY_DATA_PATH("repo_base_path"),
+		REPOSITORY_ARTWORKS_PATH("repo_artworks_path"),
 		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path"),
 		ARTWORKS_FOLDER_PATH("artworks_folder_path"),
 		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path"),

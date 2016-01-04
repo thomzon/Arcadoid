@@ -17,7 +17,7 @@ public class FTPSettingsValidator {
 		this.folderCreationCallback = folderCreationCallback;
 		this.completionCallback = completionCallback;
 		this.ftpSettings = ftpSettings;
-		this.pathsToCheck = new String[]{ftpSettings.catalogDataPath, ftpSettings.mameDataPath};
+		this.pathsToCheck = new String[]{ftpSettings.catalogDataPath, ftpSettings.artworksDataPath, ftpSettings.mameDataPath};
 	}
 	
 	public void validate() {

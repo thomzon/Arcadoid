@@ -2,6 +2,7 @@ package data.transfer;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 
 import com.enterprisedt.net.ftp.FTPException;
 import com.enterprisedt.net.ftp.FileTransferClient;
@@ -89,6 +90,19 @@ public class DataTransfer {
 			result.success = true;
 		} catch (FTPException | IOException e) {
 			result.errorType = ErrorType.UNKNOWN_DIRECTORY;
+		}
+		return result;
+	}
+	
+	public FileListingResult getFilesList(String directoryName) {
+		FileListingResult result = new FileListingResult();
+		try {
+			result.foundFiles = this.ftpClient.directoryList(directoryName);
+			result.success = true;
+		} catch (FTPException | IOException e) {
+			result.errorType = ErrorType.UNKNOWN_DIRECTORY;
+		} catch (ParseException e) {
+			result.errorType = ErrorType.OTHER_ERROR;
 		}
 		return result;
 	}

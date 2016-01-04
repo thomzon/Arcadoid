@@ -3,7 +3,6 @@ package controllers.editor;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -30,7 +29,7 @@ import javafx.stage.DirectoryChooser;
 public class SettingsViewController implements Initializable {
 
 	@FXML
-	private TextField ftpAddressField, ftpPortNumberField, ftpDataPathField, ftpMameRomsPathField, ftpUserField;
+	private TextField ftpAddressField, ftpPortNumberField, ftpDataPathField, ftpArtworksPathField, ftpMameRomsPathField, ftpUserField;
 	@FXML
 	private PasswordField ftpPasswordField;
 	@FXML
@@ -87,6 +86,7 @@ public class SettingsViewController implements Initializable {
 	@FXML private void resetAction() {
 		this.ftpAddressField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS));
 		this.ftpDataPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_DATA_PATH));
+		this.ftpArtworksPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_ARTWORKS_PATH));
 		this.ftpMameRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH));
 		this.ftpUserField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_USER));
 		this.ftpPasswordField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD));
@@ -143,16 +143,22 @@ public class SettingsViewController implements Initializable {
 		settings.user = this.ftpUserField.getText();
 		settings.password = this.ftpPasswordField.getText();
 		settings.catalogDataPath = this.ftpDataPathField.getText();
+		settings.artworksDataPath = this.ftpArtworksPathField.getText();
 		settings.mameDataPath = this.ftpMameRomsPathField.getText();
 		return settings;
 	}
 	
 	private void changeInterfaceState(boolean enabled) {
+		this.pickArtworksFolderButton.setDisable(!enabled);
+		this.clearArtworksFolderButton.setDisable(!enabled);
+		this.pickMameRomsFolderButton.setDisable(!enabled);
+		this.clearMameRomsFolderButton.setDisable(!enabled);
 		this.ftpAddressField.setDisable(!enabled);
 		this.ftpPortNumberField.setDisable(!enabled);
 		this.ftpUserField.setDisable(!enabled);
 		this.ftpPasswordField.setDisable(!enabled);
 		this.ftpDataPathField.setDisable(!enabled);
+		this.ftpArtworksPathField.setDisable(!enabled);
 		this.ftpMameRomsPathField.setDisable(!enabled);
 		this.resetButton.setDisable(!enabled);
 		this.saveButton.setDisable(!enabled);

@@ -1,5 +1,6 @@
 package controllers.editor;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -20,22 +21,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 
 public class GamesViewController implements Initializable {
 
-	@FXML
-	private ListView<Game> allGamesListView;
-	@FXML
-	private ComboBox<Platform> gameTypeDropdown;
-	@FXML
-	private TextField gameNameField;	
-	@FXML
-	private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
-	@FXML
-	private ListView<Tag> availableTagsListView, assignedTagsListView;
-	@FXML
-	private GridPane gameFieldsGridPane;
+	@FXML private ListView<Game> allGamesListView;
+	@FXML private ComboBox<Platform> gameTypeDropdown;
+	@FXML private TextField gameNameField;	
+	@FXML private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
+	@FXML private ListView<Tag> availableTagsListView, assignedTagsListView;
+	@FXML private GridPane gameFieldsGridPane;
 	
 	private Game editedGame;
 	private PlatformSpecificGameFieldsHandler platformSpecificFieldsHandler;
@@ -127,8 +121,7 @@ public class GamesViewController implements Initializable {
 		}
 	}
 	
-	@FXML
-	private void saveAction() {
+	@FXML private void saveAction() {
 		this.editedGame.setName(this.gameNameField.getText());
 		this.editedGame.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedGame.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
@@ -139,39 +132,47 @@ public class GamesViewController implements Initializable {
 		this.allGamesListView.getSelectionModel().select(selectedIndex);
 	}
 	
-	@FXML
-	private void newAction() {
+	@FXML private void newAction() {
 		ArcadoidData.sharedInstance().createNewGame();
 		this.allGamesListView.getSelectionModel().selectLast();
 	}
 	
-	@FXML
-	private void deleteAction() {
+	@FXML private void deleteAction() {
 		this.doDeleteCurrentGame();
 	}
 	
-	@FXML
-	private void thumbnailPathAction() {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
-		fileChooser.showOpenDialog(null);
+	@FXML private void pickThumbnailPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+		}
 	}
 	
-	@FXML
-	private void backgroundPathAction() {
-		System.out.println("Back");
+	@FXML private void pickBackgroundPathAction() {
+		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
+		if (file != null) {
+			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+		}
 	}
 	
-	@FXML
-	private void assignTagsAction() {
+	@FXML private void clearThumbnailPathAction() {
+		this.thumbnailArtworkPathLabel.setText("");
+		this.saveAction();
+	}
+	
+	@FXML private void clearBackgroundPathAction() {
+		this.backgroundArtworkPathLabel.setText("");
+		this.saveAction();
+	}
+	
+	@FXML private void assignTagsAction() {
 		List<Tag> selectedTags = this.availableTagsListView.getSelectionModel().getSelectedItems();
 		this.assignedTagsListView.getItems().addAll(selectedTags);
 		this.availableTagsListView.getItems().removeAll(selectedTags);
 		this.saveAction();
 	}
 	
-	@FXML
-	private void unassignTagsAction() {
+	@FXML private void unassignTagsAction() {
 		List<Tag> selectedTags = this.assignedTagsListView.getSelectionModel().getSelectedItems();
 		this.availableTagsListView.getItems().addAll(selectedTags);
 		this.assignedTagsListView.getItems().removeAll(selectedTags);
