@@ -3,11 +3,13 @@ package data.access;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import data.json.DataPersistence;
+import data.model.BaseItem;
 import data.model.Game;
 import data.model.Game.Platform;
 import data.model.MameGame;
@@ -38,6 +40,21 @@ public class ArcadoidData {
 			sharedInstance = new ArcadoidData();
 		}
 		return sharedInstance;
+	}
+	
+	public List<BaseItem> getAllItems() {
+		ArrayList<BaseItem> allItems = new ArrayList<BaseItem>();
+		allItems.addAll(this.allTags);
+		allItems.addAll(this.allGames);
+		this.addNavigationItemsToList(this.rootNavigationItems, allItems);
+		return allItems;
+	}
+	
+	private void addNavigationItemsToList(List<NavigationItem> navigationItems, ArrayList<BaseItem> list) {
+		list.addAll(navigationItems);
+		for (NavigationItem navigationItem : navigationItems) {
+			this.addNavigationItemsToList(navigationItem.getSubItems(), list);
+		}
 	}
 	
 	public ObservableList<Tag> getAllTags() {

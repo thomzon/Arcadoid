@@ -21,6 +21,7 @@ public class SendToRepositoryService extends Service<Void> {
 	private class SendToRepositoryTask extends Task<Void> {
 		
 		private DataTransfer transfer;
+		private FileTransferTracker tracker;
 		
 		@Override protected Void call() throws InterruptedException {
         	this.transfer = new DataTransfer();
@@ -30,8 +31,18 @@ public class SendToRepositoryService extends Service<Void> {
 		
 		private void connect() {
 	        updateMessage(Messages.get("progress.body.verifyingFtpSettings"));
-	        updateProgress(0, 100);
 	        CompletionResult result = this.transfer.connect();
+	        if (result != null && !result.success) {
+	        	completion.call(result);
+	        } else {
+	        	this.prepareFileTracker();
+	        }
+		}
+		
+		private void prepareFileTracker() {
+	        updateMessage(Messages.get("progress.body.checkingFilesToTransfer"));
+	        this.tracker = new FileTransferTracker(this.transfer);
+	        CompletionResult result = tracker.prepare();
 	        if (result != null && !result.success) {
 	        	completion.call(result);
 	        } else {
@@ -39,12 +50,7 @@ public class SendToRepositoryService extends Service<Void> {
 	        }
 		}
 		
-		private void prepareFileTracker() {
-			
-		}
-		
 		private void goToCatalogDirectory() {
-	        updateProgress(10, 100);
 	        CompletionResult result = this.transfer.goToDirectory(this.transfer.getFtpSettings().catalogDataPath);
 	        if (result != null && !result.success) {
 	        	completion.call(result);

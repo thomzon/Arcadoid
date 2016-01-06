@@ -1,7 +1,5 @@
 package data.access;
 
-import java.util.ArrayList;
-
 import data.model.BaseItem;
 
 public class IdentifierProvider {
@@ -17,10 +15,7 @@ public class IdentifierProvider {
 	
 	protected static void updateHighestIdentifier() {
 		long highestIdentifier = lastUsedIdentifier;
-		ArrayList<BaseItem> allItems = new ArrayList<BaseItem>();
-		allItems.addAll(ArcadoidData.sharedInstance().getAllTags());
-		allItems.addAll(ArcadoidData.sharedInstance().getAllGames());
-		for (BaseItem baseItem : allItems) {
+		for (BaseItem baseItem : ArcadoidData.sharedInstance().getAllItems()) {
 			if (baseItem.getIdentifier() > highestIdentifier) {
 				highestIdentifier = baseItem.getIdentifier();
 			}

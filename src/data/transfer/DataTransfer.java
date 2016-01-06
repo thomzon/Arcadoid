@@ -100,8 +100,10 @@ public class DataTransfer {
 			result.foundFiles = this.ftpClient.directoryList(directoryName);
 			result.success = true;
 		} catch (FTPException | IOException e) {
+			e.printStackTrace();
 			result.errorType = ErrorType.UNKNOWN_DIRECTORY;
 		} catch (ParseException e) {
+			e.printStackTrace();
 			result.errorType = ErrorType.OTHER_ERROR;
 		}
 		return result;
