@@ -41,7 +41,8 @@ public class NavigationViewController implements Initializable {
 	
 	private TreeItem<NavigationItem> dummyRoot;
 	private TreeItem<NavigationItem> editedItem;
-	
+	private boolean ignoreSave = false;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.initializeValueChangeListening();
@@ -117,6 +118,7 @@ public class NavigationViewController implements Initializable {
 	
 	private void showSelectedItem(TreeItem<NavigationItem> item) {
 		if (item == null) return;
+		this.ignoreSave = true;
 		this.editedItem = item;
 		this.availableTagsListView.setItems(null);
 		this.availableTagsListView.setItems(ArcadoidData.sharedInstance().getAllTagsExcept(this.editedItem.getValue().getAssignedTags()));
@@ -126,13 +128,13 @@ public class NavigationViewController implements Initializable {
 		this.assignedTagsListView.setItems(assignedTags);
 		this.thumbnailArtworkPathLabel.setText(this.editedItem.getValue().getThumbnailArtworkPath());
 		this.backgroundArtworkPathLabel.setText(this.editedItem.getValue().getBackgroundArtworkPath());
-		// Get current values before setting fields to avoid side effects due to fields change listeners
 		String currentName = this.editedItem.getValue().getName();
 		boolean currentShowEligibleGames = this.editedItem.getValue().getShowEligibleGames();
 		boolean currentMustMatchAllTags = this.editedItem.getValue().getGamesMustMatchAllTags();
 		this.navigationItemNameField.setText(currentName);
 		this.showEligibleGamesCheckbox.setSelected(currentShowEligibleGames);
 		this.mustMatchAllTagsCheckbox.setSelected(currentMustMatchAllTags);
+		this.ignoreSave = false;
 	}
 	
 	private void updateViewFromValues() {
@@ -178,6 +180,7 @@ public class NavigationViewController implements Initializable {
 	}
 	
 	@FXML private void saveAction() {
+		if (this.ignoreSave) return;
 		this.editedItem.getValue().setName(this.navigationItemNameField.getText());
 		this.editedItem.getValue().setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedItem.getValue().setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
@@ -229,14 +232,16 @@ public class NavigationViewController implements Initializable {
 	@FXML private void pickThumbnailPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+			this.thumbnailArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	
 	@FXML private void pickBackgroundPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+			this.backgroundArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	

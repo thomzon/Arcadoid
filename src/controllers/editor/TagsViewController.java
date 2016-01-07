@@ -21,7 +21,8 @@ public class TagsViewController implements Initializable {
 	
 	private final ArcadoidData dataAccessor = ArcadoidData.sharedInstance();
 	private Tag editedTag;
-	
+	private boolean ignoreSave = false;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.initializeValueChangesListening();
@@ -51,10 +52,12 @@ public class TagsViewController implements Initializable {
 	
 	private void showSelectedTag(Tag selectedTag) {
 		if (selectedTag != null) {
+			this.ignoreSave = true;
 			this.editedTag = selectedTag;
 			this.tagNameField.setText(this.editedTag.getName());
 			this.thumbnailArtworkPathLabel.setText(this.editedTag.getThumbnailArtworkPath());
 			this.backgroundArtworkPathLabel.setText(this.editedTag.getBackgroundArtworkPath());
+			this.ignoreSave = false;
 		}
 	}
 	
@@ -66,6 +69,7 @@ public class TagsViewController implements Initializable {
 	}
 	
 	@FXML private void saveAction() {
+		if (this.ignoreSave) return;
 		this.editedTag.setName(this.tagNameField.getText());
 		this.editedTag.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedTag.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
@@ -85,14 +89,16 @@ public class TagsViewController implements Initializable {
 	@FXML private void pickThumbnailPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+			this.thumbnailArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	
 	@FXML private void pickBackgroundPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+			this.backgroundArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	

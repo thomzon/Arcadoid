@@ -33,6 +33,7 @@ public class GamesViewController implements Initializable {
 	
 	private Game editedGame;
 	private PlatformSpecificGameFieldsHandler platformSpecificFieldsHandler;
+	private boolean ignoreSave = false;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -100,6 +101,7 @@ public class GamesViewController implements Initializable {
 	
 	private void showSelectedGame(Game selectedGame) {
 		if (selectedGame == null) return;
+		this.ignoreSave = true;
 		this.editedGame = selectedGame;
 		this.availableTagsListView.setItems(null);
 		this.availableTagsListView.setItems(ArcadoidData.sharedInstance().getAllTagsExcept(this.editedGame.getAssignedTags()));
@@ -112,6 +114,7 @@ public class GamesViewController implements Initializable {
 		this.thumbnailArtworkPathLabel.setText(this.editedGame.getThumbnailArtworkPath());
 		this.backgroundArtworkPathLabel.setText(this.editedGame.getBackgroundArtworkPath());
 		this.platformSpecificFieldsHandler.setEditedGame(this.editedGame);
+		this.ignoreSave = false;
 	}
 	
 	private void doDeleteCurrentGame() {
@@ -122,6 +125,7 @@ public class GamesViewController implements Initializable {
 	}
 	
 	@FXML private void saveAction() {
+		if (this.ignoreSave) return;
 		this.editedGame.setName(this.gameNameField.getText());
 		this.editedGame.setThumbnailArtworkPath(this.thumbnailArtworkPathLabel.getText());
 		this.editedGame.setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
@@ -144,14 +148,16 @@ public class GamesViewController implements Initializable {
 	@FXML private void pickThumbnailPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.thumbnailArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.thumbnailArtworkPathLabel.setText(file.getAbsolutePath());
+			this.thumbnailArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	
 	@FXML private void pickBackgroundPathAction() {
 		File file = ArtworkPathSelection.selectArtworkFile(this.backgroundArtworkPathLabel.getScene().getWindow());
 		if (file != null) {
-			this.backgroundArtworkPathLabel.setText(file.getAbsolutePath());
+			this.backgroundArtworkPathLabel.setText(file.getName());
+			this.saveAction();
 		}
 	}
 	

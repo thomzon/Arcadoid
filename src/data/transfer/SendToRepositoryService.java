@@ -61,8 +61,17 @@ public class SendToRepositoryService extends Service<Void> {
 		
 		private void sendDataFile() {
 	        updateMessage(Messages.get("progress.body.sendingCatalogFile"));
-	        updateProgress(20, 100);
+	        updateProgress(0, 100);
 	        CompletionResult result = this.transfer.transferFile(ArcadoidData.DATA_FILE_PATH);
+	        if (result != null && !result.success) {
+	        	completion.call(result);
+	        } else {
+	        	this.goToArtworksDirectory();
+	        }
+		}
+		
+		private void goToArtworksDirectory() {
+			CompletionResult result = this.transfer.goToDirectory(this.transfer.getFtpSettings().artworksDataPath);
 	        if (result != null && !result.success) {
 	        	completion.call(result);
 	        } else {

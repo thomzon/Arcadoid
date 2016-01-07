@@ -3,6 +3,7 @@ package data.settings;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -159,6 +160,14 @@ public class Settings
 	 */
 	public static boolean initialSettings() {
 		return initial;
+	}
+	
+	public static String fullPathWithRootAndLeaf(String root, String leaf) {
+		if (root.endsWith(FileSystems.getDefault().getSeparator())) {
+			return root + leaf;
+		} else {
+			return root + FileSystems.getDefault().getSeparator() + leaf;
+		}
 	}
 
 }

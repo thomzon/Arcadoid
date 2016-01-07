@@ -101,6 +101,10 @@ public class ArcadoidData {
 		return this.allGames;
 	}
 	
+	public List<Game> getAllGamesForPlatform(Platform platform) {
+		return this.allGames.filtered((game) -> game.getPlatform() == platform);
+	}
+	
 	public Game createNewGame() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Game newGame = new MameGame(newIdentifier);

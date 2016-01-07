@@ -109,6 +109,14 @@ public class DataTransfer {
 		return result;
 	}
 	
+	public FileListingResult getFilesList(String directoryName, String childName) {
+		String fullPath = directoryName + "/" + childName;
+		if (directoryName.endsWith("/")) {
+			fullPath = directoryName + childName;
+		}
+		return this.getFilesList(fullPath);
+	}
+	
 	public CompletionResult transferFile(String filePath) {
 		CompletionResult result = new CompletionResult();
 		try {
