@@ -19,7 +19,7 @@ import data.settings.FTPSettings;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 
-public class FileTransferTracker {
+public class FileUploadTracker {
 
 	private DataTransfer transfer;
 	private FTPSettings ftpSettings;
@@ -30,13 +30,9 @@ public class FileTransferTracker {
 	private Map<String, Map<String, Number>> mameRomsToTransfer = new HashMap<String, Map<String, Number>>();
 	
 	
-	FileTransferTracker(DataTransfer transfer) {
+	FileUploadTracker(DataTransfer transfer) {
 		this.transfer = transfer;
 		this.ftpSettings = new FTPSettings();
-	}
-
-	long getTotalNumberOfBytesToTransfer() {
-		return totalNumberOfBytesToTransfer;
 	}
 	
 	CompletionResult prepare() {
@@ -57,9 +53,99 @@ public class FileTransferTracker {
 		return null;
 	}
 	
-	long getLocalFileSize(String fileName, String directory) {
+	long percentComplete() {
+		float percent = (float)this.totalNumberOfBytesTransferred / (float)totalNumberOfBytesToTransfer;
+		return (long) (percent * 100);
+	}
+	
+	CompletionResult prepareForDataFileUpload() {
+		return this.transfer.goToDirectory(this.ftpSettings.catalogDataPath);
+	}
+	
+	CompletionResult sendDataFile() {
+		return this.transfer.transferFile(ArcadoidData.DATA_FILE_PATH);
+	}
+	
+	String nextArtworkFileToTransfer() {
+		if (this.artworksToTransfer.isEmpty()) {
+			return null;
+		} else {
+			String next = (String)this.artworksToTransfer.keySet().toArray()[0];
+			return next;
+		}
+	}
+	
+	CompletionResult prepareForArtworkUpload() {
+		return this.transfer.goToDirectory(this.ftpSettings.artworksDataPath);
+	}
+	
+	CompletionResult sendNextArtworkFile() {
+		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
+		String next = this.nextArtworkFileToTransfer();
+		String fullPath = Settings.fullPathWithRootAndLeaf(artworksDirectoryPath, next);
+		long fileSize = this.artworksToTransfer.get(next).longValue();
+		this.totalNumberOfBytesTransferred += fileSize;
+		this.artworksToTransfer.remove(next);
+		return this.transfer.transferFile(fullPath, next);
+	}
+	
+	String nextMameRomFileToTransfer() {
+		String romName = this.nextMameRomToTransfer();
+		if (romName == null) {
+			return null;
+		} else {
+			String fileName = (String)this.mameRomsToTransfer.get(romName).keySet().toArray()[0];
+			return fileName;
+		}
+	}
+	
+	String nextMameRomToTransfer() {
+		if (this.mameRomsToTransfer.isEmpty()) {
+			return null;
+		} else {
+			String romName = (String)this.mameRomsToTransfer.keySet().toArray()[0];
+			return romName;
+		}
+	}
+	
+	CompletionResult prepareForMameRomsUpload() {
+		return this.transfer.goToDirectory(this.ftpSettings.mameDataPath);
+	}
+	
+	CompletionResult sendNextMameRomFile() {
+		String romName = this.nextMameRomToTransfer();
+		CompletionResult result = null;
+		if (this.mameRomsFolderToCreate.contains(romName)) {
+			result = this.transfer.createDirectory(this.ftpSettings.mameDataPath, romName);
+			if (result != null && !result.success) {
+				return result;
+			}
+			this.mameRomsFolderToCreate.remove(romName);
+		}
+		result = this.transfer.goToDirectory(this.ftpSettings.mameDataPath, romName);
+		if (result != null && !result.success) {
+			return result;
+		}
+		String fileName = this.nextMameRomFileToTransfer();
+		String mameRoot = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
+		String mameRomPath = Settings.fullPathWithRootAndLeaf(mameRoot, romName);
+		String filePath = Settings.fullPathWithRootAndLeaf(mameRomPath, fileName);
+		long fileSize = this.mameRomsToTransfer.get(romName).get(fileName).longValue();
+		this.totalNumberOfBytesTransferred += fileSize;
+		this.mameRomsToTransfer.get(romName).remove(fileName);
+		if (this.mameRomsToTransfer.get(romName).isEmpty()) {
+			this.mameRomsToTransfer.remove(romName);
+		}
+		return this.transfer.transferFile(filePath, fileName);
+	}
+	
+	private long getLocalFileSize(String fileName, String directory) {
 		try {
-			return new File(directory, fileName).length();
+			if (directory.isEmpty()) {
+				return new File(fileName).length();
+			} else {
+				return new File(directory, fileName).length();
+			}
 		} catch (Exception e) {
 			return 0;
 		}
@@ -93,7 +179,12 @@ public class FileTransferTracker {
 		Map<String, Number> romFilesList = this.listOfFilesInDirectory(mameRomPath);
 		if (remoteFoldersList.get(mameGame.gameName()) == null) {
 			this.mameRomsFolderToCreate.add(mameGame.gameName());
-			this.mameRomsToTransfer.put(mameGame.gameName(), romFilesList);
+			Map<String, Number> transferList = new HashMap<String, Number>();
+			for (String localFilePath : romFilesList.keySet()) {
+				String fileName = new File(localFilePath).getName();
+				this.checkAndAddFileToListIfNeeded(fileName, mameRomPath, new HashMap<String, Number>(), transferList);
+			}
+			this.mameRomsToTransfer.put(mameGame.gameName(), transferList);
 		} else {
 			FileListingResult remoteRomFilesResult = this.transfer.getFilesList(this.ftpSettings.mameDataPath, mameGame.gameName());
 			if (!remoteRomFilesResult.success) return remoteRomFilesResult;
@@ -101,9 +192,11 @@ public class FileTransferTracker {
 			Map<String, Number> transferList = new HashMap<String, Number>();
 			for (String localFilePath : romFilesList.keySet()) {
 				String fileName = new File(localFilePath).getName();
-				this.checkAndAddFileToListIfNeeded(fileName, "", remoteRomFilesList, transferList);
+				this.checkAndAddFileToListIfNeeded(fileName, mameRomPath, remoteRomFilesList, transferList);
 			}
-			this.mameRomsToTransfer.put(mameGame.gameName(), transferList);
+			if (!transferList.isEmpty()) {
+				this.mameRomsToTransfer.put(mameGame.gameName(), transferList);
+			}
 		}
 		return null;
 	}
@@ -122,6 +215,7 @@ public class FileTransferTracker {
 		if (localFileSize == 0) return;
 		Number remoteFileSize = remoteFilesList.get(fileName);
 		if (remoteFileSize == null || remoteFileSize.longValue() != localFileSize) {
+			this.totalNumberOfBytesToTransfer += localFileSize;
 			pendingTransferList.put(fileName, localFileSize);
 		}
 	}

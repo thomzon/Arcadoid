@@ -162,6 +162,12 @@ public class Settings
 		return initial;
 	}
 	
+	/**
+	 * Creates a full local path from two parts
+	 * @param root First part of the local path
+	 * @param leaf Second part of the local path
+	 * @return The full path with appropriate separator
+	 */
 	public static String fullPathWithRootAndLeaf(String root, String leaf) {
 		if (root.endsWith(FileSystems.getDefault().getSeparator())) {
 			return root + leaf;

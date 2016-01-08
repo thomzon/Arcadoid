@@ -1,6 +1,5 @@
 package data.transfer;
 
-import data.access.ArcadoidData;
 import data.settings.Messages;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -21,7 +20,7 @@ public class SendToRepositoryService extends Service<Void> {
 	private class SendToRepositoryTask extends Task<Void> {
 		
 		private DataTransfer transfer;
-		private FileTransferTracker tracker;
+		private FileUploadTracker tracker;
 		
 		@Override protected Void call() throws InterruptedException {
         	this.transfer = new DataTransfer();
@@ -41,17 +40,8 @@ public class SendToRepositoryService extends Service<Void> {
 		
 		private void prepareFileTracker() {
 	        updateMessage(Messages.get("progress.body.checkingFilesToTransfer"));
-	        this.tracker = new FileTransferTracker(this.transfer);
+	        this.tracker = new FileUploadTracker(this.transfer);
 	        CompletionResult result = tracker.prepare();
-	        if (result != null && !result.success) {
-	        	completion.call(result);
-	        } else {
-	        	this.goToCatalogDirectory();
-	        }
-		}
-		
-		private void goToCatalogDirectory() {
-	        CompletionResult result = this.transfer.goToDirectory(this.transfer.getFtpSettings().catalogDataPath);
 	        if (result != null && !result.success) {
 	        	completion.call(result);
 	        } else {
@@ -60,23 +50,62 @@ public class SendToRepositoryService extends Service<Void> {
 		}
 		
 		private void sendDataFile() {
-	        updateMessage(Messages.get("progress.body.sendingCatalogFile"));
+			updateMessage(Messages.get("progress.body.sendingCatalogFile"));
 	        updateProgress(0, 100);
-	        CompletionResult result = this.transfer.transferFile(ArcadoidData.DATA_FILE_PATH);
-	        if (result != null && !result.success) {
-	        	completion.call(result);
-	        } else {
-	        	this.goToArtworksDirectory();
-	        }
+	        CompletionResult result = this.tracker.prepareForDataFileUpload();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				result = this.tracker.sendDataFile();
+				if (result != null && !result.success) {
+					completion.call(result);
+				} else {
+					updateProgress(this.tracker.percentComplete(), 100);
+					this.sendArtworkFiles();
+				}
+			}
 		}
 		
-		private void goToArtworksDirectory() {
-			CompletionResult result = this.transfer.goToDirectory(this.transfer.getFtpSettings().artworksDataPath);
-	        if (result != null && !result.success) {
-	        	completion.call(result);
-	        } else {
-	        	this.finish();
-	        }
+		private void sendArtworkFiles() {
+			CompletionResult result = this.tracker.prepareForArtworkUpload();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextArtworkFileToTransfer();
+				while (nextFileName != null) {
+					updateMessage(Messages.get("progress.body.sendingArtwork", nextFileName));
+					result = this.tracker.sendNextArtworkFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						updateProgress(this.tracker.percentComplete(), 100);
+						nextFileName = this.tracker.nextArtworkFileToTransfer();
+					}
+				}
+				this.sendMameRomsFiles();
+			}
+		}
+		
+		private void sendMameRomsFiles() {
+			CompletionResult result = this.tracker.prepareForMameRomsUpload();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextMameRomFileToTransfer();
+				while (nextFileName != null) {
+					updateMessage(Messages.get("progress.body.sendingMameRomFile", nextFileName));
+					result = this.tracker.sendNextMameRomFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						updateProgress(this.tracker.percentComplete(), 100);
+						nextFileName = this.tracker.nextMameRomFileToTransfer();
+					}
+				}
+				this.finish();
+			}
 		}
 		
 		private void finish() {

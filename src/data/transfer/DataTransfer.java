@@ -94,6 +94,14 @@ public class DataTransfer {
 		return result;
 	}
 	
+	public CompletionResult goToDirectory(String path, String directory) {
+		String fullPath = path + "/" + directory;
+		if (path.endsWith("/")) {
+			fullPath = path + directory;
+		}
+		return this.goToDirectory(fullPath);
+	}
+	
 	public FileListingResult getFilesList(String directoryName) {
 		FileListingResult result = new FileListingResult();
 		try {
@@ -118,9 +126,13 @@ public class DataTransfer {
 	}
 	
 	public CompletionResult transferFile(String filePath) {
+		return this.transferFile(filePath, filePath);
+	}
+	
+	public CompletionResult transferFile(String filePath, String remoteName) {
 		CompletionResult result = new CompletionResult();
 		try {
-			this.ftpClient.uploadFile(filePath, filePath);
+			this.ftpClient.uploadFile(filePath, remoteName);
 			result.success = true;
 		} catch (FTPException | IOException e) {
 			result.errorType = ErrorType.CANNOT_WRITE_REMOTE_FILE;
@@ -139,7 +151,7 @@ public class DataTransfer {
 		return result;
 	}
 	
-	private CompletionResult createDirectory(String fullPath) {
+	public CompletionResult createDirectory(String fullPath) {
 		CompletionResult result = new CompletionResult();
 		try {
 			this.ftpClient.createDirectory(this.fixPath(fullPath));
@@ -148,6 +160,14 @@ public class DataTransfer {
 			result.errorType = ErrorType.OTHER_ERROR;
 		}
 		return result;
+	}
+	
+	public CompletionResult createDirectory(String path, String directory) {
+		String fullPath = path + "/" + directory;
+		if (path.endsWith("/")) {
+			fullPath = path + directory;
+		}
+		return this.createDirectory(fullPath);
 	}
 	
 	private String fixPath(String path) {
