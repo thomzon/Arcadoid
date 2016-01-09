@@ -6,6 +6,16 @@ import data.transfer.tracking.TrackerProgressCallable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
+/**
+ * Service that handles sending all required Arcadoid data to the remote FTP repository.
+ * The work is actually done by the SendToRepositoryTask inner class. The idea is:
+ * - At all steps, if anything FTP related goes wrong, stop everything and forwards the faulty CompletionResult object.
+ * - Verify that FTP settings are OK.
+ * - Compare existing local and remote data to build a list of all files that must be transferred.
+ * - Send all files sequentially with detaild progress updates.
+ * @author Thomas Debouverie
+ *
+ */
 public class SendToRepositoryService extends Service<Void> {
 
 	private CompletionCallable completion;

@@ -2,6 +2,11 @@ package data.transfer.tracking;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Represents code to be executed during a full Arcadoid data download or upload, with global and current file progress indicators.
+ * @author Thomas Debouverie
+ *
+ */
 public class TrackerProgressCallable implements Callable<Void> {
 
 	protected long percentageDone;

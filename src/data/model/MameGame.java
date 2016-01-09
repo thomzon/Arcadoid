@@ -3,8 +3,16 @@ package data.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Game running on the MAME platform.
+ * @author Thomas Debouverie
+ *
+ */
 public class MameGame extends Game {
 
+	/**
+	 * This is the name of the folder containing all ROM files for that game.
+	 */
 	private StringProperty gameName = new SimpleStringProperty();
 	
 	public MameGame(long identifier) {
@@ -32,6 +40,9 @@ public class MameGame extends Game {
 		return Platform.MAME;
 	}
 	
+	/**
+	 * MAME games are run using the base MAME emulator via command-line.
+	 */
 	@Override
 	public void execute() {
 		if (this.process != null) return;
@@ -45,6 +56,9 @@ public class MameGame extends Game {
 //		}
 	}
 
+	/**
+	 * Terminating a MAME emulator process is as simple as killing it.
+	 */
 	@Override
 	public void terminate() {
 		if (this.process != null) {

@@ -18,7 +18,7 @@ import javafx.concurrent.Task;
 
 /**
  * Wraps EDTFTPJ library with simple FTP operations method, with synchronous and asynchronous options.
- * @author Thomas
+ * @author Thomas Debouverie
  *
  */
 public class DataTransfer { 
@@ -38,7 +38,7 @@ public class DataTransfer {
 		this.ftpSettings = ftpSettings;
 	}
 	
-	void setListener(EventListener listener) {
+	public void setListener(EventListener listener) {
 		this.ftpClient.setEventListener(listener);
 	}
 
@@ -100,7 +100,7 @@ public class DataTransfer {
 	public CompletionResult goToDirectory(String fullPath) {
 		CompletionResult result = new CompletionResult();
 		try {
-			this.ftpClient.changeDirectory(this.fixPath(fullPath));
+			this.ftpClient.changeDirectory(DataTransfer.fixPath(fullPath));
 			result.success = true;
 		} catch (FTPException | IOException e) {
 			result.errorType = ErrorType.UNKNOWN_DIRECTORY;
@@ -172,7 +172,7 @@ public class DataTransfer {
 	public CompletionResult createDirectory(String fullPath) {
 		CompletionResult result = new CompletionResult();
 		try {
-			this.ftpClient.createDirectory(this.fixPath(fullPath));
+			this.ftpClient.createDirectory(DataTransfer.fixPath(fullPath));
 			result.success = true;
 		} catch (FTPException | IOException e) {
 			result.errorType = ErrorType.OTHER_ERROR;
@@ -208,7 +208,7 @@ public class DataTransfer {
 		}
 	}
 	
-	private String fixPath(String path) {
+	private static String fixPath(String path) {
 		if (path.startsWith("/")) {
 			return path;
 		} else {

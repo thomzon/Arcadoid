@@ -3,6 +3,12 @@ package data.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Represents one item in the Arcadoid front-end navigation.
+ * If can be used to show specific subitems, or to show games that match one or several tags.
+ * @author Thomas Debouverie
+ *
+ */
 public class NavigationItem extends BaseItem {
 
 	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();

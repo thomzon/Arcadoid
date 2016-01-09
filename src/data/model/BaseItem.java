@@ -3,6 +3,11 @@ package data.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Groups all properties common to all type of data used.
+ * @author Thomas Debouverie
+ *
+ */
 public abstract class BaseItem extends IdentifiableItem {
 
 	private final StringProperty name = new SimpleStringProperty();

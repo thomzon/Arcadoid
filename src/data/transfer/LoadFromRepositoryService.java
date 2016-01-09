@@ -6,6 +6,16 @@ import data.transfer.tracking.TrackerProgressCallable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
+/**
+ * Service that handles loading all required Arcadoid data from the remote FTP repository.
+ * The work is actually done by the LoadFromRepositoryTask inner class. The idea is:
+ * - At all steps, if anything FTP related goes wrong, stop everything and forwards the faulty CompletionResult object.
+ * - Verify that FTP settings are OK.
+ * - Compare existing local and remote data to build a list of all files that must be transferred.
+ * - Get all files sequentially with detaild progress updates.
+ * @author Thomas Debouverie
+ *
+ */
 public class LoadFromRepositoryService extends Service<Void> {
 
 	private CompletionCallable completion;

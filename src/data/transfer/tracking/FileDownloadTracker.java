@@ -15,10 +15,11 @@ import data.transfer.DataTransfer;
 import data.transfer.FileListingResult;
 
 /**
- * Like FileUploadTracker, but simpler has all files found on the FTP server and not already present locally will be downloaded.
- * No targetted download is made for simplicity's sake, as it would require first downloading the catalog,
- * then scanning local and FTP folders to see what needs to be downloaded.
- * @author Thomas
+ * Specializes FileOperationTracker for a full Arcadoid data upload to the FTP server.
+ * Each remote file is compared to its remote counterpart, and only transferred if it does not exist remotely, or if its sizes are different.
+ * Unlike the FileUploadTracker object, the remote catalog is not considered.
+ * All remote files found in the different data paths will be considered for download.
+ * @author Thomas Debouverie.
  *
  */
 public class FileDownloadTracker extends FileOperationTracker {

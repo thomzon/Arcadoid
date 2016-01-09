@@ -9,6 +9,15 @@ import data.transfer.DataTransfer;
 import data.transfer.TransferProgressCallable;
 import data.transfer.TransferProgressListener;
 
+/**
+ * Object responsible of:
+ * - Detecting all files that must be transferred to or from the FTP server.
+ * - Keep track of file transfer progress and forwards the information using a TrackerProgressCallable object.
+ * - Execute the actual file transfers.
+ * - Forwards any error that happen along the way.
+ * @author Thomas Debouverie
+ *
+ */
 abstract class FileOperationTracker {
 
 	DataTransfer transfer;

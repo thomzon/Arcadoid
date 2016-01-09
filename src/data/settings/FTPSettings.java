@@ -4,10 +4,18 @@ import java.io.IOException;
 
 import data.settings.Settings.PropertyId;
 
+/**
+ * Wraps Settings properties related to FTP communication.
+ * @author Thomas Debouverie
+ *
+ */
 public class FTPSettings {
 
 	public String address, portNumber, user, password, catalogDataPath, artworksDataPath, mameDataPath;
 	
+	/**
+	 * Creates an instance by getting current settings via the Settings interface.
+	 */
 	public FTPSettings() {
 		this.address = Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS);
 		this.portNumber = Settings.getSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER);
@@ -18,6 +26,10 @@ public class FTPSettings {
 		this.mameDataPath = Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH);
 	}
 	
+	/**
+	 * Saves current instance values to the Settings interface.
+	 * @throws IOException Throws by the Settings interface in case writing to the properties file fails.
+	 */
 	public void save() throws IOException {
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_ADDRESS, this.address);
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER, this.portNumber);

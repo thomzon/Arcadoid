@@ -1,5 +1,10 @@
 package data.model;
 
+/**
+ * Simple abstraction for objects that must be uniquely identified by a number identifier.
+ * @author Thomas Debouverie
+ *
+ */
 public abstract class IdentifiableItem {
 
 	private long identifier;
@@ -12,6 +17,9 @@ public abstract class IdentifiableItem {
 		return this.identifier;
 	}
 	
+	/**
+	 * Two IdentifiableItem are equals simply if they are of the same class, and have the same identifier.
+	 */
 	@Override
 	public boolean equals(Object anObject) {
 		if (this == anObject) {

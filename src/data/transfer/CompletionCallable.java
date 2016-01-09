@@ -4,6 +4,13 @@ import java.util.concurrent.Callable;
 
 import javafx.application.Platform;
 
+/**
+ * Represents code that is executed after an asynchronous operation has been completed.
+ * When the operation is finished, the code will be executed on the main thread.
+ * The result of the call is included in the result property.
+ * @author Thomas Debouverie
+ *
+ */
 public class CompletionCallable implements Callable<Void> {
 
 	public enum ErrorType {

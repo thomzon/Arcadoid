@@ -22,10 +22,10 @@ import data.transfer.DataTransfer;
 import data.transfer.FileListingResult;
 
 /**
- * Has two roles:
- * 1) Scan current catalog and remote FTP repository to determine what files need to be transferred.
- * 2) Sends individual files to FTP repository and keep track of global progress based on total files size.
- * @author Thomas
+ * Specializes FileOperationTracker for a full Arcadoid data upload to the FTP server.
+ * Each local file is compared to its remote counterpart, and only transferred if it does not exist remotely, or if its sizes are different.
+ * Only files that are relevant to the current local Arcadoid catalog will be considered.
+ * @author Thomas Debouverie.
  *
  */
 public class FileUploadTracker extends FileOperationTracker {

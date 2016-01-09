@@ -5,9 +5,21 @@ import java.io.IOException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Game running on the Steam platform.
+ * @author Thomas Debouverie
+ *
+ */
 public class SteamGame extends Game {
 
+	/**
+	 * This is the Steam application ID.
+	 */
 	private final StringProperty appId = new SimpleStringProperty();
+	
+	/**
+	 * This is the name of the process that is started by the game. It can be found in the Task Manager when the game is running.
+	 */
 	private final StringProperty processName = new SimpleStringProperty();
 	
 	public SteamGame(long identifier) {
@@ -47,6 +59,9 @@ public class SteamGame extends Game {
 		return Platform.STEAM;
 	}
 
+	/**
+	 * Running a Steam game is just a command line to the Steam app, with the -applaunch command and the relevant Steam application ID.
+	 */
 	@Override
 	public void execute() {
 		if (this.process != null) return;
@@ -59,6 +74,9 @@ public class SteamGame extends Game {
 //		}
 	}
 
+	/**
+	 * To terminate a Steam game, the Steam process started must be killed, but the actual Windows process specific to the game must also be killed.
+	 */
 	@Override
 	public void terminate() {
 		if (this.process != null) this.process.destroy();

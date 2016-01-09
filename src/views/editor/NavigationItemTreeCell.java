@@ -3,6 +3,11 @@ package views.editor;
 import data.model.NavigationItem;
 import javafx.scene.control.TreeCell;
 
+/**
+ * Represents a row in the Navigation tree.
+ * @author Thomas
+ *
+ */
 public class NavigationItemTreeCell extends TreeCell<NavigationItem> {
 
 	@Override
