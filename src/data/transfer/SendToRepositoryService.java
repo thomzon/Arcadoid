@@ -1,6 +1,8 @@
 package data.transfer;
 
 import data.settings.Messages;
+import data.transfer.tracking.FileUploadTracker;
+import data.transfer.tracking.TrackerProgressCallable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -21,6 +23,7 @@ public class SendToRepositoryService extends Service<Void> {
 		
 		private DataTransfer transfer;
 		private FileUploadTracker tracker;
+		private TrackerProgressCallable progressCallable;
 		
 		@Override protected Void call() throws InterruptedException {
         	this.transfer = new DataTransfer();
@@ -40,7 +43,15 @@ public class SendToRepositoryService extends Service<Void> {
 		
 		private void prepareFileTracker() {
 	        updateMessage(Messages.get("progress.body.checkingFilesToTransfer"));
+	        this.progressCallable = new TrackerProgressCallable() {
+	        	@Override public Void call() throws Exception {
+	        		updateProgress(this.getPercentageDone(), 100);
+	        		updateMessage(this.getCurrentMessage() + ": " + this.getCurrentTransferPercentageDone() + "%");
+	        		return null;
+	        	}
+	        };
 	        this.tracker = new FileUploadTracker(this.transfer);
+	        this.tracker.setProgressCallable(this.progressCallable);
 	        CompletionResult result = tracker.prepare();
 	        if (result != null && !result.success) {
 	        	completion.call(result);
@@ -52,7 +63,7 @@ public class SendToRepositoryService extends Service<Void> {
 		private void sendDataFile() {
 			updateMessage(Messages.get("progress.body.sendingCatalogFile"));
 	        updateProgress(0, 100);
-	        CompletionResult result = this.tracker.prepareForDataFileUpload();
+	        CompletionResult result = this.tracker.prepareForDataFileOperation();
 			if (result != null && !result.success) {
 				completion.call(result);
 			} else {
@@ -60,26 +71,26 @@ public class SendToRepositoryService extends Service<Void> {
 				if (result != null && !result.success) {
 					completion.call(result);
 				} else {
-					updateProgress(this.tracker.percentComplete(), 100);
 					this.sendArtworkFiles();
 				}
 			}
 		}
 		
 		private void sendArtworkFiles() {
-			CompletionResult result = this.tracker.prepareForArtworkUpload();
+			CompletionResult result = this.tracker.prepareForArtworkOperation();
 			if (result != null && !result.success) {
 				completion.call(result);
 			} else {
 				String nextFileName = this.tracker.nextArtworkFileToTransfer();
 				while (nextFileName != null) {
-					updateMessage(Messages.get("progress.body.sendingArtwork", nextFileName));
+					String newMessage = Messages.get("progress.body.sendingArtwork", nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
 					result = this.tracker.sendNextArtworkFile();
 					if (result != null && !result.success) {
 						completion.call(result);
 						return;
 					} else {
-						updateProgress(this.tracker.percentComplete(), 100);
 						nextFileName = this.tracker.nextArtworkFileToTransfer();
 					}
 				}
@@ -88,20 +99,23 @@ public class SendToRepositoryService extends Service<Void> {
 		}
 		
 		private void sendMameRomsFiles() {
-			CompletionResult result = this.tracker.prepareForMameRomsUpload();
+			CompletionResult result = this.tracker.prepareForMameRomsOperation();
 			if (result != null && !result.success) {
 				completion.call(result);
 			} else {
 				String nextFileName = this.tracker.nextMameRomFileToTransfer();
+				String nextRomName = this.tracker.nextMameRomToTransfer();
 				while (nextFileName != null) {
-					updateMessage(Messages.get("progress.body.sendingMameRomFile", nextFileName));
+					String newMessage = Messages.get("progress.body.sendingMameRomFile", nextRomName, nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
 					result = this.tracker.sendNextMameRomFile();
 					if (result != null && !result.success) {
 						completion.call(result);
 						return;
 					} else {
-						updateProgress(this.tracker.percentComplete(), 100);
 						nextFileName = this.tracker.nextMameRomFileToTransfer();
+						nextRomName = this.tracker.nextMameRomToTransfer();
 					}
 				}
 				this.finish();

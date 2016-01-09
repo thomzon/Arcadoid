@@ -1,16 +1,26 @@
 package data.transfer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.enterprisedt.net.ftp.EventListener;
 import com.enterprisedt.net.ftp.FTPException;
+import com.enterprisedt.net.ftp.FTPFile;
 import com.enterprisedt.net.ftp.FileTransferClient;
 
 import data.settings.FTPSettings;
 import data.transfer.CompletionCallable.ErrorType;
 import javafx.concurrent.Task;
 
+/**
+ * Wraps EDTFTPJ library with simple FTP operations method, with synchronous and asynchronous options.
+ * @author Thomas
+ *
+ */
 public class DataTransfer { 
 	
 	private FTPSettings ftpSettings;
@@ -26,6 +36,10 @@ public class DataTransfer {
 
 	public void setFtpSettings(FTPSettings ftpSettings) {
 		this.ftpSettings = ftpSettings;
+	}
+	
+	void setListener(EventListener listener) {
+		this.ftpClient.setEventListener(listener);
 	}
 
 	public void connectWithCompletion(CompletionCallable completion) {
@@ -141,9 +155,13 @@ public class DataTransfer {
 	}
 	
 	public CompletionResult getFile(String filePath) {
+		return this.getFile(filePath, filePath);
+	}
+	
+	public CompletionResult getFile(String remoteFileName, String localFilePath) {
 		CompletionResult result = new CompletionResult();
 		try {
-			this.ftpClient.downloadFile(filePath, filePath);
+			this.ftpClient.downloadFile(localFilePath, remoteFileName);
 			result.success = true;
 		} catch (FTPException | IOException e) {
 			result.errorType = ErrorType.CANNOT_READ_REMOTE_FILE;
@@ -168,6 +186,26 @@ public class DataTransfer {
 			fullPath = path + directory;
 		}
 		return this.createDirectory(fullPath);
+	}
+	
+	public static Map<String, Number> ftpFileListToFilesNameAndSize(FTPFile[] ftpList) {
+		HashMap<String, Number> map = new HashMap<String, Number>();
+		for (FTPFile ftpFile : ftpList) {
+			map.put(ftpFile.getName(), ftpFile.size());
+		}
+		return map;
+	}
+	
+	public static long getLocalFileSize(String fileName, String directory) {
+		try {
+			if (directory.isEmpty()) {
+				return new File(fileName).length();
+			} else {
+				return new File(directory, fileName).length();
+			}
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 	
 	private String fixPath(String path) {

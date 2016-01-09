@@ -1,4 +1,4 @@
-package data.transfer;
+package data.transfer.tracking;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -15,27 +15,28 @@ import data.model.BaseItem;
 import data.model.Game;
 import data.model.Game.Platform;
 import data.model.MameGame;
-import data.settings.FTPSettings;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.transfer.CompletionResult;
+import data.transfer.DataTransfer;
+import data.transfer.FileListingResult;
 
-public class FileUploadTracker {
+/**
+ * Has two roles:
+ * 1) Scan current catalog and remote FTP repository to determine what files need to be transferred.
+ * 2) Sends individual files to FTP repository and keep track of global progress based on total files size.
+ * @author Thomas
+ *
+ */
+public class FileUploadTracker extends FileOperationTracker {
 
-	private DataTransfer transfer;
-	private FTPSettings ftpSettings;
-	private long totalNumberOfBytesToTransfer;
-	private long totalNumberOfBytesTransferred;
-	private Map<String, Number> artworksToTransfer = new HashMap<String, Number>();
-	private List<String> mameRomsFolderToCreate = new ArrayList<String>();
-	private Map<String, Map<String, Number>> mameRomsToTransfer = new HashMap<String, Map<String, Number>>();
+	private List<String> mameRomsFolderToCreate = new ArrayList<String>();	
 	
-	
-	FileUploadTracker(DataTransfer transfer) {
-		this.transfer = transfer;
-		this.ftpSettings = new FTPSettings();
+	public FileUploadTracker(DataTransfer transfer) {
+		super(transfer);
 	}
 	
-	CompletionResult prepare() {
+	public CompletionResult prepare() {
 		this.totalNumberOfBytesToTransfer = new File(ArcadoidData.DATA_FILE_PATH).length();
 		FileListingResult existingArtworkFiles = this.transfer.getFilesList(this.ftpSettings.artworksDataPath);
 		if (!existingArtworkFiles.success) {
@@ -53,66 +54,26 @@ public class FileUploadTracker {
 		return null;
 	}
 	
-	long percentComplete() {
-		float percent = (float)this.totalNumberOfBytesTransferred / (float)totalNumberOfBytesToTransfer;
-		return (long) (percent * 100);
+	public CompletionResult sendDataFile() {
+		this.transferWillStart(new File(ArcadoidData.DATA_FILE_PATH).length());
+		CompletionResult result = this.transfer.transferFile(ArcadoidData.DATA_FILE_PATH);
+		this.transferDidEnd();
+		return result;
 	}
 	
-	CompletionResult prepareForDataFileUpload() {
-		return this.transfer.goToDirectory(this.ftpSettings.catalogDataPath);
-	}
-	
-	CompletionResult sendDataFile() {
-		return this.transfer.transferFile(ArcadoidData.DATA_FILE_PATH);
-	}
-	
-	String nextArtworkFileToTransfer() {
-		if (this.artworksToTransfer.isEmpty()) {
-			return null;
-		} else {
-			String next = (String)this.artworksToTransfer.keySet().toArray()[0];
-			return next;
-		}
-	}
-	
-	CompletionResult prepareForArtworkUpload() {
-		return this.transfer.goToDirectory(this.ftpSettings.artworksDataPath);
-	}
-	
-	CompletionResult sendNextArtworkFile() {
+	public CompletionResult sendNextArtworkFile() {
 		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		String next = this.nextArtworkFileToTransfer();
 		String fullPath = Settings.fullPathWithRootAndLeaf(artworksDirectoryPath, next);
 		long fileSize = this.artworksToTransfer.get(next).longValue();
-		this.totalNumberOfBytesTransferred += fileSize;
 		this.artworksToTransfer.remove(next);
-		return this.transfer.transferFile(fullPath, next);
+		this.transferWillStart(fileSize);
+		CompletionResult result = this.transfer.transferFile(fullPath, next);
+		this.transferDidEnd();
+		return result;
 	}
 	
-	String nextMameRomFileToTransfer() {
-		String romName = this.nextMameRomToTransfer();
-		if (romName == null) {
-			return null;
-		} else {
-			String fileName = (String)this.mameRomsToTransfer.get(romName).keySet().toArray()[0];
-			return fileName;
-		}
-	}
-	
-	String nextMameRomToTransfer() {
-		if (this.mameRomsToTransfer.isEmpty()) {
-			return null;
-		} else {
-			String romName = (String)this.mameRomsToTransfer.keySet().toArray()[0];
-			return romName;
-		}
-	}
-	
-	CompletionResult prepareForMameRomsUpload() {
-		return this.transfer.goToDirectory(this.ftpSettings.mameDataPath);
-	}
-	
-	CompletionResult sendNextMameRomFile() {
+	public CompletionResult sendNextMameRomFile() {
 		String romName = this.nextMameRomToTransfer();
 		CompletionResult result = null;
 		if (this.mameRomsFolderToCreate.contains(romName)) {
@@ -131,28 +92,18 @@ public class FileUploadTracker {
 		String mameRomPath = Settings.fullPathWithRootAndLeaf(mameRoot, romName);
 		String filePath = Settings.fullPathWithRootAndLeaf(mameRomPath, fileName);
 		long fileSize = this.mameRomsToTransfer.get(romName).get(fileName).longValue();
-		this.totalNumberOfBytesTransferred += fileSize;
 		this.mameRomsToTransfer.get(romName).remove(fileName);
 		if (this.mameRomsToTransfer.get(romName).isEmpty()) {
 			this.mameRomsToTransfer.remove(romName);
 		}
-		return this.transfer.transferFile(filePath, fileName);
-	}
-	
-	private long getLocalFileSize(String fileName, String directory) {
-		try {
-			if (directory.isEmpty()) {
-				return new File(fileName).length();
-			} else {
-				return new File(directory, fileName).length();
-			}
-		} catch (Exception e) {
-			return 0;
-		}
+		this.transferWillStart(fileSize);
+		result = this.transfer.transferFile(filePath, fileName);
+		this.transferDidEnd();
+		return result;
 	}
 	
 	private void compareLocalAndRemoteArtworks(FTPFile[] remoteArtworks) {
-		Map<String, Number> remoteFilesList = this.ftpFileListToFilesNameAndSize(remoteArtworks);
+		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteArtworks);
 		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		for (BaseItem item : ArcadoidData.sharedInstance().getAllItems()) {
 			this.checkAndAddFileToListIfNeeded(item.getBackgroundArtworkPath(), artworksDirectoryPath, remoteFilesList, this.artworksToTransfer);
@@ -162,7 +113,7 @@ public class FileUploadTracker {
 	
 	private CompletionResult compareLocalAndRemoteMameRoms(FTPFile[] remoteMameFolders) {
 		String mameRoot = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
-		Map<String, Number> remoteFoldersList = this.ftpFileListToFilesNameAndSize(remoteMameFolders);
+		Map<String, Number> remoteFoldersList = DataTransfer.ftpFileListToFilesNameAndSize(remoteMameFolders);
 		for (Game game : ArcadoidData.sharedInstance().getAllGamesForPlatform(Platform.MAME)) {
 			MameGame mameGame = (MameGame)game;
 			CompletionResult comparisonResult = this.compareLocalAndRemoteMameRoms(mameRoot, remoteFoldersList, mameGame);
@@ -188,7 +139,7 @@ public class FileUploadTracker {
 		} else {
 			FileListingResult remoteRomFilesResult = this.transfer.getFilesList(this.ftpSettings.mameDataPath, mameGame.gameName());
 			if (!remoteRomFilesResult.success) return remoteRomFilesResult;
-			Map<String, Number> remoteRomFilesList = this.ftpFileListToFilesNameAndSize(remoteRomFilesResult.foundFiles);
+			Map<String, Number> remoteRomFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteRomFilesResult.foundFiles);
 			Map<String, Number> transferList = new HashMap<String, Number>();
 			for (String localFilePath : romFilesList.keySet()) {
 				String fileName = new File(localFilePath).getName();
@@ -201,17 +152,9 @@ public class FileUploadTracker {
 		return null;
 	}
 	
-	private Map<String, Number> ftpFileListToFilesNameAndSize(FTPFile[] ftpList) {
-		HashMap<String, Number> map = new HashMap<String, Number>();
-		for (FTPFile ftpFile : ftpList) {
-			map.put(ftpFile.getName(), ftpFile.size());
-		}
-		return map;
-	}
-	
 	private void checkAndAddFileToListIfNeeded(String fileName, String fileDirectory, Map<String, Number> remoteFilesList, Map<String, Number> pendingTransferList) {
 		if (fileName.isEmpty()) return;
-		long localFileSize = this.getLocalFileSize(fileName, fileDirectory);
+		long localFileSize = DataTransfer.getLocalFileSize(fileName, fileDirectory);
 		if (localFileSize == 0) return;
 		Number remoteFileSize = remoteFilesList.get(fileName);
 		if (remoteFileSize == null || remoteFileSize.longValue() != localFileSize) {
