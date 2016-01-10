@@ -56,9 +56,9 @@
                            </GridPane.margin>
                         </Label>
                         <Label text="%field.gamePlatform" />
-                        <ComboBox fx:id="gameTypeDropdown" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" />
-                        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearThumbnailPathAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearBackgroundPathAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="gameTypeDropdown" focusTraversable="false" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" />
+                        <Button focusTraversable="false" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearThumbnailPathAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Button focusTraversable="false" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearBackgroundPathAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                   <HBox alignment="CENTER" layoutX="1.0" layoutY="125.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="240.0">

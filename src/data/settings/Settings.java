@@ -1,5 +1,6 @@
 package data.settings;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,15 +61,22 @@ public class Settings
 		try	{
 			prop.load(new FileInputStream(CONFIG_FILE_PATH));
 		} catch (IOException e)	{
-			for (PropertyId property : PropertyId.values())	{
-				setSetting(property, "");
-			}
+			setDefaultValues();
 			try	{
 				saveSettings();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	private static void setDefaultValues() {
+		for (PropertyId property : PropertyId.values())	{
+			setSetting(property, "");
+		}
+		File artworksFolder = new File("Artworks");
+		artworksFolder.mkdir();
+		setSetting(PropertyId.ARTWORKS_FOLDER_PATH, artworksFolder.getAbsolutePath());
 	}
 	
 	/**

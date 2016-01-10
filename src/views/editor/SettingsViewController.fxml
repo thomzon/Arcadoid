@@ -34,14 +34,14 @@
                         <Label text="%field.username" GridPane.rowIndex="5" />
                         <Label text="%field.password" GridPane.rowIndex="6" />
                         <TextField fx:id="ftpAddressField" GridPane.columnIndex="1" />
+                        <TextField fx:id="ftpPortNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="ftpDataPathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="ftpArtworksPathField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="ftpMameRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <TextField fx:id="ftpUserField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <PasswordField fx:id="ftpPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="%field.portNumber" GridPane.rowIndex="1" />
-                        <TextField fx:id="ftpPortNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="%field.artworksDataPath" GridPane.rowIndex="3" />
-                        <TextField fx:id="ftpArtworksPathField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>
