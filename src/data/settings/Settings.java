@@ -11,8 +11,8 @@ import java.util.Properties;
 import data.access.NotificationCenter;
 
 /**
- * Static methods for access to application settings
- * @author Thomas
+ * Static methods for access to application settings.
+ * @author Thomas Debouverie
  *
  */
 public class Settings
@@ -20,14 +20,16 @@ public class Settings
 	
 	private static final String CONFIG_FILE_PATH = "config.properties";
 	private static final String SETTING_LIST_SEPARATOR = "";
+	/**
+	 * Notification triggered when the mandatory settings have been validated or invalidated.
+	 */
 	public static final String SETTINGS_VALIDITY_CHANGED_NOTIFICATION = "SETTINGS_VALIDITY_CHANGED_NOTIFICATION";
 	
 	private static Properties prop;
-	private static boolean initial;
 	
 	/**
-	 * Enum for list of supported settings
-	 * @author Thomas
+	 * List of supported settings.
+	 * @author Thomas Debouverie
 	 *
 	 */
 	public enum PropertyId {
@@ -51,16 +53,13 @@ public class Settings
 	}
 	
 	/**
-	 * Try to read properties file, and create it if it does not exist yet
-	 * Also retrieve message bundle for user locale (for now always English)
+	 * Try to read properties file, and create it if it does not exist yet.
 	 */
 	static {
 		prop = new Properties();
 		try	{
 			prop.load(new FileInputStream(CONFIG_FILE_PATH));
-			initial = false;
 		} catch (IOException e)	{
-			initial = true;
 			for (PropertyId property : PropertyId.values())	{
 				setSetting(property, "");
 			}
@@ -73,9 +72,10 @@ public class Settings
 	}
 	
 	/**
-	 * Returns value for given property as a list of Integer
-	 * @param property Property for which list must be returned
-	 * @return List of integer for given property
+	 * Returns value for given property as a list of Integer.
+	 * The property must be a series of Integer separated by the SETTING_LIST_SEPARATOR constant value.
+	 * @param property Property for which list must be returned.
+	 * @return List of integer for given property.
 	 */
 	public static List<Integer> getSettingAsIntegerList(PropertyId property) {
 		String strValue = getSetting(property);
@@ -90,9 +90,9 @@ public class Settings
 	
 	/**
 	 * Sets value for given property from a list of objects - list will be concatenated
-	 * in one string with SETTING_LIST_SEPARATOR as separator
-	 * @param property Property for which value must be set
-	 * @param values List of values to be saved as one string
+	 * in one string with SETTING_LIST_SEPARATOR as separator.
+	 * @param property Property for which value must be set.
+	 * @param values List of values to be saved as one string.
 	 */
 	public static void setSettingForList(PropertyId property, Object[] values) {
 		String strValue = "";
@@ -104,43 +104,43 @@ public class Settings
 	}
 	
 	/**
-	 * Returns value for given property
-	 * @param property Property for which value must be returned
-	 * @return Value of given property
+	 * Returns string value for given property.
+	 * @param property Property for which value must be returned.
+	 * @return Value of given property.
 	 */
 	public static String getSetting(PropertyId property) {
 		return prop.getProperty(property.stringValue);
 	}
 	
 	/**
-	 * Returns boolean value for given property
-	 * @param property Property for which value must be returned
-	 * @return Boolean value of given property
+	 * Returns boolean value for given property.
+	 * @param property Property for which value must be returned.
+	 * @return Boolean value of given property.
 	 */
 	public static boolean getSettingAsBoolean(PropertyId property) {
 		return Boolean.parseBoolean(getSetting(property));
 	}
 	
 	/**
-	 * Sets value for given property
-	 * @param property Property for which value must be set
-	 * @param value Value to set
+	 * Sets value for given property.
+	 * @param property Property for which value must be set.
+	 * @param value Value to set.
 	 */
 	public static void setSetting(PropertyId property, String value) {
 		prop.setProperty(property.stringValue, value);
 	}
 	
 	/**
-	 * Sets boolean value for given property
-	 * @param property Property for which value must be set
-	 * @param value Boolean value to set
+	 * Sets boolean value for given property.
+	 * @param property Property for which value must be set.
+	 * @param value Boolean value to set.
 	 */
 	public static void setSetting(PropertyId property, boolean value) {
 		prop.setProperty(property.stringValue, new Boolean(value).toString());
 	}
 	
 	/**
-	 * Mark editor settings as being valid and trigger appropriate notification
+	 * Mark editor settings as being valid and trigger appropriate notification.
 	 */
 	public static void validateEditorSettings() {
 		setSetting(PropertyId.EDITOR_SETTINGS_VALID, true);
@@ -148,25 +148,26 @@ public class Settings
 	}
 	
 	/**
-	 * Saves settings to configuration file
-	 * @throws IOException If any error occurs while saving
+	 * Mark editor settings as being invalid and trigger appropriate notification.
+	 */
+	public static void invalidateEditorSettings() {
+		setSetting(PropertyId.EDITOR_SETTINGS_VALID, false);
+		NotificationCenter.sharedInstance().postNotification(SETTINGS_VALIDITY_CHANGED_NOTIFICATION, null);
+	}
+	
+	/**
+	 * Saves settings to configuration file.
+	 * @throws IOException If any error occurs while saving.
 	 */
 	public static void saveSettings() throws IOException {
 		prop.store(new FileOutputStream(CONFIG_FILE_PATH), null);
 	}
 	
 	/**
-	 * @return True if settings file is initial
-	 */
-	public static boolean initialSettings() {
-		return initial;
-	}
-	
-	/**
-	 * Creates a full local path from two parts
-	 * @param root First part of the local path
-	 * @param leaf Second part of the local path
-	 * @return The full path with appropriate separator
+	 * Creates a full local path from two parts.
+	 * @param root First part of the local path.
+	 * @param leaf Second part of the local path.
+	 * @return The full path with appropriate separator.
 	 */
 	public static String fullPathWithRootAndLeaf(String root, String leaf) {
 		if (root.endsWith(FileSystems.getDefault().getSeparator())) {

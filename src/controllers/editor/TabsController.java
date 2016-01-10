@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.ArcadoidEditor;
+import application.editor.ArcadoidEditor;
 import data.access.NotificationCenter;
 import data.settings.Messages;
 import data.settings.Settings;
@@ -15,6 +15,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * View controller in charge of the main tabs for the Arcadoid Editor application.
+ * @author Thomas Debouverie
+ *
+ */
 public class TabsController implements Initializable {
 
 	@FXML
@@ -31,9 +36,10 @@ public class TabsController implements Initializable {
 	}
 	
 	public void updateTabsState() {
-		this.gamesTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
-		this.navigationTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
-		this.tagsTab.setDisable(!Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID));
+		boolean settingsValid = Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID);
+		this.gamesTab.setDisable(!settingsValid);
+		this.navigationTab.setDisable(!settingsValid);
+		this.tagsTab.setDisable(!settingsValid);
 	}
 	
 	private void setupTabForController(Tab tab, String controllerName) {

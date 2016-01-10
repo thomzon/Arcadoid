@@ -22,6 +22,11 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+/**
+ * View controller in charge of editing Games.
+ * @author Thomas Debouverie
+ *
+ */
 public class GamesViewController implements Initializable {
 
 	@FXML private ListView<Game> allGamesListView;

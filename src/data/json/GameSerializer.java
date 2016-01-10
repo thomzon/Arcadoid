@@ -13,6 +13,11 @@ import data.model.MameGame;
 import data.model.SteamGame;
 import data.model.Tag;
 
+/**
+ * Transforms Game objects into JsonElement objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class GameSerializer implements JsonSerializer<Game> {
 
 	@Override

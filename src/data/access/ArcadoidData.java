@@ -20,13 +20,28 @@ import data.settings.Messages;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Main Arcadoid data object, in charge of giving access to the UI to all required data types.
+ * @author Thomas Debouverie
+ *
+ */
 public class ArcadoidData {
 
 	private static ArcadoidData sharedInstance = null;
+	/**
+	 * Local path to the serialized JSON data.
+	 */
 	public static final String DATA_FILE_PATH = "data.json";
+	/**
+	 * Notification sent when the data has been loaded from local file.
+	 */
 	public static final String DATA_LOADED_NOTIFICATION = "DATA_LOADED_NOTIFICATION";
+	/**
+	 * Notification sent when a tag has been modified.
+	 */
 	public static final String TAG_MODIFIED_NOTIFICATION = "TAG_MODIFIED_NOTIFICATION";
 	
+	private int arcadoidDataVersionNumber = 0;
 	private ObservableList<Tag> allTags = FXCollections.observableArrayList();
 	private Map<Number, Tag> tagsByIdentifier = new HashMap<Number, Tag>();
 	private ObservableList<Game> allGames = FXCollections.observableArrayList();
@@ -34,7 +49,7 @@ public class ArcadoidData {
 	
 	private ArcadoidData() {
 	}
-	
+
 	public static ArcadoidData sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new ArcadoidData();
@@ -42,6 +57,21 @@ public class ArcadoidData {
 		return sharedInstance;
 	}
 	
+	public int getArcadoidDataVersionNumber() {
+		return arcadoidDataVersionNumber;
+	}
+
+	public void setArcadoidDataVersionNumber(int arcadoidDataVersionNumber) {
+		this.arcadoidDataVersionNumber = arcadoidDataVersionNumber;
+	}
+	
+	public void incrementArcadoidDataVersionNumber() {
+		this.arcadoidDataVersionNumber += 1;
+	}
+	
+	/**
+	 * @return A uniform list of all tags, games and navigation items.
+	 */
 	public List<BaseItem> getAllItems() {
 		ArrayList<BaseItem> allItems = new ArrayList<BaseItem>();
 		allItems.addAll(this.allTags);
@@ -75,6 +105,10 @@ public class ArcadoidData {
 		return this.tagsByIdentifier.get(identifier);
 	}
 	
+	/**
+	 * Creates a new Tag object and insert it immediately in the list of tags.
+	 * @return The created Tag object.
+	 */
 	public Tag createNewTag() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Tag newTag = new Tag(newIdentifier);
@@ -113,6 +147,13 @@ public class ArcadoidData {
 		return newGame;
 	}
 	
+	/**
+	 * Changes the platform of the given game.
+	 * The returned Game object is actually not the same object anymore, although it will keep the same identifier.
+	 * @param currentGame Game that must be changed.
+	 * @param newPlatform Platform that must be used for the change.
+	 * @return A new Game object specific to the new platform.
+	 */
 	public Game changeGamePlatform(Game currentGame, Platform newPlatform) {
 		Game newGame = null;
 		this.allGames.indexOf(currentGame);
@@ -165,10 +206,28 @@ public class ArcadoidData {
 		this.rootNavigationItems.addAll(rootItems);
 	}
 	
+	/**
+	 * Saves all data to a serialized JSON file. Exceptions are forwarded from the DataPersitence layer.
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * @throws IllegalStateException
+	 */
 	public void saveData() throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
+		this.incrementArcadoidDataVersionNumber();
 		DataPersistence.saveDataToFile(this, DATA_FILE_PATH);
 	}
 	
+	/**
+	 * Reads the serialized JSON file and replace all current data with the parsed data.
+	 * The highest used identifier is also updated after the load by checking all retrieved objects.
+	 * Once loading is finished, the DATA_LOADED_NOTIFICATION notification is posted.
+	 * Exceptions are forwarded from the DataPersistence layer.
+	 * @throws UnsupportedEncodingException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws NullPointerException
+	 */
 	public void loadData() throws UnsupportedEncodingException, FileNotFoundException, IOException, NullPointerException {
 		DataPersistence.loadDataFromFile(DATA_FILE_PATH);
 		IdentifierProvider.updateHighestIdentifier();

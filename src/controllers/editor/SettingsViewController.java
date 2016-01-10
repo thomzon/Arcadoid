@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import data.access.NotificationCenter;
 import data.settings.ConfirmationDialogCallable;
 import data.settings.FTPSettings;
 import data.settings.FTPSettingsValidator;
@@ -14,6 +15,8 @@ import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
+import data.transfer.DataUpdateChecker;
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +29,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
+/**
+ * View controller in charge of the Arcadoid Editor settings pane.
+ * @author Thomas Debouverie
+ *
+ */
 public class SettingsViewController implements Initializable {
 
 	@FXML
@@ -36,7 +44,9 @@ public class SettingsViewController implements Initializable {
 	private Button resetButton, saveButton, pickArtworksFolderButton, clearArtworksFolderButton, pickMameRomsFolderButton, clearMameRomsFolderButton;
 	@FXML
 	private Label artworksFolderLabel, mameRomsFolderLabel;
-	
+
+	private DataUpdateChecker updateChecker = new DataUpdateChecker();
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.preparePortNumberField();
@@ -95,6 +105,7 @@ public class SettingsViewController implements Initializable {
 	}
 	
 	@FXML private void saveAction() {
+		Settings.invalidateEditorSettings();
 		if (!this.checkAndSaveMandatorySettings()) return;
 		this.changeInterfaceState(false);
 		ConfirmationDialogCallable folderCreationCallback = new ConfirmationDialogCallable() {
@@ -123,7 +134,6 @@ public class SettingsViewController implements Initializable {
 		}
 		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderLabel.getText());
 		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderLabel.getText());
-		Settings.validateEditorSettings();
 		return true;
 	}
 	
@@ -169,17 +179,33 @@ public class SettingsViewController implements Initializable {
 			this.changeInterfaceState(true);
 			this.doSaveSettings();
 			this.handleSaveSuccess();
+			this.checkForUpdate();
 		} else {
 			this.changeInterfaceState(true);
 			this.handleErrorForFtpResult(result);
 		}
+		Settings.validateEditorSettings();
+		try {
+			Settings.saveSettings();
+		} catch (IOException e) {
+			Platform.runLater(() -> this.handleErrorSavingSettings());
+		}
+	}
+	
+	private void checkForUpdate() {
+		this.updateChecker.checkForUpdate(new CompletionCallable() {
+			@Override public Void call() throws Exception {
+				NotificationCenter.sharedInstance().postNotification(RootController.ASK_ABOUT_DATA_UPDATE_NOTIFICATION, null);
+				return null;
+			}
+		});
 	}
 	
 	private void doSaveSettings() {
 		try {
 			this.setupFTPSettings().save();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Platform.runLater(() -> this.handleErrorSavingSettings());
 		}
 	}
 	
@@ -188,7 +214,7 @@ public class SettingsViewController implements Initializable {
 		alert.setTitle(Messages.get("alert.title"));
 		alert.setHeaderText(Messages.get("info.header.ftpCheckSuccess"));
 		alert.setContentText(Messages.get("info.body.ftpCheckSuccess"));
-		alert.show();
+		alert.showAndWait();
 	}
 	
 	private void handleErrorForLocalPathsCheckWithMessage(String message) {
@@ -223,6 +249,14 @@ public class SettingsViewController implements Initializable {
 		alert.setTitle(Messages.get("alert.title"));
 		alert.setHeaderText(header);
 		alert.setContentText(message);
+		alert.show();
+	}
+	
+	private void handleErrorSavingSettings() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(Messages.get("alert.title"));
+		alert.setHeaderText(Messages.get("error.header.settingsSave"));
+		alert.setContentText(Messages.get("error.body.settingsSave"));
 		alert.show();
 	}
 

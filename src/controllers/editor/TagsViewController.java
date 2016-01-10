@@ -13,6 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+/**
+ * View controller in charge of editing Tags.
+ * @author Thomas Debouverie
+ *
+ */
 public class TagsViewController implements Initializable {
 	
 	@FXML private ListView<Tag> allTagsListView;

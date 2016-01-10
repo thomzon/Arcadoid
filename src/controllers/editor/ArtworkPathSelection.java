@@ -10,6 +10,11 @@ import data.settings.Settings.PropertyId;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
+/**
+ * Static utilities for artwork image files selection.
+ * @author Thomas Debouverie
+ *
+ */
 public class ArtworkPathSelection {
 	
 	public static File selectArtworkFile(Window window) {

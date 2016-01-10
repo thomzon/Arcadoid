@@ -2,6 +2,11 @@ package data.access;
 
 import data.model.BaseItem;
 
+/**
+ * Simple static unique identifier generator.
+ * @author Thomas Debouverie
+ *
+ */
 public class IdentifierProvider {
 
 	private static long lastUsedIdentifier = 0;
@@ -13,6 +18,10 @@ public class IdentifierProvider {
 		lastUsedIdentifier = identifier;
 	}
 	
+	/**
+	 * Goes through all items available in the ArcadoidData interface, and check what is the highest identifer used.
+	 * The next available identifier is then set to this highest identifier + 1.
+	 */
 	protected static void updateHighestIdentifier() {
 		long highestIdentifier = lastUsedIdentifier;
 		for (BaseItem baseItem : ArcadoidData.sharedInstance().getAllItems()) {

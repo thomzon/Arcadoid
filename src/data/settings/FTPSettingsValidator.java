@@ -5,6 +5,12 @@ import data.transfer.CompletionCallable.ErrorType;
 import data.transfer.CompletionResult;
 import data.transfer.DataTransfer;
 
+/**
+ * Verifies a set of FTP settings. Connection settings are verified, and availability of remote folders are checked.
+ * If remote folders do not exist, a ConfirmationDialogCallable will be used to ask the user if it should be created.
+ * @author Thomas Debouverie
+ *
+ */
 public class FTPSettingsValidator {
 
 	private ConfirmationDialogCallable folderCreationCallback;

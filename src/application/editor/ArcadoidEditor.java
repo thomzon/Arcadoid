@@ -1,4 +1,4 @@
-package application;
+package application.editor;
 	
 import java.io.IOException;
 

@@ -11,6 +11,12 @@ import com.google.gson.JsonSerializer;
 import data.model.NavigationItem;
 import data.model.Tag;
 
+/**
+ * Transforms NavigationItem objects into JsonElement objects.
+ * It will not handle serialization of children NavigationItems, this is done at the ArcaoidDataSerializer level.
+ * @author Thomas Debouverie
+ *
+ */
 public class NavigationItemSerializer implements JsonSerializer<NavigationItem> {
 
 	@Override

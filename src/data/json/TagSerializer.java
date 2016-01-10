@@ -9,6 +9,11 @@ import com.google.gson.JsonSerializer;
 
 import data.model.Tag;
 
+/**
+ * Transforms Tag objects into JsonElement objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class TagSerializer implements JsonSerializer<Tag> {
 
 	public JsonElement serialize(Tag src, Type typeOfSrc, JsonSerializationContext context) {

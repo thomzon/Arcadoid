@@ -18,14 +18,26 @@ import data.model.Game;
 import data.model.NavigationItem;
 import data.model.Tag;
 
+/**
+ * JsonDeserializer implementation to handle ArcadoidData object.
+ * No new object is actually not created during deserialization.
+ * The ArcadoidData singleton is directly updated from data found in the JSON element.
+ * @author Thomas Debouverie
+ *
+ */
 public class ArcadoidDataDeserializer implements JsonDeserializer<ArcadoidData> {
 
 	@Override
 	public ArcadoidData deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+		ArcadoidData.sharedInstance().setArcadoidDataVersionNumber(this.deserializeVersionNumber(element.getAsJsonObject()));
 		ArcadoidData.sharedInstance().setAllTags(this.deserializeTags(element.getAsJsonObject(), context));
 		ArcadoidData.sharedInstance().setAllGames(this.deserializeGames(element.getAsJsonObject(), context));
 		ArcadoidData.sharedInstance().setRootNavigationItems(this.deserializeRootNavigationItems(element.getAsJsonObject(), context));
 		return ArcadoidData.sharedInstance();
+	}
+	
+	private int deserializeVersionNumber(JsonObject object) {
+		return object.get(JsonConstants.PROPERTY_VERSION_NUMBER).getAsInt();
 	}
 	
 	private List<Tag> deserializeTags(JsonObject object, JsonDeserializationContext context) {
@@ -48,6 +60,12 @@ public class ArcadoidDataDeserializer implements JsonDeserializer<ArcadoidData> 
 		return gameList;
 	}
 	
+	/**
+	 * Deserializes each NavigationItem contained in the given JsonObject, and reconstructs the NavigationItem hierarchy.
+	 * @param object JsonObject containing NavigationItem data.
+	 * @param context Current JsonDeserializationContext.
+	 * @return The list of all root NavigationItem objects.
+	 */
 	private List<NavigationItem> deserializeRootNavigationItems(JsonObject object, JsonDeserializationContext context) {
 		NavigationItemDeserializer deserializer = new NavigationItemDeserializer();
 		ArrayList<NavigationItem> rootItems = new ArrayList<NavigationItem>();

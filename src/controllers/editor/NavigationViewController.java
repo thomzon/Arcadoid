@@ -31,6 +31,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import views.editor.NavigationItemTreeCell;
 
+/**
+ * View controller in charge of editing navigation in the Arcadoid front-end.
+ * @author Thomas Debouverie
+ *
+ */
 public class NavigationViewController implements Initializable {
 
 	@FXML private TreeView<NavigationItem> navigationTreeView;

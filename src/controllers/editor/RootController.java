@@ -3,17 +3,23 @@ package controllers.editor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.ProgressDialog;
 
-import application.ArcadoidEditor;
+import application.editor.ArcadoidEditor;
 import data.access.ArcadoidData;
+import data.access.NotificationCenter;
 import data.settings.Messages;
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
+import data.transfer.DataUpdateChecker;
 import data.transfer.LoadFromRepositoryService;
 import data.transfer.SendToRepositoryService;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,24 +28,36 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Master view controller for the Arcadoid Editor application.
+ * Handles the top toolbar and associated actions.
+ * @author Thomas Debouverie
+ *
+ */
 public class RootController implements Initializable {
 
+	public static final String ASK_ABOUT_DATA_UPDATE_NOTIFICATION = "ASK_ABOUT_DATA_UPDATE_NOTIFICATION";
+	
 	@FXML
-	private Button sendToRepositoryButton, getFromRepositoryButton;
+	private Button saveToFileButton, resetFromFileButton, sendToRepositoryButton, getFromRepositoryButton;
 	
     private BorderPane rootLayout;
 	private Stage primaryStage;
+	private DataUpdateChecker updateChecker = new DataUpdateChecker();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	}
 	
 	public void setPrimaryStage(Stage primaryStage) {
+		NotificationCenter.sharedInstance().addObserver(Settings.SETTINGS_VALIDITY_CHANGED_NOTIFICATION, this, "updateToolbarState");
+		NotificationCenter.sharedInstance().addObserver(ASK_ABOUT_DATA_UPDATE_NOTIFICATION, this, "askAboutDataUpdate");
 		this.primaryStage = primaryStage;
 		primaryStage.setTitle("Arcadoid Editor");
 	}
@@ -48,6 +66,20 @@ public class RootController implements Initializable {
 		this.initStage();
 		this.showMainView();
 		this.resetFromFileWithUnknownFileAlert(false);
+		this.updateChecker.checkForUpdate(new CompletionCallable() {
+			@Override public Void call() throws Exception {
+				Platform.runLater(() -> askAboutDataUpdate());
+				return null;
+			}
+		});
+	}
+	
+	public void updateToolbarState() {
+		boolean settingsValid = Settings.getSettingAsBoolean(PropertyId.EDITOR_SETTINGS_VALID);
+		this.saveToFileButton.setDisable(!settingsValid);
+		this.resetFromFileButton.setDisable(!settingsValid);
+		this.sendToRepositoryButton.setDisable(!settingsValid);
+		this.getFromRepositoryButton.setDisable(!settingsValid);
 	}
 	
 	private void initStage() {
@@ -75,6 +107,17 @@ public class RootController implements Initializable {
             e.printStackTrace();
         }
     }
+	
+	public void askAboutDataUpdate() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(Messages.get("alert.title"));
+		alert.setHeaderText(Messages.get("confirmation.header.dataUpdateAvailable"));
+		alert.setContentText(Messages.get("confirmation.body.dataUpdateAvailable"));
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			this.getFromRepositoryAction();
+		}
+	}
 	
 	@FXML
 	private void saveToFileAction() {
@@ -117,7 +160,7 @@ public class RootController implements Initializable {
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		service.start();
 	}
-	
+		
 	@FXML
 	private void getFromRepositoryAction() {
 		CompletionCallable sendCompletion = new CompletionCallable() {

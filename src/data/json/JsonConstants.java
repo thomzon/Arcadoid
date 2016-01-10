@@ -1,8 +1,13 @@
 package data.json;
 
+/**
+ * Constants used when (de)serializing using JSON.
+ * @author Thomas Debouverie
+ *
+ */
 public class JsonConstants {
 
-	static final String PROPERTY_UPDATE_DATE = "update_date";
+	static final String PROPERTY_VERSION_NUMBER = "version_number";
 	static final String PROPERTY_TAGS = "tags";
 	static final String PROPERTY_ID = "id";
 	static final String PROPERTY_NAME = "name";

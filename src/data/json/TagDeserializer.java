@@ -10,6 +10,11 @@ import com.google.gson.JsonParseException;
 
 import data.model.Tag;
 
+/**
+ * Transforms JsonElement objects into Tag objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class TagDeserializer implements JsonDeserializer<Tag> {
 
 	@Override

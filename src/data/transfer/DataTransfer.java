@@ -75,6 +75,17 @@ public class DataTransfer {
 		new Thread(task).start();
 	}
 	
+	public void getFileWithCompletion(String remoteFileName, String localFileName, CompletionCallable completion) {
+		Task<Void> task = new Task<Void>() {
+			protected Void call() {
+				final CompletionResult result = getFile(remoteFileName, localFileName);
+				completion.call(result);
+				return null;
+			}
+		};
+		new Thread(task).start();
+	}
+	
 	public CompletionResult connect() {
 		CompletionResult result = new CompletionResult();
 		try {

@@ -5,6 +5,11 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
 
+/**
+ * Simple static wrapper around localized application texts.
+ * @author Thomas Debouverie
+ *
+ */
 public class Messages {
 
 	private static final String MESSAGES_BUNDLE_NAME = "messages";

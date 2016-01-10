@@ -13,6 +13,12 @@ import data.access.ArcadoidData;
 import data.model.NavigationItem;
 import data.model.Tag;
 
+/**
+ * Transforms JsonElement objects into NavigationItem objects.
+ * It will not handle deserialization of children NavigationItems, this is done at the ArcaoidDataDeserializer level.
+ * @author Thomas Debouverie
+ *
+ */
 public class NavigationItemDeserializer implements JsonDeserializer<NavigationItem> {
 
 	@Override

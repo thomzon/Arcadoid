@@ -7,6 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+/**
+ * Concrete PlatformSpecificGameFieldsHandler implementation to handle MAME games specific fields.
+ * @author Thomas Debouverie
+ *
+ */
 class MameGameFieldsHandler extends PlatformSpecificGameFieldsHandler {
 
 	private Label label = new Label();

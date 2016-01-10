@@ -15,6 +15,12 @@ import com.google.gson.stream.JsonWriter;
 
 import data.access.ArcadoidData;
 
+/**
+ * Public access to saving and loading data from and to file.
+ * Uses GSON to serialize and deserialize data in JSON format.
+ * @author Thomas Debouverie
+ *
+ */
 public class DataPersistence {
 
 	public static void saveDataToFile(ArcadoidData data, String filePath) throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
@@ -36,6 +42,25 @@ public class DataPersistence {
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
 		JsonReader jsonReader = new JsonReader(reader);
 		gson.fromJson(jsonReader, ArcadoidData.class);
+	}
+	
+	public static int getVersionNumberFromFile(String filePath) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
+		JsonReader jsonReader = new JsonReader(reader);
+		int versionNumber = -1;
+		try {
+			jsonReader.beginObject();
+			while (jsonReader.hasNext()) {
+				String fieldName = jsonReader.nextName();
+				if (fieldName != null && fieldName.equals(JsonConstants.PROPERTY_VERSION_NUMBER)) {
+					versionNumber = jsonReader.nextInt();
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			jsonReader.close();
+		}
+		return versionNumber;
 	}
 
 }

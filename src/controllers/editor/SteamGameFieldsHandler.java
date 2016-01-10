@@ -7,6 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+/**
+ * Concrete PlatformSpecificGameFieldsHandler implementation to handle Steam game fields.
+ * @author Thomas Debouverie
+ *
+ */
 public class SteamGameFieldsHandler extends PlatformSpecificGameFieldsHandler {
 
 	private Label appIdLabel = new Label(), processNameLabel = new Label();
