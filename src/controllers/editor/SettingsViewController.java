@@ -13,6 +13,8 @@ import data.settings.FTPSettingsValidator;
 import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.settings.editor.EditorSettings;
+import data.settings.editor.EditorSettingsValidator;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
 import data.transfer.DataUpdateChecker;
@@ -51,6 +53,7 @@ public class SettingsViewController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.preparePortNumberField();
 		this.resetAction();
+		this.checkMandatorySettingsAtStartup();
 	}
 	
 	private void preparePortNumberField() {
@@ -65,6 +68,15 @@ public class SettingsViewController implements Initializable {
 				}
 			}
 		);
+	}
+	
+	private void checkMandatorySettingsAtStartup() {
+		EditorSettings settings = this.setupEditorSettings();
+		EditorSettingsValidator validator = new EditorSettingsValidator(settings);
+		CompletionResult result = validator.validate();
+		if (result != null && !result.success) {
+			this.handleErrorForStartupSettingsCheck(result);
+		}
 	}
 	
 	@FXML private void pickArtworksFolderAction() {
@@ -106,7 +118,7 @@ public class SettingsViewController implements Initializable {
 	
 	@FXML private void saveAction() {
 		Settings.invalidateEditorSettings();
-		if (!this.checkAndSaveMandatorySettings()) return;
+		if (!this.checkMandatorySettings()) return;
 		this.changeInterfaceState(false);
 		ConfirmationDialogCallable folderCreationCallback = new ConfirmationDialogCallable() {
 			@Override public Boolean call() throws Exception {
@@ -123,18 +135,16 @@ public class SettingsViewController implements Initializable {
 		validator.validate();
 	}
 	
-	private boolean checkAndSaveMandatorySettings() {
-		if (this.artworksFolderLabel.getText() == null || this.artworksFolderLabel.getText().isEmpty() || !new File(this.artworksFolderLabel.getText()).exists()) {
-			this.handleErrorForLocalPathsCheckWithMessage(Messages.get("error.body.artworksPathNotFound"));
+	private boolean checkMandatorySettings() {
+		EditorSettings settings = this.setupEditorSettings();
+		EditorSettingsValidator validator = new EditorSettingsValidator(settings);
+		CompletionResult result = validator.validate();
+		if (result != null && !result.success) {
+			this.handleErrorForEditorSettingsCheckResult(result);
 			return false;
+		} else {
+			return true;
 		}
-		if (this.mameRomsFolderLabel.getText() == null || this.mameRomsFolderLabel.getText().isEmpty() || !new File(this.mameRomsFolderLabel.getText()).exists()) {
-			this.handleErrorForLocalPathsCheckWithMessage(Messages.get("error.body.mameRomsPathNotFound"));
-			return false;
-		}
-		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderLabel.getText());
-		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderLabel.getText());
-		return true;
 	}
 	
 	private boolean askToCreatePath(String path) {
@@ -156,6 +166,13 @@ public class SettingsViewController implements Initializable {
 		settings.artworksDataPath = this.ftpArtworksPathField.getText();
 		settings.mameDataPath = this.ftpMameRomsPathField.getText();
 		return settings;
+	}
+	
+	private EditorSettings setupEditorSettings() {
+		EditorSettings editorSettings = new EditorSettings();
+		editorSettings.artworksFolderPath = this.artworksFolderLabel.getText();
+		editorSettings.mameRomsFolderPath = this.mameRomsFolderLabel.getText();
+		return editorSettings;
 	}
 	
 	private void changeInterfaceState(boolean enabled) {
@@ -217,7 +234,34 @@ public class SettingsViewController implements Initializable {
 		alert.showAndWait();
 	}
 	
-	private void handleErrorForLocalPathsCheckWithMessage(String message) {
+	private void handleErrorForStartupSettingsCheck(CompletionResult result) {
+		Settings.invalidateEditorSettings();
+		try {
+			Settings.saveSettings();
+		} catch (IOException e) {
+			this.handleErrorSavingSettings();
+			return;
+		}
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(Messages.get("alert.title"));
+		alert.setHeaderText(Messages.get("info.header.incompleteSettings"));
+		alert.setContentText(Messages.get("info.body.incompleteSettings"));
+		alert.show();
+	}
+	
+	private void handleErrorForEditorSettingsCheckResult(CompletionResult result) {
+		String message = null;
+		switch (result.errorType) {
+		case ARTWORKS_FOLDER_PATH_NOT_FOUND:
+			message = Messages.get("error.body.artworksPathNotFound");
+			break;
+		case MAME_ROMS_FOLDER_PATH_NOT_FOUND:
+			message = Messages.get("error.body.mameRomsPathNotFound");
+			break;
+		default:
+			Messages.get("error.body.unexpectedSettingsCheckError");
+			break;
+		}
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(Messages.get("alert.title"));
 		alert.setHeaderText(Messages.get("error.header.localPathCheckError"));

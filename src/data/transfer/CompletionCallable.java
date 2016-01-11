@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 import javafx.application.Platform;
 
 /**
- * Represents code that is executed after an asynchronous operation has been completed.
+ * Represents code that is executed after an operation (most often asynchronous) has been completed.
  * When the operation is finished, the code will be executed on the main thread.
  * The result of the call is included in the result property.
  * @author Thomas Debouverie
@@ -21,6 +21,8 @@ public class CompletionCallable implements Callable<Void> {
 		INCOMPLETE_PATHS_CHECK,
 		CANNOT_WRITE_REMOTE_FILE,
 		CANNOT_READ_REMOTE_FILE,
+		ARTWORKS_FOLDER_PATH_NOT_FOUND,
+		MAME_ROMS_FOLDER_PATH_NOT_FOUND,
 		OTHER_ERROR;
 	}
 	

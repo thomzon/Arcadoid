@@ -14,6 +14,8 @@ import data.access.NotificationCenter;
 import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.settings.editor.EditorSettings;
+import data.settings.editor.EditorSettingsValidator;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
 import data.transfer.DataUpdateChecker;
@@ -66,12 +68,21 @@ public class RootController implements Initializable {
 		this.initStage();
 		this.showMainView();
 		this.resetFromFileWithUnknownFileAlert(false);
-		this.updateChecker.checkForUpdate(new CompletionCallable() {
-			@Override public Void call() throws Exception {
-				Platform.runLater(() -> askAboutDataUpdate());
-				return null;
-			}
-		});
+		this.checkMandatorySettingsAtStartup();
+	}
+	
+	private void checkMandatorySettingsAtStartup() {
+		EditorSettings settings = new EditorSettings();
+		EditorSettingsValidator validator = new EditorSettingsValidator(settings);
+		CompletionResult result = validator.validate();
+		if (result == null || result.success) {
+			this.updateChecker.checkForUpdate(new CompletionCallable() {
+				@Override public Void call() throws Exception {
+					Platform.runLater(() -> askAboutDataUpdate());
+					return null;
+				}
+			});
+		}
 	}
 	
 	public void updateToolbarState() {
