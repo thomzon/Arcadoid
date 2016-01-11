@@ -221,6 +221,7 @@ public class SettingsViewController implements Initializable {
 	private void doSaveSettings() {
 		try {
 			this.setupFTPSettings().save();
+			this.setupEditorSettings().save();
 		} catch (IOException e) {
 			Platform.runLater(() -> this.handleErrorSavingSettings());
 		}
