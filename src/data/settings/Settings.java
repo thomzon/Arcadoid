@@ -34,22 +34,66 @@ public class Settings
 	 *
 	 */
 	public enum PropertyId {
-		EDITOR_SETTINGS_VALID("editor_settings_valid"),
-		REPOSITORY_FTP_ADDRESS("repo_ftp_address"),
-		REPOSITORY_FTP_PORT_NUMBER("repo_ftp_port"),
-		REPOSITORY_FTP_USER("repo_ftp_user"),
-		REPOSITORY_FTP_PASSWORD("repo_ftp_password"),
-		REPOSITORY_DATA_PATH("repo_base_path"),
-		REPOSITORY_ARTWORKS_PATH("repo_artworks_path"),
-		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path"),
-		ARTWORKS_FOLDER_PATH("artworks_folder_path"),
-		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path"),
-		MAME_PATH("mame_path"),
-		STEAM_PATH("steam_path");
+		// Editor settings
+		EDITOR_SETTINGS_VALID("editor_settings_valid", ""),
+		ARTWORKS_FOLDER_PATH("artworks_folder_path", Messages.get("field.artworksFolderPath")),
+		
+		// FTP settings
+		REPOSITORY_FTP_ADDRESS("repo_ftp_address", Messages.get("field.address")),
+		REPOSITORY_FTP_PORT_NUMBER("repo_ftp_port", Messages.get("field.portNumber")),
+		REPOSITORY_FTP_USER("repo_ftp_user", Messages.get("field.username")),
+		REPOSITORY_FTP_PASSWORD("repo_ftp_password", Messages.get("field.password")),
+		REPOSITORY_DATA_PATH("repo_base_path", Messages.get("field.catalogDataPath")),
+		REPOSITORY_ARTWORKS_PATH("repo_artworks_path", Messages.get("field.artworksDataPath")),
+		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path", Messages.get("field.mameDataPath")),
+		
+		// Common settings
+		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path", Messages.get("field.mameRomsFolderPath")),
+		
+		// Front-end specific settings
+		MAME_PATH("mame_path", Messages.get("field.mameExecutablePath")),
+		STEAM_PATH("steam_path", Messages.get("field.steamExecutablePath")),
+		KEY_P1_UP("key_p1_up", Messages.get("inputkey.p1.up")),
+		KEY_P1_LEFT("key_p1_left", Messages.get("inputkey.p1.left")),
+		KEY_P1_DOWN("key_p1_down", Messages.get("inputkey.p1.down")),
+		KEY_P1_RIGHT("key_p1_right", Messages.get("inputkey.p1.right")),
+		KEY_P1_B1("key_p1_b1", Messages.get("inputkey.p1.b1")),
+		KEY_P1_B2("key_p1_b2", Messages.get("inputkey.p1.b2")),
+		KEY_P1_B3("key_p1_b3", Messages.get("inputkey.p1.b3")),
+		KEY_P1_B4("key_p1_b4", Messages.get("inputkey.p1.b4")),
+		KEY_P1_B5("key_p1_b5", Messages.get("inputkey.p1.b5")),
+		KEY_P1_B6("key_p1_b6", Messages.get("inputkey.p1.b6")),
+		KEY_P1_B7("key_p1_b7", Messages.get("inputkey.p1.b7")),
+		KEY_P1_B8("key_p1_b8", Messages.get("inputkey.p1.b8")),
+		KEY_P1_START("key_p1_start", Messages.get("inputkey.p1.start")),
+		KEY_P1_SELECT("key_p1_select", Messages.get("inputkey.p1.select")),
+		KEY_P2_UP("key_p2_up", Messages.get("inputkey.p2.up")),
+		KEY_P2_LEFT("key_p2_left", Messages.get("inputkey.p2.left")),
+		KEY_P2_DOWN("key_p2_down", Messages.get("inputkey.p2.down")),
+		KEY_P2_RIGHT("key_p2_right", Messages.get("inputkey.p2.right")),
+		KEY_P2_B1("key_p2_b1", Messages.get("inputkey.p2.b1")),
+		KEY_P2_B2("key_p2_b2", Messages.get("inputkey.p2.b2")),
+		KEY_P2_B3("key_p2_b3", Messages.get("inputkey.p2.b3")),
+		KEY_P2_B4("key_p2_b4", Messages.get("inputkey.p2.b4")),
+		KEY_P2_B5("key_p2_b5", Messages.get("inputkey.p2.b5")),
+		KEY_P2_B6("key_p2_b6", Messages.get("inputkey.p2.b6")),
+		KEY_P2_B7("key_p2_b7", Messages.get("inputkey.p2.b7")),
+		KEY_P2_B8("key_p2_b8", Messages.get("inputkey.p2.b8")),
+		KEY_P2_START("key_p2_start", Messages.get("inputkey.p2.start")),
+		KEY_P2_SELECT("key_p2_select", Messages.get("inputkey.p2.select")),
+		KEY_COMB_VOLUME_UP("keycomb_volume_up", Messages.get("inputkey.comb.volumeUp")),
+		KEY_COMB_VOLUME_DOWN("keycomb_volume_down", Messages.get("inputkey.comb.volumeDown")),
+		KEY_COMB_QUIT_GAME("keycomb_quit_game", Messages.get("inputkey.comb.quitGame")),
+		KEY_COMB_FAVORITE("keycomb_favorite", Messages.get("inputkey.comb.favorite"));
 		
 		private final String stringValue;
-		private PropertyId(final String s) {
-			stringValue = s;
+		private final String description;
+		private PropertyId(final String s, final String d) {
+			this.stringValue = s;
+			this.description = d;
+		}
+		public String toString() {
+			return this.description;
 		}
 	}
 	
