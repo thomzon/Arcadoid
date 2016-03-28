@@ -12,13 +12,14 @@ import data.settings.Settings.PropertyId;
  */
 public class FrontEndSettings {
 
-	public String artworksFolderPath, mameExecutablePath, steamExecutablePath; 
+	public String artworksFolderPath, mameRomsFolderPath, mameExecutablePath, steamExecutablePath;
 
 	/**
 	 * Creates an instance by getting property values from the Settings interface.
 	 */
 	public FrontEndSettings() {
 		this.artworksFolderPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
+		this.mameRomsFolderPath = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
 		this.mameExecutablePath = Settings.getSetting(PropertyId.MAME_PATH);
 		this.steamExecutablePath = Settings.getSetting(PropertyId.STEAM_PATH);
 	}

@@ -3,7 +3,6 @@ package controllers.frontend;
 import javafx.animation.FadeTransition;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
 import views.frontend.FrontendPane;
@@ -18,10 +17,6 @@ public class UIService {
 
 	private static UIService sharedInstance = null;
 	
-	/**
-	 * Reference to primary Stage
-	 */
-	private Stage primaryStage;
 	/**
 	 * Reference to root Pane of displayed Scene
 	 */
@@ -45,15 +40,15 @@ public class UIService {
 	}
 	
 	/**
-	 * Sets the primary stage.
-	 * @param primaryStage
+	 * Sets the root pane of the app.
+	 * @param rootPane
 	 */
-	public void setPrimaryStage(Stage primaryStage) {
-		this.primaryStage = primaryStage;
+	public void setRootPane(Pane rootPane) {
+		this.rootPane = rootPane;
 	}
 	
 	/**
-	 * Display a popup on middle of the screen
+	 * Display a popup on middle of the screen.
 	 * @param popup FrontendPopup to display
 	 */
 	public void displayPopup(FrontendPopup popup) {
