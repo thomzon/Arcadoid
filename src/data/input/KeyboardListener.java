@@ -1,6 +1,7 @@
 package data.input;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -101,6 +102,13 @@ public class KeyboardListener implements NativeKeyListener
 	 */
 	public List<Integer> getPressedKeyCodes() {
 		return new ArrayList<Integer>(this.pressedCodes.keySet());
+	}
+	
+	/**
+	 * @return A list of all currently pressed key names
+	 */
+	public Collection<String> getPressedKeyNames() {
+		return this.pressedCodes.values();
 	}
 	
 	/**

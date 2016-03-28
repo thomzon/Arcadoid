@@ -5,6 +5,7 @@ import java.io.IOException;
 import controllers.editor.RootController;
 import data.settings.Messages;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
@@ -26,6 +27,13 @@ public class ArcadoidEditor extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		Platform.exit();
+		System.exit(0);
 	}
 	
 	public static void main(String[] args) {

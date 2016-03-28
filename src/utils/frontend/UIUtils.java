@@ -4,10 +4,12 @@ import java.lang.reflect.Method;
 
 import com.sun.javafx.geom.Point2D;
 
+import data.settings.Messages;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.stage.Screen;
 import javafx.util.Duration;
@@ -27,7 +29,7 @@ public class UIUtils {
 	public static final int		SCREEN_REPLACE_FADE_TIME 		= 300;
 	public static final int		SETTINGS_INIT_MSG_TIME			= 1000;
 	public static final double  DIM_LAYER_OPACITY				= 0.4;
-	public static final double	POPUP_TEXT_MARGIN				= 10;
+	public static final double	POPUP_TEXT_MARGIN				= 20;
 	public static final double	DELAY_BEFORE_LAYOUT				= 200;
 	
 	/**
@@ -84,6 +86,22 @@ public class UIUtils {
 	    }));
         timeline.playFromStart();
         return true;
+	}
+	
+	/**
+	 * Creates and returns a JavaFX button
+	 * @param textKey Key in messages bundle for button text
+	 * @param useKey True if textKey must be used to read message bundle, instead of being used as-is
+	 * @return New JavaFX button
+	 */	
+	public static Button createButton(String textKey, boolean useKey) {
+		Button button = new Button();
+		if (useKey) {
+			button.setText(Messages.get(textKey));
+		} else {
+			button.setText(textKey);
+		}
+		return button;
 	}
 	
 }

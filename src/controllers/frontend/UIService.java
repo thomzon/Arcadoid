@@ -1,8 +1,14 @@
 package controllers.frontend;
 
 import javafx.animation.FadeTransition;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
 import views.frontend.FrontendPane;
@@ -30,7 +36,9 @@ public class UIService {
 	 */
 	private Rectangle dimLayer;
 	
-	private UIService() {}
+	private UIService() {
+		this.createDimLayer();
+	}
 	
 	public static UIService getInstance() {
 		if (sharedInstance == null) {
@@ -39,12 +47,25 @@ public class UIService {
 		return sharedInstance;
 	}
 	
+	private void createDimLayer() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		this.dimLayer = new Rectangle(0, 0, screenBounds.getWidth(), screenBounds.getHeight());
+		this.dimLayer.setFill(Color.BLACK);
+		this.dimLayer.setOpacity(0);
+	}
+	
 	/**
-	 * Sets the root pane of the app.
-	 * @param rootPane
+	 * Starts the application main UI.
 	 */
-	public void setRootPane(Pane rootPane) {
-		this.rootPane = rootPane;
+	public void startServiceInPrimaryStage(Stage primaryStage) {
+		this.rootPane = new Pane();
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());
+		scene.getStylesheets().add("Frontend.css");
+		scene.setCursor(Cursor.NONE);
+		primaryStage.setScene(scene);
+		primaryStage.setFullScreen(true);
+		primaryStage.show();
 	}
 	
 	/**
@@ -54,7 +75,9 @@ public class UIService {
 	public void displayPopup(FrontendPopup popup) {
 		this.rootPane.getChildren().add(this.dimLayer);
 		this.rootPane.getChildren().add(popup);
-		this.displayedPane.setDisable(true);
+		if (this.displayedPane != null) {
+			this.displayedPane.setDisable(true);
+		}
 		popup.makeAppearAfterStandardDelay();
 		FadeTransition dimTransition = new FadeTransition(Duration.millis(UIUtils.SCREEN_REPLACE_FADE_TIME), this.dimLayer);
 		dimTransition.setFromValue(0);
@@ -83,7 +106,9 @@ public class UIService {
 	public void popupHasDisappeared(FrontendPopup popup) {
 		this.rootPane.getChildren().remove(popup);
 		this.rootPane.getChildren().remove(this.dimLayer);
-		this.displayedPane.setDisable(false);
+		if (this.displayedPane != null) {
+			this.displayedPane.setDisable(false);
+		}
 	}
 	
 }

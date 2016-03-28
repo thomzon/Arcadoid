@@ -65,6 +65,9 @@ public class FrontendPopup extends Group {
 		transition.setToValue(1);
 		transition.setCycleCount(1);
 		transition.play();
+		transition.setOnFinished((event) -> {
+			this.hasAppeared();
+		});
 	}
 	
 	/**
@@ -91,7 +94,13 @@ public class FrontendPopup extends Group {
 	}
 	
 	/**
-	 * Notifies UIService that popup has disappeared
+	 * Called when appearance animation is finished.
+	 */
+	public void hasAppeared() {
+	}
+	
+	/**
+	 * Notifies UIService that popup has disappeared.
 	 */
 	public void hasDisappeared() {
 		UIService.getInstance().popupHasDisappeared(this);

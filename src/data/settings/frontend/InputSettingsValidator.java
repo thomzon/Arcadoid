@@ -15,7 +15,8 @@ public class InputSettingsValidator implements KeyboardDelegate {
 	private List<PropertyId> inputsToValidate;
 	private InputSettingsValidatorDelegate delegate;
 	private KeyboardListener keyboardListener;
-	private boolean recordingCombination;
+	private boolean recordingCombination = false;
+	private boolean recording = false;
 	private PropertyId currentRecordedInput;
 	
 	public InputSettingsValidator() {
@@ -46,6 +47,10 @@ public class InputSettingsValidator implements KeyboardDelegate {
 	}
 	
 	public void activateRecording() {
+		// Only activate recording if we are not recording a key combination, so recording will start when first key is pressed
+		if (!this.recordingCombination) {
+			this.recording = true;
+		}
 		this.keyboardListener.start();
 	}
 	
@@ -53,23 +58,21 @@ public class InputSettingsValidator implements KeyboardDelegate {
 		if (this.inputsToValidate.isEmpty()) {
 			this.delegate.inputSettingsValidatorDidFinish(this);
 		} else {
-			this.currentRecordedInput = this.inputsToValidate.get(0);
+			this.currentRecordedInput = this.inputsToValidate.remove(0);
 			this.recordingCombination = this.inputSettings.inputPropertySupportsCombination(this.currentRecordedInput);
 			this.delegate.inputSettingsValidatorDidStartRecordingInputProperty(this, this.currentRecordedInput, this.recordingCombination);
 		}
 	}
 	
 	private void keyRecorded() {
+		this.recording = false;
 		this.keyboardListener.stop();
 		this.recordNextKey();
 	}
 
 	@Override
-	public void combinationPressed(String combinationKey) {}
-
-	@Override
 	public void keyReleased(int keyCode, String keyName) {
-		if (!this.recordingCombination) return;
+		if (!this.recordingCombination || !this.recording) return;
 		List<Integer> keyCodes = this.keyboardListener.getPressedKeyCodes();
 		Settings.setSettingForList(this.currentRecordedInput, keyCodes.toArray());
 		this.keyRecorded();
@@ -77,7 +80,13 @@ public class InputSettingsValidator implements KeyboardDelegate {
 
 	@Override
 	public void keyPressed(int keyCode, String keyName) {
-		if (this.recordingCombination) return;
+		// If recording a combination, recording starts as soon as a first key is pressed
+		if (this.recordingCombination) {
+			this.recording = true;
+			this.delegate.inputSettingsValidatorDidAddPressedKey(this, this.keyboardListener.getPressedKeyNames());
+			return;
+		}
+		if (!this.recording) return;
 		Integer integerValue = new Integer(keyCode);
 		Settings.setSetting(this.currentRecordedInput, integerValue.toString());
 		this.keyRecorded();

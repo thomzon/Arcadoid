@@ -1,27 +1,25 @@
 package application.frontend;
 
 import controllers.frontend.UIService;
+import data.input.PlayerInputObserver;
+import data.input.PlayerInputService;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
-public class Arcadoid extends Application {
+public class Arcadoid extends Application implements PlayerInputObserver {
 
 	@Override
 	public void start(Stage primaryStage) {
-		Pane rootPane = new Pane();
-		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		Scene scene = new Scene(rootPane, screenBounds.getWidth(), screenBounds.getHeight());
-		scene.getStylesheets().add("Frontend.css");
-		scene.setCursor(Cursor.NONE);
-		primaryStage.setScene(scene);
-		primaryStage.setFullScreen(true);
-		primaryStage.show();
-		UIService.getInstance().setRootPane(rootPane);
+		UIService.getInstance().startServiceInPrimaryStage(primaryStage);
+		PlayerInputService.getInstance().startService();
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		Platform.exit();
+		System.exit(0);
 	}
 	
 	public static void main(String[] args) {
