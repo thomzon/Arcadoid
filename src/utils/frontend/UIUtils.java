@@ -11,6 +11,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 
@@ -27,6 +28,8 @@ public class UIUtils {
 	public static final double 	BORDER_NODE_MARGIN 				= 30;
 	public static final double  BUTTON_LABEL_MARGIN				= 50;
 	public static final int		SCREEN_REPLACE_FADE_TIME 		= 300;
+	public static final int		AUTOHIDE_ANIMATIONS_TIME		= 100;
+	public static final int		MOUSE_AUTOHIDE_DELAY			= 1000;
 	public static final int		SETTINGS_INIT_MSG_TIME			= 1000;
 	public static final double  DIM_LAYER_OPACITY				= 0.4;
 	public static final double	POPUP_TEXT_MARGIN				= 20;
@@ -66,14 +69,14 @@ public class UIUtils {
 	 * @param target Object on which method will be called
 	 * @param methodName Method to call
 	 * @param timeInMillis Duration to wait before calling the method
-	 * @return True if the method was found on the given target, otherwise false
+	 * @return The Timeline object created for the delayed call if successful, otherwise null
 	 */
-	public static boolean callMethodAfterTime(final Object target, String methodName, double timeInMillis) {
+	public static Timeline callMethodAfterTime(final Object target, String methodName, double timeInMillis) {
 		Method foundMethod = null;
 		try {
 			foundMethod = target.getClass().getMethod(methodName);
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 		final Method method = foundMethod;
 		Timeline timeline = new Timeline();
@@ -85,7 +88,7 @@ public class UIUtils {
         	}
 	    }));
         timeline.playFromStart();
-        return true;
+        return timeline;
 	}
 	
 	/**
@@ -102,6 +105,23 @@ public class UIUtils {
 			button.setText(textKey);
 		}
 		return button;
+	}
+	
+	/**
+	 * Creates and returns a JavaFX label
+	 * @param textKey Key in messages bundle for label text
+	 * @param useKey True if textKey must be used to read message bundle, instead of being used as-is
+	 * @return New JavaFX label
+	 */
+	public static Label createLabel(String textKey, boolean useKey)	{
+		Label label = new Label();
+		if (useKey) {
+			label.setText(Messages.get(textKey));
+		} else {
+			label.setText(textKey);
+		}
+		label.setWrapText(true);
+		return label;
 	}
 	
 }

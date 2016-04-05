@@ -10,14 +10,14 @@ import data.settings.Settings.PropertyId;
  * @author Thomas Debouverie
  *
  */
-public class FrontEndSettings {
+public class FrontendSettings {
 
 	public String artworksFolderPath, mameRomsFolderPath, mameExecutablePath, steamExecutablePath;
 
 	/**
 	 * Creates an instance by getting property values from the Settings interface.
 	 */
-	public FrontEndSettings() {
+	public FrontendSettings() {
 		this.artworksFolderPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		this.mameRomsFolderPath = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
 		this.mameExecutablePath = Settings.getSetting(PropertyId.MAME_PATH);
@@ -30,6 +30,7 @@ public class FrontEndSettings {
 	 */
 	public void save() throws IOException {
 		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderPath);
+		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderPath);
 		Settings.setSetting(PropertyId.MAME_PATH, this.mameExecutablePath);
 		Settings.setSetting(PropertyId.STEAM_PATH, this.steamExecutablePath);
 		Settings.saveSettings();

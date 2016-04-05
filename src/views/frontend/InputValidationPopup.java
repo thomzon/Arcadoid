@@ -28,7 +28,7 @@ public class InputValidationPopup extends InfoPopup implements InputSettingsVali
 	private Runnable completion;
 	
 	public InputValidationPopup(InputSettingsValidator validator, Runnable completion) {
-		super(400, 150, "", false);
+		super(400, 200, "", false);
 		this.inputSettingsValidator = validator;
 		this.completion = completion;
 		this.createPressedCombinationText();

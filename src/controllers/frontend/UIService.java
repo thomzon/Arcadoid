@@ -1,8 +1,11 @@
 package controllers.frontend;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.animation.FadeTransition;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -62,10 +65,20 @@ public class UIService {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());
 		scene.getStylesheets().add("Frontend.css");
-		scene.setCursor(Cursor.NONE);
 		primaryStage.setScene(scene);
-		primaryStage.setFullScreen(true);
+//		primaryStage.setFullScreen(true);
 		primaryStage.show();
+		this.displayGameNavigation(false);
+	}
+	
+	public void displayGameNavigation(boolean animated) {
+		FrontendPane newPane = new GameNavigationPane();
+		this.replacePane(newPane, animated);
+	}
+	
+	public void displaySettings(boolean animated) {
+		FrontendPane newPane = new SettingsPane();
+		this.replacePane(newPane, animated);
 	}
 	
 	/**
@@ -109,6 +122,41 @@ public class UIService {
 		if (this.displayedPane != null) {
 			this.displayedPane.setDisable(false);
 		}
+	}
+	
+	/**
+	 * Removes any UbercadePane still in hierarchy that are not displayed
+	 */
+	public void removeObsoletePanes() {
+		List<Node> toRemove = new ArrayList<Node>();
+		for (Node child : this.rootPane.getChildren()) {
+			if (child != this.displayedPane) {
+				toRemove.add(child);
+			}
+		}
+		for (Node child : toRemove) {
+			this.rootPane.getChildren().remove(child);
+		}
+	}
+	
+	/**
+	 * Replaces current displayed pane with fade out/fade in effect
+	 * @param newPane
+	 */
+	private void replacePane(FrontendPane newPane, boolean animated) {
+		int animationDurations = animated ? UIUtils.SCREEN_REPLACE_FADE_TIME : 0;
+		for (Node child : this.rootPane.getChildren()) {
+			if (child instanceof FrontendPane) {
+				((FrontendPane) child).prepareForDisappearance();
+				((FrontendPane) child).animateDisappearanceWithDuration(animationDurations);
+			}
+		}		
+		this.rootPane.getChildren().add(newPane);
+		newPane.prepareForAppearance();
+		newPane.setupPane();
+		this.displayedPane = newPane;
+		newPane.animateAppearanceWithDuration(animationDurations);
+		UIUtils.callMethodAfterTime(this, "removeObsoletePanes", animationDurations * 2);
 	}
 	
 }
