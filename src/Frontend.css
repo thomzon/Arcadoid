@@ -1,31 +1,57 @@
 .button
 {
 	-fx-font-family: Times ;
-	-fx-font-size: 24 ;
+	-fx-font-size: 14 ;
+}
+
+.text-field
+{
+	-fx-font-family: Times ;
+	-fx-font-size: 14 ;
+}
+
+.password-field
+{
+	-fx-font-family: Times ;
+	-fx-font-size: 14 ;
 }
 
 #settings-button
 {
-	-fx-graphic: url(/images/settings_button.png);
+	-fx-graphic: url(../images/settings_button.png);
+	-fx-background-color: transparent;
+}
+
+#sync-button
+{
+	-fx-graphic: url(../images/sync_button.png);
 	-fx-background-color: transparent;
 }
 
 .settings-label
 {
 	-fx-font-family: Times ;
-	-fx-font-size: 24 ;
+	-fx-font-size: 14 ;
 }
 
-.item-popup-label
+.settings-group-title
 {
 	-fx-font-family: Times ;
-	-fx-font-size: 24 ;
+	-fx-font-size: 20 ;
+	-fx-font-weight: bold;
+}
+
+.settings-title
+{
+	-fx-font-family: Times ;
+	-fx-font-size: 14 ;
+	-fx-font-weight: bold;
 }
 
 .popup-text
 {
 	-fx-font-family: Times ;
-	-fx-font-size: 24 ;
+	-fx-font-size: 20 ;
 }
 
 .popup-rectangle
@@ -36,13 +62,4 @@
 	-fx-smooth: true ;
 	-fx-stroke: black ;
 	-fx-stroke-width: 3px ;
-}
-
-.items-display-pane-selected-item-text
-{
-	-fx-font-family: Times ;
-	-fx-font-size: 30 ;
-	-fx-font-weight: bold ;
-	-fx-text-alignment: center ;
-	-fx-text-fill: black ;
 }

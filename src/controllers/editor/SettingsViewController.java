@@ -30,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import utils.transfer.TransferUtils;
 
 /**
  * View controller in charge of the Arcadoid Editor settings pane.
@@ -199,7 +200,7 @@ public class SettingsViewController implements Initializable {
 			this.checkForUpdate();
 		} else {
 			this.changeInterfaceState(true);
-			this.handleErrorForFtpResult(result);
+			TransferUtils.handleErrorForFtpResult(result, this.ftpAddressField.getText());
 		}
 		Settings.validateEditorSettings();
 		try {
@@ -266,33 +267,6 @@ public class SettingsViewController implements Initializable {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(Messages.get("alert.title"));
 		alert.setHeaderText(Messages.get("error.header.localPathCheckError"));
-		alert.setContentText(message);
-		alert.show();
-	}
-	
-	private void handleErrorForFtpResult(CompletionResult result) {
-		String message = null;
-		String header = Messages.get("error.header.ftpCheckError");
-		switch (result.errorType) {
-		case OTHER_ERROR:
-			message = Messages.get("error.body.unexpectedFtpError");
-			break;
-		case UNKNOWN_HOST:
-			message = Messages.get("error.body.unknownFtpHost" ,this.ftpAddressField.getText());
-			break;
-		case WRONG_LOGIN:
-			message = Messages.get("error.body.invalidFtpLogin");
-			break;
-		case INCOMPLETE_PATHS_CHECK:
-			header = Messages.get("error.header.ftpCheckIncomplete");
-			message = Messages.get("error.body.dataPathsNotAllValidated");
-			break;
-		default:
-			break;
-		}
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(header);
 		alert.setContentText(message);
 		alert.show();
 	}

@@ -19,7 +19,6 @@ import data.settings.editor.EditorSettingsValidator;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
 import data.transfer.DataUpdateChecker;
-import data.transfer.LoadFromRepositoryService;
 import data.transfer.SendToRepositoryService;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -35,6 +34,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import utils.transfer.LoadFromRepositoryHandler;
+import utils.transfer.TransferUtils;
 
 /**
  * Master view controller for the Arcadoid Editor application.
@@ -67,7 +68,7 @@ public class RootController implements Initializable {
 	public void show() {
 		this.initStage();
 		this.showMainView();
-		this.resetFromFileWithUnknownFileAlert(false);
+		TransferUtils.resetFromFileWithUnknownFileAlert(false);
 		this.checkMandatorySettingsAtStartup();
 	}
 	
@@ -151,7 +152,7 @@ public class RootController implements Initializable {
 	
 	@FXML
 	private void resetFromFileAction() {
-		this.resetFromFileWithUnknownFileAlert(true);
+		TransferUtils.resetFromFileWithUnknownFileAlert(true);
 	}
 	
 	@FXML
@@ -174,33 +175,8 @@ public class RootController implements Initializable {
 		
 	@FXML
 	private void getFromRepositoryAction() {
-		CompletionCallable sendCompletion = new CompletionCallable() {
-			@Override public Void call() throws Exception {
-				handleLoadFromRepositoryResult(this.result);
-				return null;
-			}
-		};
-		Service<Void> service = new LoadFromRepositoryService(sendCompletion);
-		ProgressDialog dialog = new ProgressDialog(service);
-		dialog.initOwner(this.primaryStage);
-		dialog.setTitle(Messages.get("alert.title"));
-		dialog.setHeaderText(Messages.get("progress.header.loadFromRepo"));
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		service.start();
-	}
-	
-	private void resetFromFileWithUnknownFileAlert(boolean showUnknownFileAlert) {
-		try {
-			ArcadoidData.sharedInstance().loadData();
-		} catch (FileNotFoundException e) {
-			if (showUnknownFileAlert) {
-				this.showFileLoadErrorForMessage(Messages.get("error.body.cannotAccessFile"));
-			}
-		} catch (IOException e) {
-			this.showFileLoadErrorForMessage(Messages.get("error.body.errorDuringFileIO"));
-		} catch (Exception e) {
-			this.showFileLoadErrorForMessage(Messages.get("error.body.unexpectedFileError"));
-		}
+		LoadFromRepositoryHandler handler = new LoadFromRepositoryHandler();
+		handler.startInWindow(this.primaryStage);
 	}
 	
 	private void showFileSaveErrorForMessage(String message) {
@@ -211,46 +187,10 @@ public class RootController implements Initializable {
 		alert.show();
 	}
 	
-	private void showFileLoadErrorForMessage(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.resetFromFile"));
-		alert.setContentText(message);
-		alert.show();
-	}
-	
 	private void handleSendToRepositoryResult(CompletionResult result) {
 		if (result != null && !result.success) {
-			this.showRepositoryOperationError(result);
+			TransferUtils.showRepositoryOperationError(result);
 		}
-	}
-	
-	private void handleLoadFromRepositoryResult(CompletionResult result) {
-		if (result != null && !result.success) {
-			this.showRepositoryOperationError(result);
-		} else {
-			this.resetFromFileWithUnknownFileAlert(true);
-		}
-	}
-	
-	private void showRepositoryOperationError(CompletionResult result) {
-		String message = null;
-		switch (result.errorType) {
-		case CANNOT_READ_REMOTE_FILE:
-			message = Messages.get("error.body.ftpReadError");
-			break;
-		case CANNOT_WRITE_REMOTE_FILE:
-			message = Messages.get("error.body.ftpWriteError");
-			break;
-		default:
-			message = Messages.get("error.body.invalidFtpSettings");
-			break;
-		}
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.ftpOperationError"));
-		alert.setContentText(message);
-		alert.show();
 	}
 	
 }

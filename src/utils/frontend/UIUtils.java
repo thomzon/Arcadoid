@@ -25,6 +25,7 @@ public class UIUtils {
 	/**
 	 * Constants for all UI elements
 	 */
+	public static final double	FORM_FIELDS_SEPARATION			= 20;
 	public static final double 	BORDER_NODE_MARGIN 				= 30;
 	public static final double  BUTTON_LABEL_MARGIN				= 50;
 	public static final int		SCREEN_REPLACE_FADE_TIME 		= 200;
@@ -122,6 +123,47 @@ public class UIUtils {
 		}
 		label.setWrapText(true);
 		return label;
+	}
+	
+	/**
+	 * Calculates and returns the highest width of all given controls.
+	 * @param controls List of Control objects to be checked
+	 * @return Highest width amongst all given Control objects
+	 */
+	public static double getHighestWidthOfControls(Control[] controls) {
+		double highestWidth = 0;
+		for (Control control : controls) {
+			if (control.getWidth() > highestWidth) {
+				highestWidth = control.getWidth();
+			}
+		}
+		return highestWidth;
+	}
+	
+	/**
+	 * Layouts given fields in a 2 column grid. This method assumes that the two controls arrays have the same size.
+	 * @param title Title to be displayed above the grid
+	 * @param firstColumnControls First column of controls to layout
+	 * @param secondColumnControls Second column of controls to layout
+	 * @param position The starting position to layout all the fields
+	 * @return The Y coordinate of the last laid out element
+	 */
+	public static double layoutControlPairsInGridWithTitleStartingAtPosition(Control title, Control[] firstColumnControls, Control[] secondColumnControls, Point2D position) {
+		double usedHeight = position.y;
+		double highestWidth = UIUtils.getHighestWidthOfControls(firstColumnControls);
+		title.setLayoutX(UIUtils.BORDER_NODE_MARGIN + position.x);
+		title.setLayoutY(UIUtils.BORDER_NODE_MARGIN + usedHeight);
+		usedHeight += UIUtils.BORDER_NODE_MARGIN*2 + title.getHeight();
+		for (int index = 0; index < firstColumnControls.length; ++index) {
+			Control firstControl = firstColumnControls[index];
+			Control secondControl = secondColumnControls[index];
+			firstControl.setLayoutX(UIUtils.BORDER_NODE_MARGIN + position.x);
+			firstControl.setLayoutY(usedHeight);
+			secondControl.setLayoutX(UIUtils.BUTTON_LABEL_MARGIN + highestWidth);
+			secondControl.setLayoutY(firstControl.getLayoutY() + firstControl.getHeight()/2 - secondControl.getHeight()/2);
+			usedHeight += firstControl.getHeight() + UIUtils.FORM_FIELDS_SEPARATION;
+		}
+		return usedHeight;
 	}
 	
 }

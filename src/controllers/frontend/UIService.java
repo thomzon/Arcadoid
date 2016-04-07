@@ -14,6 +14,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
+import utils.transfer.LoadFromRepositoryHandler;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 
@@ -82,6 +83,11 @@ public class UIService {
 	public void displaySettings(boolean animated) {
 		FrontendPane newPane = new SettingsPane();
 		this.replacePane(newPane, animated);
+	}
+	
+	public void startCatalogSync() {
+		LoadFromRepositoryHandler handler = new LoadFromRepositoryHandler();
+		handler.startInWindow(this.rootPane.getScene().getWindow());
 	}
 	
 	/**

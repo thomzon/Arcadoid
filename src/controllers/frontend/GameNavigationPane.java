@@ -8,8 +8,14 @@ public class GameNavigationPane extends FrontendPane {
 	private GameNavigationLayout layout;
 	
 	@Override
-	public void doLayout() {
+	public void setupPane() {
+		super.setupPane();
 		this.layout = new GameNavigationLayoutFactory().createLayoutForTypeInParentPane(GameNavigationLayoutType.COVERFLOW, this);
+		this.makeChildrenVisible(false);
+	}
+	
+	@Override
+	public void doLayout() {
 		this.layout.setupSettingsAccess();
 	}
 	
