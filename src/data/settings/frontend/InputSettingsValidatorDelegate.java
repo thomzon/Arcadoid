@@ -7,7 +7,7 @@ import data.settings.Settings.PropertyId;
 public interface InputSettingsValidatorDelegate {
 
 	public void inputSettingsValidatorDidStartRecordingInputProperty(InputSettingsValidator validator, PropertyId inputProperty, boolean isCombination);
-	public void inputSettingsValidatorDidAddPressedKey(InputSettingsValidator validator, Collection<String> keyNames);
+	public void inputSettingsValidatorDidAddPressedKey(InputSettingsValidator validator, Collection<String> keyNames, Collection<Integer> keyCodes);
 	public void inputSettingsValidatorDidFinish(InputSettingsValidator validator);
 	
 }

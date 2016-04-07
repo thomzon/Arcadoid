@@ -23,13 +23,13 @@ public class CoverflowLayout implements GameNavigationLayout {
 	
 	@Override
 	public void setupSettingsAccess() {
-		this.settingsButton = UIUtils.createButton("title.settings", true);
+		this.settingsButton = UIUtils.createButton("", false);
 		this.settingsButton.setOnAction((event) -> {
 			UIService.getInstance().displaySettings(true);
 		});
+		this.settingsButton.setId("settings-button");
 		this.parentPane.getChildren().add(this.settingsButton);
-		this.settingsButton.setLayoutX(UIUtils.BORDER_NODE_MARGIN);
-		this.settingsButton.setLayoutY(UIUtils.BORDER_NODE_MARGIN);
+		
 		this.mouseBehaviour.setupInPane(this.parentPane, new Node[]{this.settingsButton});
 		this.mouseBehaviour.startBehaviour();
 	}

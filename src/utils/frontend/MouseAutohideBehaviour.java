@@ -45,8 +45,10 @@ public class MouseAutohideBehaviour {
 	}
 	
 	private void mouseMoved() {
-		this.pane.getScene().setCursor(Cursor.DEFAULT);
-		this.showNodes();
+		if (this.hideCallTimeline == null) {
+			this.pane.getScene().setCursor(Cursor.DEFAULT);
+			this.showNodes();
+		}
 		this.cancelAutohideCall();
 		this.hideCallTimeline = UIUtils.callMethodAfterTime(this, "hideMouse", UIUtils.MOUSE_AUTOHIDE_DELAY);
 	}

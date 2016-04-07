@@ -27,7 +27,7 @@ public class UIUtils {
 	 */
 	public static final double 	BORDER_NODE_MARGIN 				= 30;
 	public static final double  BUTTON_LABEL_MARGIN				= 50;
-	public static final int		SCREEN_REPLACE_FADE_TIME 		= 300;
+	public static final int		SCREEN_REPLACE_FADE_TIME 		= 200;
 	public static final int		AUTOHIDE_ANIMATIONS_TIME		= 100;
 	public static final int		MOUSE_AUTOHIDE_DELAY			= 1000;
 	public static final int		SETTINGS_INIT_MSG_TIME			= 1000;

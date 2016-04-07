@@ -1,47 +1,13 @@
-.tree-view
-{
-	-fx-background-color: transparent ;
-	-fx-border-style : solid ;
-	-fx-border-width: 2px ;
-	-fx-border-color: black ;
-	-fx-font-family: Times ;
-	-fx-font-size: 20;
-}
-
 .button
 {
 	-fx-font-family: Times ;
 	-fx-font-size: 24 ;
 }
 
-.text-field
+#settings-button
 {
-	-fx-font-family: Times ;
-	-fx-font-size: 24 ;
-	-fx-border-color: black;
-	-fx-border-width: 2px;
-}
-
-.tree-cell
-{
-	-fx-indent: 30 ;	
-}
-
-.tree-cell:hover
-{
-	-fx-background-color: rgb(120,120,120) ;
-	-fx-text-fill: white ;
-}
-
-.tree-cell:focused
-{
-	-fx-background-color: rgb(40,40,40) ;
-	-fx-text-fill: white ;
-}
-.tree-cell:pressed
-{
-	-fx-background-color: rgb(120,120,120) ;
-	-fx-text-fill: white ;
+	-fx-graphic: url(/images/settings_button.png);
+	-fx-background-color: transparent;
 }
 
 .settings-label

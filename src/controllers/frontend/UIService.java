@@ -35,6 +35,10 @@ public class UIService {
 	 */
 	private FrontendPane displayedPane;
 	/**
+	 * Reference to game navigation pane, as it is created only once and reused.
+	 */
+	private GameNavigationPane gameNavigationPane = new GameNavigationPane();
+	/**
 	 * Layer to dim screen when popup is displayed
 	 */
 	private Rectangle dimLayer;
@@ -72,8 +76,7 @@ public class UIService {
 	}
 	
 	public void displayGameNavigation(boolean animated) {
-		FrontendPane newPane = new GameNavigationPane();
-		this.replacePane(newPane, animated);
+		this.replacePane(this.gameNavigationPane, animated);
 	}
 	
 	public void displaySettings(boolean animated) {
@@ -140,6 +143,14 @@ public class UIService {
 	}
 	
 	/**
+	 * Starts animating new displayed pane
+	 */
+	public void animateNewPaneAppearance() {
+		this.displayedPane.animateAppearanceWithDuration(UIUtils.SCREEN_REPLACE_FADE_TIME);
+		UIUtils.callMethodAfterTime(this, "removeObsoletePanes", UIUtils.SCREEN_REPLACE_FADE_TIME);
+	}
+	
+	/**
 	 * Replaces current displayed pane with fade out/fade in effect
 	 * @param newPane
 	 */
@@ -155,8 +166,12 @@ public class UIService {
 		newPane.prepareForAppearance();
 		newPane.setupPane();
 		this.displayedPane = newPane;
-		newPane.animateAppearanceWithDuration(animationDurations);
-		UIUtils.callMethodAfterTime(this, "removeObsoletePanes", animationDurations * 2);
+		if (animated) {
+			UIUtils.callMethodAfterTime(this, "animateNewPaneAppearance", animationDurations);
+		} else {
+			newPane.animateAppearanceWithDuration(0);
+			this.removeObsoletePanes();
+		}
 	}
 	
 }

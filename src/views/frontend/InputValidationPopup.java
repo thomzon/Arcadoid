@@ -6,6 +6,7 @@ import java.util.Collection;
 import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.settings.frontend.InputSettings;
 import data.settings.frontend.InputSettingsValidator;
 import data.settings.frontend.InputSettingsValidatorDelegate;
 import javafx.scene.text.Text;
@@ -24,11 +25,12 @@ public class InputValidationPopup extends InfoPopup implements InputSettingsVali
 	 */
 	private Text pressedCombinationText;
 	
+	private InputSettings inputSettings = new InputSettings();
 	private InputSettingsValidator inputSettingsValidator;
 	private Runnable completion;
 	
 	public InputValidationPopup(InputSettingsValidator validator, Runnable completion) {
-		super(400, 200, "", false);
+		super(600, 400, "", false);
 		this.inputSettingsValidator = validator;
 		this.completion = completion;
 		this.createPressedCombinationText();
@@ -64,16 +66,26 @@ public class InputValidationPopup extends InfoPopup implements InputSettingsVali
 		}
 		this.setMessage(explanationText);
 		this.inputSettingsValidator.activateRecording();
+		this.pressedCombinationText.setText("");
 	}
 	
 	@Override
-	public void inputSettingsValidatorDidAddPressedKey(InputSettingsValidator validator, Collection<String> keyNames) {
+	public void inputSettingsValidatorDidAddPressedKey(InputSettingsValidator validator, Collection<String> keyNames, Collection<Integer> keyCodes) {
 		String allPressedKeys = "";
-		for (String string : keyNames) {
+		Integer[] keyCodesList = keyCodes.toArray(new Integer[keyCodes.size()]);
+		String[] keyNamesList = keyNames.toArray(new String[keyNames.size()]);
+		for (int index = 0; index < keyCodes.size(); ++index) {
+			Integer keyCode = keyCodesList[index];
+			String keyName = keyNamesList[index];
 			if (allPressedKeys.length() > 0) {
 				allPressedKeys += " + ";
 			}
-			allPressedKeys += string;
+			String displayName = this.inputSettings.displayNameForKey(keyCode);
+			if (displayName != null) {
+				allPressedKeys += displayName;
+			} else {
+				allPressedKeys += keyName;
+			}
 		}
 		this.pressedCombinationText.setText(allPressedKeys);
 	}
