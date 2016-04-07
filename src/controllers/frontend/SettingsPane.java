@@ -70,15 +70,39 @@ public class SettingsPane extends FrontendPane {
 			this.confirm();
 		});
 		
+		this.getChildren().addAll(this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.mameExecutablePathButton, this.steamExecutablePathButton);
+		this.getChildren().addAll(this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel);
 		this.getChildren().addAll(this.cancelButton, this.confirmButton);
 	}
 	
 	private void layoutAllNodes() {
-//		Node[] allButtons = new Node[]{this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.mameExecutablePathButton, this.steamExecutablePathButton};
-//		Node[] allLabels = new Node[]{this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel};
-		
+		this.layoutSettingsFields();
+		this.layoutConfirmAndCancelButton();
+	}
+	
+	private void layoutSettingsFields() {
+		Button[] allButtons = new Button[]{this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.mameExecutablePathButton, this.steamExecutablePathButton};
+		Label[] allLabels = new Label[]{this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel};
+		double usedHeight = 0;
+		double highestWidth = 0;
+		for (Button button : allButtons) {
+			if (button.getWidth() > highestWidth) {
+				highestWidth = button.getWidth();
+			}
+		}
+		for (int index = 0; index < allButtons.length; ++index) {
+			Button button = allButtons[index];
+			Label label = allLabels[index];
+			button.setLayoutX(UIUtils.BORDER_NODE_MARGIN);
+			button.setLayoutY(UIUtils.BORDER_NODE_MARGIN * (index + 1) + usedHeight);
+			label.setLayoutX(UIUtils.BUTTON_LABEL_MARGIN + highestWidth);
+			label.setLayoutY(button.getLayoutY() + button.getHeight()/2 - label.getHeight()/2);
+			usedHeight += button.getHeight();
+		}
+	}
+	
+	private void layoutConfirmAndCancelButton() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		
 		this.cancelButton.setLayoutX(screenBounds.getWidth() - UIUtils.BORDER_NODE_MARGIN - this.cancelButton.getWidth());
 		this.cancelButton.setLayoutY(screenBounds.getHeight() - UIUtils.BORDER_NODE_MARGIN - this.cancelButton.getHeight());
 		this.confirmButton.setLayoutX(UIUtils.BORDER_NODE_MARGIN);
