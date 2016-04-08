@@ -1,5 +1,8 @@
 package data.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -27,6 +30,21 @@ public class NavigationItem extends BaseItem {
 
 	public ObservableList<Tag> getAssignedTags() {
 		return this.assignedTags;
+	}
+	
+	public List<Tag> getAllFamilyTags() {
+		List<Tag> familyTags = new ArrayList<Tag>();
+		familyTags.addAll(this.assignedTags);
+		NavigationItem parentItem = this.parentItem;
+		while (parentItem != null) {
+			for (Tag tag : parentItem.assignedTags) {
+				if (!familyTags.contains(tag)) {
+					familyTags.add(tag);
+				}
+			}
+			parentItem = parentItem.parentItem;
+		}
+		return familyTags;
 	}
 
 	public NavigationItem getParentItem() {

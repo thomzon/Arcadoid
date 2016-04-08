@@ -41,6 +41,7 @@ public class MouseAutohideBehaviour {
 	private void cancelAutohideCall() {
 		if (this.hideCallTimeline != null) {
 			this.hideCallTimeline.stop();
+			this.hideCallTimeline = null;
 		}
 	}
 	

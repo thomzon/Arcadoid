@@ -139,6 +139,33 @@ public class ArcadoidData {
 		return this.allGames.filtered((game) -> game.getPlatform() == platform);
 	}
 	
+	public List<Game> getAllGamesForNavigationItem(NavigationItem item) {
+		List<Game> games = new ArrayList<Game>();
+		if (item.getShowEligibleGames()) {
+			List<Tag> itemTags = item.getGamesMustMatchAllTags() ? item.getAllFamilyTags() : item.getAssignedTags();
+			for (Game game : this.allGames) {
+				List<Tag> gameTags = game.getAssignedTags();
+				boolean hasAllTags = false;
+				for (Tag tag : itemTags) {
+					boolean gameHasTag = gameTags.contains(tag);
+					if (gameHasTag && !item.getGamesMustMatchAllTags()) {
+						games.add(game);
+						break;
+					} else if (gameHasTag) {
+						hasAllTags = true;
+					} else if (!gameHasTag && item.getGamesMustMatchAllTags()) {
+						hasAllTags = false;
+						break;
+					}
+				}
+				if (hasAllTags) {
+					games.add(game);
+				}
+			}
+		}
+		return games;
+	}
+		
 	public Game createNewGame() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Game newGame = new MameGame(newIdentifier);
@@ -180,6 +207,30 @@ public class ArcadoidData {
 	
 	public ObservableList<NavigationItem> getRootNavigationItems() {
 		return this.rootNavigationItems;
+	}
+	
+	public List<BaseItem> getRootItems() {
+		List<BaseItem> items = new ArrayList<BaseItem>();
+		items.addAll(this.rootNavigationItems);
+		return items;
+	}
+	
+	public List<BaseItem> getChildrenForNavigationItem(NavigationItem navigationItem) {
+		List<BaseItem> children = new ArrayList<BaseItem>();
+		children.addAll(navigationItem.getSubItems());
+		children.addAll(this.getAllGamesForNavigationItem(navigationItem));
+		return children;
+	}
+	
+	public List<BaseItem> getSiblingsForNavigationItem(NavigationItem navigationItem) {
+		List<BaseItem> siblings = new ArrayList<BaseItem>();
+		NavigationItem parentItem = navigationItem.getParentItem();
+		if (parentItem != null) {
+			siblings.addAll(this.getChildrenForNavigationItem(parentItem));
+		} else {
+			siblings.addAll(this.rootNavigationItems);
+		}
+		return siblings;
 	}
 	
 	public NavigationItem createNewNavigationItemWithParent(NavigationItem parent) {

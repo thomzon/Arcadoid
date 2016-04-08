@@ -63,7 +63,7 @@ public class NotificationCenter {
 	 */
 	public void removeObserver(Object observer) {
 		for (ArrayList<NotificationObserver> observersForName : this.nameToObserver.values()) {
-			for (int index = observersForName.size() - 1; index >= 0; ++index) {
+			for (int index = observersForName.size() - 1; index >= 0 && !observersForName.isEmpty(); ++index) {
 				NotificationObserver notificationObserver = observersForName.get(index);
 				if (notificationObserver.observer == observer) {
 					observersForName.remove(index);

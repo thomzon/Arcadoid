@@ -63,3 +63,12 @@
 	-fx-stroke: black ;
 	-fx-stroke-width: 3px ;
 }
+
+#coverflow-selected-item-text
+{
+	-fx-font-family: Times ;
+	-fx-font-size: 30 ;
+	-fx-font-weight: bold ;
+	-fx-text-alignment: center ;
+	-fx-text-fill: black ;
+}

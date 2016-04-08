@@ -8,6 +8,7 @@ import controllers.frontend.UIService;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import data.settings.frontend.InputSettingsValidator;
+import javafx.application.Platform;
 import views.frontend.InputValidationPopup;
 
 /**
@@ -102,24 +103,34 @@ public class PlayerInputService implements KeyboardDelegate {
 	@Override
 	public void keyPressed(int keyCode, String keyName) {
 		if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_UP, PropertyId.KEY_P2_UP)) {
-			this.inputObservers.forEach((observer) -> {
-				observer.navigateUp();
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.navigateUp();
+				});
 			});
 		} else if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_DOWN, PropertyId.KEY_P2_DOWN)) {
-			this.inputObservers.forEach((observer) -> {
-				observer.navigateDown();
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.navigateDown();
+				});
 			});
 		} else if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_LEFT, PropertyId.KEY_P2_LEFT)) {
-			this.inputObservers.forEach((observer) -> {
-				observer.navigateLeft();
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.navigateLeft();
+				});
 			});
 		} else if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_RIGHT, PropertyId.KEY_P2_RIGHT)) {
-			this.inputObservers.forEach((observer) -> {
-				observer.navigateRight();
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.navigateRight();
+				});
 			});
 		} else if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_B1, PropertyId.KEY_P2_B1)) {
-			this.inputObservers.forEach((observer) -> {
-				observer.confirm();
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.confirm();
+				});
 			});
 		}
 	}
