@@ -2,7 +2,6 @@ package views.frontend;
 
 import java.io.File;
 
-import data.model.BaseItem;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.beans.property.DoubleProperty;
@@ -30,9 +29,8 @@ public class CoverflowItem extends Parent {
             update();
         }
     };
-        
-	public CoverflowItem(BaseItem item) {
-//		this.item = item;
+    
+	public CoverflowItem() {
 		try {
 			File artworkPathFolder = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH));
 			File coverFile = new File(artworkPathFolder, "ubercade_cover.jpg");

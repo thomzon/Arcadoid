@@ -215,7 +215,23 @@ public class ArcadoidData {
 		return items;
 	}
 	
-	public List<BaseItem> getChildrenForNavigationItem(NavigationItem navigationItem) {
+	public void buildCompleteCatalog() {
+		for (NavigationItem navigationItem : this.rootNavigationItems) {
+			this.fillChildrenForItem(navigationItem);
+		}
+	}
+	
+	public void fillChildrenForItem(BaseItem item) {
+		if (item instanceof NavigationItem) {
+			NavigationItem navigationItem = (NavigationItem)item;
+			navigationItem.setAllChildItems(this.getChildrenForNavigationItem(navigationItem));
+			for (BaseItem child : navigationItem.getAllChildItems()) {
+				this.fillChildrenForItem(child);
+			}
+		}
+	}
+	
+	private List<BaseItem> getChildrenForNavigationItem(NavigationItem navigationItem) {
 		List<BaseItem> children = new ArrayList<BaseItem>();
 		children.addAll(navigationItem.getSubItems());
 		children.addAll(this.getAllGamesForNavigationItem(navigationItem));
@@ -226,7 +242,7 @@ public class ArcadoidData {
 		List<BaseItem> siblings = new ArrayList<BaseItem>();
 		NavigationItem parentItem = navigationItem.getParentItem();
 		if (parentItem != null) {
-			siblings.addAll(this.getChildrenForNavigationItem(parentItem));
+			siblings.addAll(parentItem.getAllChildItems());
 		} else {
 			siblings.addAll(this.rootNavigationItems);
 		}

@@ -17,6 +17,7 @@ public class NavigationItem extends BaseItem {
 	private final ObservableList<Tag> assignedTags = FXCollections.observableArrayList();
 	private NavigationItem parentItem;
 	private final ObservableList<NavigationItem> subItems = FXCollections.observableArrayList();
+	private List<BaseItem> allChildItems;
 	private boolean showEligibleGames = true;
 	private boolean gamesMustMatchAllTags = true;
 	
@@ -30,6 +31,14 @@ public class NavigationItem extends BaseItem {
 
 	public ObservableList<Tag> getAssignedTags() {
 		return this.assignedTags;
+	}
+	
+	public List<BaseItem> getAllChildItems() {
+		return this.allChildItems;
+	}
+	
+	public void setAllChildItems(List<BaseItem> allChildItems) {
+		this.allChildItems = allChildItems;
 	}
 	
 	public List<Tag> getAllFamilyTags() {

@@ -63,6 +63,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	}
 	
 	public void dataLoaded() {
+		ArcadoidData.sharedInstance().buildCompleteCatalog();
 		this.displayedItems = ArcadoidData.sharedInstance().getRootItems();
 		this.layout.reloadWithDisplayedItems(this.displayedItems);
 		if (!this.displayedItems.isEmpty()) {
@@ -95,7 +96,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (this.currentItem == null) return;
 		if (this.currentItem instanceof NavigationItem) {
 			NavigationItem navigationItem = (NavigationItem)this.currentItem;
-			List<BaseItem> children = ArcadoidData.sharedInstance().getChildrenForNavigationItem(navigationItem);
+			List<BaseItem> children = navigationItem.getAllChildItems();
 			if (!children.isEmpty()) {
 				this.parentStack.push(navigationItem);
 				this.displayedItems = children;
