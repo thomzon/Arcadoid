@@ -9,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.util.Duration;
+import utils.frontend.SpringInterpolator;
 
 public class CoverflowList extends Group {
 
@@ -16,8 +17,8 @@ public class CoverflowList extends Group {
 	 * Constants for animation
 	 */
 	private static final Duration DURATION = Duration.millis(300);
-    private static final Interpolator INTERPOLATOR = Interpolator.EASE_OUT;
-    private static final double SPACING = 50;
+    private static final Interpolator INTERPOLATOR = new SpringInterpolator();
+    private static final double SPACING = 90;
     private static final double LEFT_OFFSET = -110;
     private static final double RIGHT_OFFSET = 110;
     private static final double SCALE_SMALL = 0.7;
@@ -25,7 +26,7 @@ public class CoverflowList extends Group {
 	private CoverflowListDataSource dataSource;
 	private List<CoverflowItem> visibleItems = new ArrayList<CoverflowItem>();
 	private int centeredIndex = 0;
-	private List<Timeline> itemsAnimations = new ArrayList<Timeline>();
+	private Timeline animationTimeline;
 	
 	public CoverflowList(CoverflowListDataSource dataSource) {
 		this.dataSource = dataSource;
@@ -41,6 +42,7 @@ public class CoverflowList extends Group {
 			if (newItem != null) {
 				this.visibleItems.add(newItem);
 				this.getChildren().add(newItem);
+				newItem.toBack();
 				this.moveItemToPositionIndexAnimated(newItem, index, false);
 			}
 		}
@@ -49,10 +51,21 @@ public class CoverflowList extends Group {
 	public void scrollToItemAtIndexAnimated(int index, boolean animated) {
 		this.stopAnimations();
 		this.centeredIndex = index;
+		if (animated) {
+			this.animationTimeline = new Timeline();
+		}
 		for (int visibleItemIndex = 0; visibleItemIndex < this.visibleItems.size(); ++visibleItemIndex) {
 			CoverflowItem item = this.visibleItems.get(visibleItemIndex);
 			int newItemIndex = visibleItemIndex - index;
 			this.moveItemToPositionIndexAnimated(item, newItemIndex, animated);
+			if (visibleItemIndex < this.centeredIndex) {
+				item.toFront();
+			} else {
+				item.toBack();
+			}
+		}
+		if (animated) {
+			this.animationTimeline.play();
 		}
 	}
 	
@@ -77,31 +90,33 @@ public class CoverflowList extends Group {
 		for (CoverflowItem item : this.visibleItems) {
 			CoverflowItemPool.recycleItem(item);
 		}
+		this.visibleItems.clear();
 	}
 	
 	private void stopAnimations() {
-		for (Timeline timeline : this.itemsAnimations) {
-			timeline.stop();
+		if (this.animationTimeline != null) {
+			this.animationTimeline.stop();
 		}
-		this.itemsAnimations.clear();
 	}
 	
 	private void moveItemToPositionIndexAnimated(CoverflowItem item, int positionIndex, boolean animated) {
+		double horizontalPosition = this.horizontalPositionForItemAtIndex(positionIndex);
+		double scale = this.scaleForItemAtIndex(positionIndex);
+		double angle = this.angleForItemAtIndex(positionIndex);
 		if (animated) {
-			Timeline timeline = new Timeline();
 			KeyFrame keyFrame = new KeyFrame(
 					DURATION,
-		            new KeyValue(item.translateXProperty(), this.horizontalPositionForItemAtIndex(positionIndex), INTERPOLATOR),
-		            new KeyValue(item.scaleXProperty(), this.scaleForItemAtIndex(positionIndex), INTERPOLATOR),
-		            new KeyValue(item.scaleYProperty(), this.scaleForItemAtIndex(positionIndex), INTERPOLATOR),
-		            new KeyValue(item.angleModel(), this.angleForItemAtIndex(positionIndex), INTERPOLATOR));
-			timeline.getKeyFrames().add(keyFrame);
-			timeline.play();
+		            new KeyValue(item.layoutXProperty(), horizontalPosition, INTERPOLATOR),
+		            new KeyValue(item.scaleXProperty(), scale, INTERPOLATOR),
+		            new KeyValue(item.scaleYProperty(), scale, INTERPOLATOR),
+		            new KeyValue(item.angleModel(), angle, INTERPOLATOR)
+		            );
+			this.animationTimeline.getKeyFrames().add(keyFrame);
 		} else {
-			item.setLayoutX(this.horizontalPositionForItemAtIndex(positionIndex));
-			item.setScaleX(this.scaleForItemAtIndex(positionIndex));
-			item.setScaleY(this.scaleForItemAtIndex(positionIndex));
-			item.setAngle(this.angleForItemAtIndex(positionIndex));
+			item.setLayoutX(horizontalPosition);
+			item.setScaleX(scale);
+			item.setScaleY(scale);
+			item.setAngle(angle);
 		}
 	}
 	
@@ -112,11 +127,8 @@ public class CoverflowList extends Group {
 			int indexOfItemOnIndexSide = numberOfItemsOnIndexSide - Math.abs(index);
 			position = -numberOfItemsOnIndexSide*SPACING + SPACING*indexOfItemOnIndexSide + LEFT_OFFSET;
 		} else if (index > 0) {
-			int numberOfItemsOnIndexSide = this.numberOfItems() - (this.centeredIndex + 1);
-			int indexOfItemOnIndexSide = index - 1;
-			position = numberOfItemsOnIndexSide*SPACING - SPACING*indexOfItemOnIndexSide + RIGHT_OFFSET;
+			position = SPACING*index + RIGHT_OFFSET;
 		}
-		System.out.println("Position is (" + position + ") for item at index " + index);
 		return position;
 	}
 	
