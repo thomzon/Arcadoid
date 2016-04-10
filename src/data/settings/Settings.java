@@ -34,6 +34,11 @@ public class Settings
 	 *
 	 */
 	public enum PropertyId {
+		// Versioning settings
+		EDITOR_VERSION_NUMBER("editor_version_number", ""),
+		FRONTEND_VERSION_NUMBER("frontend_version_number", ""),
+		UPDATER_VERSION_NUMBER("updater_version_number", ""),
+		
 		// Editor settings
 		EDITOR_SETTINGS_VALID("editor_settings_valid", ""),
 		ARTWORKS_FOLDER_PATH("artworks_folder_path", Messages.get("field.artworksFolderPath")),
@@ -43,6 +48,7 @@ public class Settings
 		REPOSITORY_FTP_PORT_NUMBER("repo_ftp_port", Messages.get("field.portNumber")),
 		REPOSITORY_FTP_USER("repo_ftp_user", Messages.get("field.username")),
 		REPOSITORY_FTP_PASSWORD("repo_ftp_password", Messages.get("field.password")),
+		REPOSITORY_APPLICATION_PATH("repo_application_path", Messages.get("field.applicationPath")),
 		REPOSITORY_DATA_PATH("repo_base_path", Messages.get("field.catalogDataPath")),
 		REPOSITORY_ARTWORKS_PATH("repo_artworks_path", Messages.get("field.artworksDataPath")),
 		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path", Messages.get("field.mameDataPath")),
@@ -126,6 +132,17 @@ public class Settings
 		setSetting(PropertyId.ARTWORKS_FOLDER_PATH, artworksFolder.getAbsolutePath());
 	}
 	
+	public static String getSettingsValueForPropertyFromFile(PropertyId property, String file) {
+		String value = null;
+		Properties properties = new Properties();
+		try	{
+			properties.load(new FileInputStream(CONFIG_FILE_PATH));
+			value = properties.getProperty(property.stringValue);
+		} catch (Exception e) {
+		}
+		return value;
+	}
+	
 	/**
 	 * Returns value for given property as a list of Integer.
 	 * The property must be a series of Integer separated by the SETTING_LIST_SEPARATOR constant value.
@@ -182,7 +199,9 @@ public class Settings
 	 * @param value Value to set.
 	 */
 	public static void setSetting(PropertyId property, String value) {
-		prop.setProperty(property.stringValue, value);
+		if (value != null) {
+			prop.setProperty(property.stringValue, value);
+		}
 	}
 	
 	/**

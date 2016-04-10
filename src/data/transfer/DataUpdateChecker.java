@@ -18,9 +18,6 @@ public class DataUpdateChecker {
 	
 	private CompletionCallable updateAvailableCompletion;
 	private DataTransfer dataTransfer;
-
-	public DataUpdateChecker() {
-	}
 	
 	public void checkForUpdate(CompletionCallable updateAvailableCompletion) {
 		this.updateAvailableCompletion = updateAvailableCompletion;
@@ -68,7 +65,7 @@ public class DataUpdateChecker {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			cleanup();
+			this.cleanup();
 		}
 	}
 	

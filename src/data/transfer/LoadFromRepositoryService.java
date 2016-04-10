@@ -12,7 +12,7 @@ import javafx.concurrent.Task;
  * - At all steps, if anything FTP related goes wrong, stop everything and forwards the faulty CompletionResult object.
  * - Verify that FTP settings are OK.
  * - Compare existing local and remote data to build a list of all files that must be transferred.
- * - Get all files sequentially with detaild progress updates.
+ * - Get all files sequentially with detailed progress updates.
  * @author Thomas Debouverie
  *
  */
@@ -104,11 +104,11 @@ public class LoadFromRepositoryService extends Service<Void> {
 						nextFileName = this.tracker.nextArtworkFileToTransfer();
 					}
 				}
-				this.sendMameRomsFiles();
+				this.getMameRomsFiles();
 			}
 		}
 		
-		private void sendMameRomsFiles() {
+		private void getMameRomsFiles() {
 			CompletionResult result = this.tracker.prepareForMameRomsOperation();
 			if (result != null && !result.success) {
 				completion.call(result);

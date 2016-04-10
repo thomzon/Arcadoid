@@ -11,7 +11,7 @@ import data.settings.Settings.PropertyId;
  */
 public class FTPSettings {
 
-	public String address, portNumber, user, password, catalogDataPath, artworksDataPath, mameDataPath;
+	public String address, portNumber, user, password, applicationPath, catalogDataPath, artworksDataPath, mameDataPath;
 	
 	/**
 	 * Creates an instance by getting current settings via the Settings interface.
@@ -21,6 +21,7 @@ public class FTPSettings {
 		this.portNumber = Settings.getSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER);
 		this.user = Settings.getSetting(PropertyId.REPOSITORY_FTP_USER);
 		this.password = Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD);
+		this.applicationPath = Settings.getSetting(PropertyId.REPOSITORY_APPLICATION_PATH);
 		this.catalogDataPath = Settings.getSetting(PropertyId.REPOSITORY_DATA_PATH);
 		this.artworksDataPath = Settings.getSetting(PropertyId.REPOSITORY_ARTWORKS_PATH);
 		this.mameDataPath = Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH);
@@ -33,6 +34,7 @@ public class FTPSettings {
 	public void save() throws IOException {
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_ADDRESS, this.address);
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_PORT_NUMBER, this.portNumber);
+		Settings.setSetting(PropertyId.REPOSITORY_APPLICATION_PATH, this.applicationPath);
 		Settings.setSetting(PropertyId.REPOSITORY_DATA_PATH, this.catalogDataPath);
 		Settings.setSetting(PropertyId.REPOSITORY_ARTWORKS_PATH, this.artworksDataPath);
 		Settings.setSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH, this.mameDataPath);

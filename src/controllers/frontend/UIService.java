@@ -3,6 +3,8 @@ package controllers.frontend;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.transfer.CompletionCallable;
+import data.transfer.DataUpdateChecker;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -69,11 +71,23 @@ public class UIService {
 		this.rootPane = new Pane();
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());
-		scene.getStylesheets().add("Frontend.css");
+		scene.getStylesheets().add("frontend.css");
 		primaryStage.setScene(scene);
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
 		this.displayGameNavigation(false);
+		this.checkForDataUpdate();
+	}
+	
+	private void checkForDataUpdate() {
+		DataUpdateChecker checker = new DataUpdateChecker();
+		checker.checkForUpdate(new CompletionCallable() {
+			@Override
+			public Void call() throws Exception {
+				startCatalogSync();
+				return null;
+			}
+		});
 	}
 	
 	public void displayGameNavigation(boolean animated) {

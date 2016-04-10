@@ -1,16 +1,18 @@
-package application.frontend;
+package applications;
 
 import controllers.frontend.UIService;
-import data.input.PlayerInputObserver;
 import data.input.PlayerInputService;
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-public class Arcadoid extends Application implements PlayerInputObserver {
+public class Arcadoid extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		Settings.setSetting(PropertyId.FRONTEND_VERSION_NUMBER, "1");
 		UIService.getInstance().startServiceInPrimaryStage(primaryStage);
 		PlayerInputService.sharedInstance().startService();
 	}

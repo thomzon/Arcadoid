@@ -40,7 +40,7 @@ import utils.transfer.TransferUtils;
 public class SettingsViewController implements Initializable {
 
 	@FXML
-	private TextField ftpAddressField, ftpPortNumberField, ftpDataPathField, ftpArtworksPathField, ftpMameRomsPathField, ftpUserField;
+	private TextField ftpAddressField, ftpPortNumberField, ftpApplicationPathField, ftpDataPathField, ftpArtworksPathField, ftpMameRomsPathField, ftpUserField;
 	@FXML
 	private PasswordField ftpPasswordField;
 	@FXML
@@ -108,6 +108,7 @@ public class SettingsViewController implements Initializable {
 	
 	@FXML private void resetAction() {
 		this.ftpAddressField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_ADDRESS));
+		this.ftpApplicationPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_APPLICATION_PATH));
 		this.ftpDataPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_DATA_PATH));
 		this.ftpArtworksPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_ARTWORKS_PATH));
 		this.ftpMameRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH));
@@ -163,6 +164,7 @@ public class SettingsViewController implements Initializable {
 		settings.portNumber = this.ftpPortNumberField.getText();
 		settings.user = this.ftpUserField.getText();
 		settings.password = this.ftpPasswordField.getText();
+		settings.applicationPath = this.ftpApplicationPathField.getText();
 		settings.catalogDataPath = this.ftpDataPathField.getText();
 		settings.artworksDataPath = this.ftpArtworksPathField.getText();
 		settings.mameDataPath = this.ftpMameRomsPathField.getText();
@@ -185,6 +187,7 @@ public class SettingsViewController implements Initializable {
 		this.ftpPortNumberField.setDisable(!enabled);
 		this.ftpUserField.setDisable(!enabled);
 		this.ftpPasswordField.setDisable(!enabled);
+		this.ftpApplicationPathField.setDisable(!enabled);
 		this.ftpDataPathField.setDisable(!enabled);
 		this.ftpArtworksPathField.setDisable(!enabled);
 		this.ftpMameRomsPathField.setDisable(!enabled);

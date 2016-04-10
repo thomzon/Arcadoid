@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.ProgressDialog;
 
-import application.editor.ArcadoidEditor;
+import applications.ArcadoidEditor;
 import data.access.ArcadoidData;
 import data.access.NotificationCenter;
 import data.settings.Messages;

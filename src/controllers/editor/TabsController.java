@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.editor.ArcadoidEditor;
+import applications.ArcadoidEditor;
 import data.access.NotificationCenter;
 import data.settings.Messages;
 import data.settings.Settings;
