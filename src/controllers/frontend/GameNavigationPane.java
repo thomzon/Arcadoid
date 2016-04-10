@@ -9,7 +9,9 @@ import data.access.NotificationCenter;
 import data.input.PlayerInputObserver;
 import data.input.PlayerInputService;
 import data.model.BaseItem;
+import data.model.Game;
 import data.model.NavigationItem;
+import utils.frontend.GameLaunchService;
 import views.frontend.FrontendPane;
 
 public class GameNavigationPane extends FrontendPane implements PlayerInputObserver {
@@ -24,7 +26,9 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	public void prepareForAppearance() {
 		super.prepareForAppearance();
 		NotificationCenter.sharedInstance().addObserver(ArcadoidData.DATA_LOADED_NOTIFICATION, this, "dataLoaded");
-		PlayerInputService.getInstance().addInputObserver(this);
+		NotificationCenter.sharedInstance().addObserver(GameLaunchService.GAME_WILL_LAUNCH_NOTIFICATION, this, "gameWillLaunch");
+		NotificationCenter.sharedInstance().addObserver(GameLaunchService.GAME_WILL_QUIT_NOTIFICATION, this, "gameWillQuit");
+		PlayerInputService.sharedInstance().addInputObserver(this);
 	}
 	
 	@Override
@@ -59,7 +63,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		super.prepareForDisappearance();
 		this.layout.prepareForParentPaneDisappearance();
 		NotificationCenter.sharedInstance().removeObserver(this);
-		PlayerInputService.getInstance().removeInputObserver(this);
+		PlayerInputService.sharedInstance().removeInputObserver(this);
 	}
 	
 	public void dataLoaded() {
@@ -118,6 +122,19 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	
 	@Override
 	public void confirm() {
+		if (this.currentItem instanceof NavigationItem) {
+			this.navigateDown();
+		} else if (this.currentItem instanceof Game) {
+			GameLaunchService.sharedInstance().runGame((Game)this.currentItem);
+		}
+	}
+	
+	public void gameWillLaunch(Game game) {
+		PlayerInputService.sharedInstance().removeInputObserver(this);
+	}
+	
+	public void gameWillQuit(Game game) {
+		PlayerInputService.sharedInstance().addInputObserver(this);
 	}
 	
 }

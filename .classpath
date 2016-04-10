@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="lib/edtftpj.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/controlsfx-8.40.10.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.4-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,6 +2,7 @@ package data.input;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import controllers.frontend.UIService;
@@ -27,7 +28,7 @@ public class PlayerInputService implements KeyboardDelegate {
 		this.inputObservers = new ArrayList<PlayerInputObserver>();
 	}
 	
-	public static PlayerInputService getInstance() {
+	public static PlayerInputService sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new PlayerInputService();
 		}
@@ -74,14 +75,16 @@ public class PlayerInputService implements KeyboardDelegate {
 	}
 	
 	private void startKeyboardHook() {
-		try {
-			GlobalScreen.registerNativeHook();
-		} catch (NativeHookException e) {
-			e.printStackTrace();
-			System.exit(4);
+		if (SystemUtils.IS_OS_WINDOWS) {
+			try {
+				GlobalScreen.registerNativeHook();
+			} catch (NativeHookException e) {
+				e.printStackTrace();
+				System.exit(4);
+			}
+			this.keyboardListener = new KeyboardListener(this);
+			this.keyboardListener.start();
 		}
-		this.keyboardListener = new KeyboardListener(this);
-		this.keyboardListener.start();
 	}
 	
 	private void checkInputSettings() {

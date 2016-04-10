@@ -12,7 +12,7 @@ public class Arcadoid extends Application implements PlayerInputObserver {
 	@Override
 	public void start(Stage primaryStage) {
 		UIService.getInstance().startServiceInPrimaryStage(primaryStage);
-		PlayerInputService.getInstance().startService();
+		PlayerInputService.sharedInstance().startService();
 	}
 	
 	@Override
