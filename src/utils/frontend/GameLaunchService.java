@@ -21,7 +21,7 @@ public class GameLaunchService implements PlayerInputObserver {
 		return sharedInstance;
 	}
 	
-	private GameLaunchService() {
+	public void startService() {
 		PlayerInputService.sharedInstance().addInputObserver(this);
 	}
 	

@@ -1,13 +1,16 @@
 package data.input;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+
 import controllers.frontend.UIService;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import data.settings.frontend.InputSettings;
 import data.settings.frontend.InputSettingsValidator;
 import javafx.application.Platform;
 import views.frontend.InputValidationPopup;
@@ -83,7 +86,17 @@ public class PlayerInputService implements KeyboardDelegate {
 				System.exit(4);
 			}
 			this.keyboardListener = new KeyboardListener(this);
+			this.setupListenedCombinations();
 			this.keyboardListener.start();
+		}
+	}
+	
+	private void setupListenedCombinations() {
+		this.keyboardListener.resetListenedCombinations();
+		InputSettings inputSettings = new InputSettings();
+		for (PropertyId property : inputSettings.allCombinationProperties()) {
+			List<Integer> keyCodes = Settings.getSettingAsIntegerList(property);
+			this.keyboardListener.addListenedKeyCombination(keyCodes, property.getKey());
 		}
 	}
 	
@@ -92,6 +105,7 @@ public class PlayerInputService implements KeyboardDelegate {
 		if (!validator.inputSettingsValid()) {
 			this.keyboardListener.stop();
 			InputValidationPopup popup = new InputValidationPopup(validator, () -> {
+				this.setupListenedCombinations();
 				this.keyboardListener.start();
 			});
 			UIService.getInstance().displayPopup(popup);
@@ -100,7 +114,13 @@ public class PlayerInputService implements KeyboardDelegate {
 
 	@Override
 	public void combinationPressed(String combinationKey) {
-		
+		if (combinationKey.equals(PropertyId.KEY_COMB_QUIT_GAME.getKey())) {
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.quitGame();
+				});
+			});
+		}
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import data.input.PlayerInputService;
 import data.model.BaseItem;
 import data.model.Game;
 import data.model.NavigationItem;
+import javafx.application.Platform;
 import utils.frontend.GameLaunchService;
 import views.frontend.FrontendPane;
 
@@ -129,12 +130,17 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		}
 	}
 	
-	public void gameWillLaunch(Game game) {
-		PlayerInputService.sharedInstance().removeInputObserver(this);
+	public void gameWillLaunch() {
+		Platform.runLater(() -> {
+			PlayerInputService.sharedInstance().removeInputObserver(this);
+		});
 	}
 	
-	public void gameWillQuit(Game game) {
-		PlayerInputService.sharedInstance().addInputObserver(this);
+	public void gameWillQuit() {
+		Platform.runLater(() -> {
+			PlayerInputService.sharedInstance().addInputObserver(this);
+			this.getScene().getWindow().requestFocus();
+		});
 	}
 	
 }

@@ -31,6 +31,13 @@ public class InputSettings {
 	}
 	
 	/**
+	 * @return List of all properties that relate to a key combination input
+	 */
+	public List<PropertyId> allCombinationProperties() {
+		return this.combinationInputProperties;
+	}
+	
+	/**
 	 * @param inputProperty The property to check
 	 * @return True if given property supports a key combination rather than a simple one-key input
 	 */

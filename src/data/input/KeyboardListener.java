@@ -98,6 +98,13 @@ public class KeyboardListener implements NativeKeyListener
 	}
 	
 	/**
+	 * Removes all key combinations that are monitored
+	 */
+	public void resetListenedCombinations() {
+		this.listenedCombinations.clear();
+	}
+	
+	/**
 	 * @return A list of all currently pressed key codes
 	 */
 	public List<Integer> getPressedKeyCodes() {

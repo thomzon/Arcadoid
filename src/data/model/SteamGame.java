@@ -2,6 +2,8 @@ package data.model;
 
 import java.io.IOException;
 
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -65,13 +67,13 @@ public class SteamGame extends Game {
 	@Override
 	public void execute() {
 		if (this.process != null) return;
-//		String executable = AppSettings.getSetting(AppSettings.PropertyId.STEAM_PATH) + " -applaunch " + _appId;
-//		try {
-//			_process = Runtime.getRuntime().exec(executable);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			System.exit(4);
-//		}
+		String executable = Settings.getSetting(PropertyId.STEAM_PATH) + " -applaunch " + this.appId();
+		try {
+			this.process = Runtime.getRuntime().exec(executable);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(4);
+		}
 	}
 
 	/**

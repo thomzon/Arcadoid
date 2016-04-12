@@ -7,6 +7,7 @@ import data.settings.Settings.PropertyId;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import utils.frontend.GameLaunchService;
 
 public class Arcadoid extends Application {
 
@@ -15,6 +16,7 @@ public class Arcadoid extends Application {
 		Settings.setSetting(PropertyId.FRONTEND_VERSION_NUMBER, "1");
 		UIService.getInstance().startServiceInPrimaryStage(primaryStage);
 		PlayerInputService.sharedInstance().startService();
+		GameLaunchService.sharedInstance().startService();
 	}
 	
 	@Override

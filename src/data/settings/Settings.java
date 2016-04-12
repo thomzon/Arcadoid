@@ -20,7 +20,7 @@ public class Settings
 {	
 	
 	private static final String CONFIG_FILE_PATH = "config.properties";
-	private static final String SETTING_LIST_SEPARATOR = "||";
+	private static final String SETTING_LIST_SEPARATOR = "\\|\\|";
 	/**
 	 * Notification triggered when the mandatory settings have been validated or invalidated.
 	 */
@@ -97,6 +97,9 @@ public class Settings
 		private PropertyId(final String s, final String d) {
 			this.stringValue = s;
 			this.description = d;
+		}
+		public String getKey() {
+			return this.stringValue;
 		}
 		public String getDescription() {
 			return this.description;

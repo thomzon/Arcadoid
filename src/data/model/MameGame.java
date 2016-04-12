@@ -1,5 +1,10 @@
 package data.model;
 
+import java.io.File;
+import java.io.IOException;
+
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -46,14 +51,14 @@ public class MameGame extends Game {
 	@Override
 	public void execute() {
 		if (this.process != null) return;
-//		String mamePath   = AppSettings.getSetting(AppSettings.PropertyId.MAME_PATH);
-//		String executable = AppSettings.getSetting(AppSettings.PropertyId.MAME_PATH) + " " + _gameName;
-//		try {
-//			_process = Runtime.getRuntime().exec(executable, null, new File(mamePath).getParentFile());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			System.exit(4);
-//		}
+		String mamePath = Settings.getSetting(PropertyId.MAME_PATH);
+		String executable = mamePath + " " + this.gameName();
+		try {
+			this.process = Runtime.getRuntime().exec(executable, null, new File(mamePath).getParentFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(4);
+		}
 	}
 
 	/**
