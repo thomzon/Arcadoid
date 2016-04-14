@@ -5,6 +5,7 @@ import java.io.File;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import data.transfer.CompletionCallable;
+import data.transfer.CompletionResult;
 import data.transfer.DataTransfer;
 
 /**
@@ -21,6 +22,11 @@ public class ApplicationUpdateChecker {
 	private DataTransfer dataTransfer;
 	
 	public boolean updateAvailableForEditor, updateAvailableForFrontend, updateAvailableForUpdater;
+	public int remoteEditorVersionNumber, remoteFrontendVersionNumber, remoteUpdaterVersionNumber;
+	
+	public boolean anyUpdateAvailable() {
+		return this.updateAvailableForEditor || this.updateAvailableForFrontend || this.updateAvailableForUpdater;
+	}
 	
 	public void checkForEditorUpdate(CompletionCallable completion) {
 		this.updateAvailableForEditor = false;
@@ -36,6 +42,8 @@ public class ApplicationUpdateChecker {
 			@Override public Void call() throws Exception {
 				if (this.result == null || this.result.success) {
 					goToRemoteApplicationDirectory();
+				} else {
+					completion(this.result);
 				}
 				return null;
 			}
@@ -47,6 +55,8 @@ public class ApplicationUpdateChecker {
 			@Override public Void call() throws Exception {
 				if (this.result == null || this.result.success) {
 					getTemporaryDataFile();
+				} else {
+					completion(this.result);
 				}
 				return null;
 			}
@@ -57,42 +67,54 @@ public class ApplicationUpdateChecker {
 		this.dataTransfer.getFileWithCompletion(ApplicationUpdater.REMOTE_VERSION_FILE, TEMPORARY_VERSION_FILE_NAME, new CompletionCallable() {
 			@Override public Void call() throws Exception {
 				if (this.result == null || this.result.success) {
+					fetchRemoteVersionNumbers();
 					doCheckForUpdate();
+				} else {
+					completion(this.result);
 				}
 				return null;
 			}
 		});
 	}
 	
-	private void doCheckForUpdate() {
-		this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER);
-		this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER);
-		this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER);
-		this.cleanup();
-		this.completion();
+	private void fetchRemoteVersionNumbers() {
+		this.remoteEditorVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.EDITOR_VERSION_NUMBER);
+		this.remoteFrontendVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.FRONTEND_VERSION_NUMBER);
+		this.remoteUpdaterVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.UPDATER_VERSION_NUMBER);
 	}
 	
-	private boolean checkForUpdateForProperty(PropertyId property) {
+	private void doCheckForUpdate() {
+		this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER, this.remoteEditorVersionNumber);
+		this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER, this.remoteFrontendVersionNumber);
+		this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER, this.remoteUpdaterVersionNumber);
+		this.cleanup();
+		this.completion(null);
+	}
+	
+	private int retrieveRemoteVersionNumberForProperty(PropertyId property) {
 		try {
 			String remoteValue = Settings.getSettingsValueForPropertyFromFile(property, TEMPORARY_VERSION_FILE_NAME);
 			int remoteVersionNumber = remoteValue != null ? Integer.parseInt(remoteValue) : 0;
+			return remoteVersionNumber;
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	private boolean checkForUpdateForProperty(PropertyId property, int remoteVersionNumber) {
+		try {
 			String localValue = Settings.getSetting(property);
 			int localVersionNumber = localValue != null ? Integer.parseInt(localValue) : 0;
-			System.out.println("Remote version number is " + remoteVersionNumber + ", local one is " + localValue);
-			return localVersionNumber != 0 && remoteVersionNumber > localVersionNumber;
+			System.out.println("Remote version number of " + property.getKey() + " is " + remoteVersionNumber + ", local one is " + localValue);
+			return remoteVersionNumber > localVersionNumber;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	private void completion() {
+	private void completion(CompletionResult result) {
 		if (this.completion != null) {
-			try {
-				this.completion.call();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.completion.call(result);
 		}
 	}
 	

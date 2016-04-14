@@ -3,9 +3,16 @@ package controllers.frontend;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
 import data.transfer.CompletionCallable;
+import data.transfer.CompletionResult;
 import data.transfer.DataUpdateChecker;
+import data.transfer.updater.ApplicationUpdateChecker;
+import data.transfer.updater.ApplicationUpdater;
+import data.transfer.updater.ApplicationUpdater.ApplicationExecutable;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
 import utils.transfer.LoadFromRepositoryHandler;
+import utils.transfer.TransferUtils;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 
@@ -45,6 +53,8 @@ public class UIService {
 	 * Layer to dim screen when popup is displayed
 	 */
 	private Rectangle dimLayer;
+	
+	private ApplicationUpdateChecker updateChecker = new ApplicationUpdateChecker();
 	
 	private UIService() {
 		this.createDimLayer();
@@ -76,7 +86,34 @@ public class UIService {
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
 		this.displayGameNavigation(false);
-		this.checkForDataUpdate();
+		this.checkForAppUpdate();
+	}
+	
+	private void checkForAppUpdate() {
+		this.updateChecker.checkForEditorUpdate(new CompletionCallable() {
+			@Override
+			public Void call() throws Exception {
+				Platform.runLater(() -> {
+					handleUpdateCheckerResult(this.result);
+				});
+				return null;
+			}
+		});
+	}
+	
+	private void handleUpdateCheckerResult(CompletionResult result) {
+		if (result != null && !result.success) {
+			TransferUtils.showRepositoryOperationError(result);
+		} else if (this.updateChecker.updateAvailableForUpdater) {
+//			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
+//				Settings.setSetting(PropertyId.UPDATER_VERSION_NUMBER, "" + updateChecker.remoteUpdaterVersionNumber);
+//				checkForAppUpdate();
+//			});
+		} else if (this.updateChecker.updateAvailableForFrontend) {
+//			ApplicationUpdater.launchUpdaterForExecutable(ApplicationExecutable.FRONTEND);
+		} else {
+			this.checkForDataUpdate();
+		}
 	}
 	
 	private void checkForDataUpdate() {

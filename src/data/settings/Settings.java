@@ -139,7 +139,7 @@ public class Settings
 		String value = null;
 		Properties properties = new Properties();
 		try	{
-			properties.load(new FileInputStream(CONFIG_FILE_PATH));
+			properties.load(new FileInputStream(file));
 			value = properties.getProperty(property.stringValue);
 		} catch (Exception e) {
 		}

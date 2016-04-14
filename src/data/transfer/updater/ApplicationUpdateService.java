@@ -41,7 +41,7 @@ public class ApplicationUpdateService extends Service<Void> {
 	private class ApplicationUpdateTask extends Task<Void> {
 
 		private DataTransfer transfer;
-		private FTPSettings ftpSettings;
+		private FTPSettings ftpSettings = new FTPSettings();
 		private String applicationName;
 		private long expectedFileSize;
 		

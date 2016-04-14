@@ -11,6 +11,5 @@
    <children>
       <Button fx:id="updateEditorButton" mnemonicParsing="false" onAction="#updateEditorAction" text="%action.updateEditor" />
       <Button fx:id="updateFrontendButton" mnemonicParsing="false" onAction="#updateFrontendAction" text="%action.updateFrontend" />
-      <Button fx:id="updateUpdaterButton" mnemonicParsing="false" onAction="#updateUpdaterAction" text="%action.updateUpdater" />
    </children>
 </FlowPane>
