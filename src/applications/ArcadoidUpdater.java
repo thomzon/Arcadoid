@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import controllers.updater.ArcadoidUpdaterController;
 import data.settings.Messages;
-import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import data.transfer.updater.ApplicationUpdater;
 import javafx.application.Application;
@@ -20,7 +19,7 @@ public class ArcadoidUpdater extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Settings.setSetting(PropertyId.UPDATER_VERSION_NUMBER, "1");
+		ApplicationVersionService.updateVersionNumberForProperty(ApplicationVersionService.UPDATER_VERSION_NUMBER, PropertyId.UPDATER_VERSION_NUMBER);
 		if (this.getParameters().getRaw().size() == 2 && this.getParameters().getRaw().get(0).equals("--update")) {
 			this.runDirectUpdateForExecutableName(this.getParameters().getRaw().get(1));
 		} else {

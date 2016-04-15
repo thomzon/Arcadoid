@@ -105,12 +105,12 @@ public class UIService {
 		if (result != null && !result.success) {
 			TransferUtils.showRepositoryOperationError(result);
 		} else if (this.updateChecker.updateAvailableForUpdater) {
-//			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
-//				Settings.setSetting(PropertyId.UPDATER_VERSION_NUMBER, "" + updateChecker.remoteUpdaterVersionNumber);
-//				checkForAppUpdate();
-//			});
+			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
+				Settings.setSetting(PropertyId.UPDATER_VERSION_NUMBER, "" + updateChecker.remoteUpdaterVersionNumber);
+				checkForAppUpdate();
+			});
 		} else if (this.updateChecker.updateAvailableForFrontend) {
-//			ApplicationUpdater.launchUpdaterForExecutable(ApplicationExecutable.FRONTEND);
+			ApplicationUpdater.launchUpdaterForExecutable(ApplicationExecutable.FRONTEND);
 		} else {
 			this.checkForDataUpdate();
 		}

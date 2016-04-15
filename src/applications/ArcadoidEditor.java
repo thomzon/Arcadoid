@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import controllers.editor.RootController;
 import data.settings.Messages;
-import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -18,7 +17,7 @@ public class ArcadoidEditor extends Application {
     
 	@Override
 	public void start(Stage primaryStage) {
-		Settings.setSetting(PropertyId.EDITOR_VERSION_NUMBER, "1");
+		ApplicationVersionService.updateVersionNumberForProperty(ApplicationVersionService.EDITOR_VERSION_NUMBER, PropertyId.EDITOR_VERSION_NUMBER);
 		try {
             FXMLLoader loader = new FXMLLoader();
             Messages.setupLoader(loader);
