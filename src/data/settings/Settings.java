@@ -20,7 +20,7 @@ public class Settings
 {	
 	
 	private static final String CONFIG_FILE_PATH = "config.properties";
-	private static final String SETTING_LIST_SEPARATOR = "\\|\\|";
+	private static final String SETTING_LIST_SEPARATOR = "_";
 	/**
 	 * Notification triggered when the mandatory settings have been validated or invalidated.
 	 */

@@ -50,7 +50,7 @@ public class SnesGame extends Game {
 		String romsPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);
 		File romFile = new File(romsFolder, this.romFileName());
-		String executable = snes9xPath + " " + romFile.getAbsolutePath();
+		String executable = "\"" + snes9xPath + "\" \"" + romFile.getAbsolutePath() + "\" -fullscreen";
 		this.execute(executable, null);
 	}
 

@@ -28,7 +28,7 @@ public class ApplicationUpdateChecker {
 		return this.updateAvailableForEditor || this.updateAvailableForFrontend || this.updateAvailableForUpdater;
 	}
 	
-	public void checkForEditorUpdate(CompletionCallable completion) {
+	public void checkForUpdate(CompletionCallable completion) {
 		this.updateAvailableForEditor = false;
 		this.updateAvailableForFrontend = false;
 		this.updateAvailableForUpdater = false;
@@ -104,7 +104,7 @@ public class ApplicationUpdateChecker {
 	private boolean checkForUpdateForProperty(PropertyId property, int remoteVersionNumber) {
 		try {
 			String localValue = Settings.getSetting(property);
-			int localVersionNumber = localValue != null ? Integer.parseInt(localValue) : 0;
+			int localVersionNumber = localValue != null && localValue.length() > 0 ? Integer.parseInt(localValue) : 0;
 			System.out.println("Remote version number of " + property.getKey() + " is " + remoteVersionNumber + ", local one is " + localValue);
 			return remoteVersionNumber > localVersionNumber;
 		} catch (Exception e) {

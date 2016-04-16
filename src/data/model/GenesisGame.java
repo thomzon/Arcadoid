@@ -50,7 +50,7 @@ public class GenesisGame extends Game {
 		String romsPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);
 		File romFile = new File(romsFolder, this.romFileName());
-		String executable = kegaPath + " " + romFile.getAbsolutePath();
+		String executable = "\"" + kegaPath + "\" \"" + romFile.getAbsolutePath() + "\"";
 		this.execute(executable, null);
 	}
 

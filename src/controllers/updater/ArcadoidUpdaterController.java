@@ -34,7 +34,7 @@ public class ArcadoidUpdaterController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.updateEditorButton.setDisable(true);
 		this.updateFrontendButton.setDisable(true);
-		this.updateChecker.checkForEditorUpdate(new CompletionCallable() {
+		this.updateChecker.checkForUpdate(new CompletionCallable() {
 			@Override
 			public Void call() throws Exception {
 				Platform.runLater(() -> {

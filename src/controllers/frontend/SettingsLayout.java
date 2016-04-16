@@ -16,10 +16,14 @@ import utils.frontend.UIUtils;
 public class SettingsLayout {
 
 	private Label		localSettingsGroupTitle, ftpSettingsGroupTitle;
-	private Label	 	artworksFolderPathLabel, mameRomsFolderPathLabel, mameExecutablePathLabel, steamExecutablePathLabel;
-	private Button 		artworksFolderPathButton, mameRomsFolderPathButton, mameExecutablePathButton, steamExecutablePathButton;
-	private Label		ftpAddressTitleLabel, portNumberTitleLabel, ftpUserTitleLabel, ftpPasswordTitleLabel, remoteCatalogDataPathTitleLabel, remoteArtworksDataPathTitleLabel, remoteMameDataPathTitleLabel;
-	private TextField	ftpAddressField, portNumberField, ftpUserField, ftpPasswordField, remoteCatalogDataPathField, remoteArtworksDataPathField, remoteMameDataPathField;
+	private Label	 	artworksFolderPathLabel, mameRomsFolderPathLabel, snesRomsFolderPathLabel, genesisRomsFolderPathLabel;
+	private Label		mameExecutablePathLabel, steamExecutablePathLabel, snes9xExecutablePathLabel, kegaExecutablePathLabel;
+	private Button 		artworksFolderPathButton, mameRomsFolderPathButton, snesRomsFolderPathButton, genesisRomsFolderPathButton;
+	private Button		mameExecutablePathButton, steamExecutablePathButton, snes9xExecutablePathButton, kegaExecutablePathButton;
+	private Label		ftpAddressTitleLabel, portNumberTitleLabel, ftpUserTitleLabel, ftpPasswordTitleLabel, remoteCatalogDataPathTitleLabel;
+	private Label		remoteArtworksDataPathTitleLabel, remoteMameDataPathTitleLabel, remoteSnesDataPathTitleLabel, remoteGenesisDataPathTitleLabel;
+	private TextField	ftpAddressField, portNumberField, ftpUserField, ftpPasswordField, remoteCatalogDataPathField;
+	private TextField	remoteArtworksDataPathField, remoteMameDataPathField, remoteSnesDataPathField, remoteGenesisDataPathField;
 	private Button		recordMissingInputsButton, recordAllInputsButton;
 	private Button		cancelButton, confirmButton;
 	
@@ -39,8 +43,12 @@ public class SettingsLayout {
 	public void transferFieldValuesToSettings(FrontendSettings settings, FTPSettings ftpSettings) {
 		settings.artworksFolderPath = this.artworksFolderPathLabel.getText();
 		settings.mameRomsFolderPath = this.mameRomsFolderPathLabel.getText();
+		settings.snesRomsFolderPath = this.snesRomsFolderPathLabel.getText();
+		settings.genesisRomsFolderPath = this.genesisRomsFolderPathLabel.getText();
 		settings.mameExecutablePath = this.mameExecutablePathLabel.getText();
 		settings.steamExecutablePath = this.steamExecutablePathLabel.getText();
+		settings.snes9xExecutablePath = this.snes9xExecutablePathLabel.getText();
+		settings.kegaExecutablePath = this.kegaExecutablePathLabel.getText();
 		ftpSettings.address = this.ftpAddressField.getText();
 		ftpSettings.portNumber = this.portNumberField.getText();
 		ftpSettings.user = this.ftpUserField.getText();
@@ -48,6 +56,8 @@ public class SettingsLayout {
 		ftpSettings.catalogDataPath = this.remoteCatalogDataPathField.getText();
 		ftpSettings.artworksDataPath = this.remoteArtworksDataPathField.getText();
 		ftpSettings.mameDataPath = this.remoteMameDataPathField.getText();
+		ftpSettings.snesDataPath = this.remoteSnesDataPathField.getText();
+		ftpSettings.genesisDataPath = this.remoteGenesisDataPathField.getText();
 	}
 	
 	private void createLocalSettingsFields(SettingsPane pane, FrontendSettings settings) {
@@ -65,6 +75,18 @@ public class SettingsLayout {
 		});
 		this.mameRomsFolderPathLabel = UIUtils.createLabel(settings.mameRomsFolderPath, false);
 		
+		this.snesRomsFolderPathButton = UIUtils.createButton("field.snesRomsFolderPath", true);
+		this.snesRomsFolderPathButton.setOnAction((event) -> {
+			pane.chooseFolderForFieldWithTitleKey(this.snesRomsFolderPathLabel, "field.snesRomsFolderPath");
+		});
+		this.snesRomsFolderPathLabel = UIUtils.createLabel(settings.snesRomsFolderPath, false);
+		
+		this.genesisRomsFolderPathButton = UIUtils.createButton("field.genesisRomsFolderPath", true);
+		this.genesisRomsFolderPathButton.setOnAction((event) -> {
+			pane.chooseFolderForFieldWithTitleKey(this.genesisRomsFolderPathLabel, "field.genesisRomsFolderPath");
+		});
+		this.genesisRomsFolderPathLabel = UIUtils.createLabel(settings.genesisRomsFolderPath, false);
+		
 		this.mameExecutablePathButton = UIUtils.createButton("field.mameExecutablePath", true);
 		this.mameExecutablePathButton.setOnAction((event) -> {
 			pane.chooseFileForFieldWithExtensionAndTitleKey(this.mameExecutablePathLabel, "field.mameExecutablePath", "field.mameExecutableDescription", "mame*.exe");
@@ -77,11 +99,26 @@ public class SettingsLayout {
 		});
 		this.steamExecutablePathLabel = UIUtils.createLabel(settings.steamExecutablePath, false);
 		
-		UIUtils.assignStyleClassToNodes("settings-label", this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel);
+		this.snes9xExecutablePathButton = UIUtils.createButton("field.snes9xExecutablePath", true);
+		this.snes9xExecutablePathButton.setOnAction((event) -> {
+			pane.chooseFileForFieldWithExtensionAndTitleKey(this.snes9xExecutablePathLabel, "field.snes9xExecutablePath", "field.snes9xExecutableDescription", "snes9x*.exe");
+		});
+		this.snes9xExecutablePathLabel = UIUtils.createLabel(settings.snes9xExecutablePath, false);
+		
+		this.kegaExecutablePathButton = UIUtils.createButton("field.kegaExecutablePath", true);
+		this.kegaExecutablePathButton.setOnAction((event) -> {
+			pane.chooseFileForFieldWithExtensionAndTitleKey(this.kegaExecutablePathLabel, "field.kegaExecutablePath", "field.kegaExecutableDescription", "Fusion*.exe");
+		});
+		this.kegaExecutablePathLabel = UIUtils.createLabel(settings.kegaExecutablePath, false);
+		
+		UIUtils.assignStyleClassToNodes("settings-label", this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.snesRomsFolderPathLabel, this.genesisRomsFolderPathLabel,
+														  this.mameExecutablePathLabel, this.steamExecutablePathLabel, this.snes9xExecutablePathLabel, this.kegaExecutablePathLabel);
 		UIUtils.assignStyleClassToNodes("settings-group-title", this.localSettingsGroupTitle);
 		pane.getChildren().addAll(this.localSettingsGroupTitle);
-		pane.getChildren().addAll(this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.mameExecutablePathButton, this.steamExecutablePathButton);
-		pane.getChildren().addAll(this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel);
+		pane.getChildren().addAll(this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.snesRomsFolderPathButton, this.genesisRomsFolderPathButton,
+								  this.mameExecutablePathButton, this.steamExecutablePathButton, this.snes9xExecutablePathButton, this.kegaExecutablePathButton);
+		pane.getChildren().addAll(this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.snesRomsFolderPathLabel, this.genesisRomsFolderPathLabel,
+								  this.mameExecutablePathLabel, this.steamExecutablePathLabel, this.snes9xExecutablePathLabel, this.kegaExecutablePathLabel);
 	}
 	
 	private void createFTPSettingsFields(SettingsPane pane, FTPSettings settings) {
@@ -94,6 +131,8 @@ public class SettingsLayout {
 		this.remoteCatalogDataPathTitleLabel = UIUtils.createLabel("field.catalogDataPath", true);
 		this.remoteArtworksDataPathTitleLabel = UIUtils.createLabel("field.artworksDataPath", true);
 		this.remoteMameDataPathTitleLabel = UIUtils.createLabel("field.mameDataPath", true);
+		this.remoteSnesDataPathTitleLabel = UIUtils.createLabel("field.snesDataPath", true);
+		this.remoteGenesisDataPathTitleLabel = UIUtils.createLabel("field.genesisDataPath", true);
 		
 		this.ftpAddressField = new TextField();
 		this.ftpAddressField.setText(settings.address);
@@ -109,12 +148,19 @@ public class SettingsLayout {
 		this.remoteArtworksDataPathField.setText(settings.artworksDataPath);
 		this.remoteMameDataPathField = new TextField();
 		this.remoteMameDataPathField.setText(settings.mameDataPath);
+		this.remoteSnesDataPathField = new TextField();
+		this.remoteSnesDataPathField.setText(settings.snesDataPath);
+		this.remoteGenesisDataPathField = new TextField();
+		this.remoteGenesisDataPathField.setText(settings.genesisDataPath);
 		
-		UIUtils.assignStyleClassToNodes("settings-title", this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel);
+		UIUtils.assignStyleClassToNodes("settings-title", this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel,
+														  this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel, this.remoteGenesisDataPathTitleLabel);
 		UIUtils.assignStyleClassToNodes("settings-group-title", this.ftpSettingsGroupTitle);
 		pane.getChildren().addAll(this.ftpSettingsGroupTitle);
-		pane.getChildren().addAll(this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel);
-		pane.getChildren().addAll(this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField, this.remoteArtworksDataPathField, this.remoteMameDataPathField);
+		pane.getChildren().addAll(this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel,
+								  this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel, this.remoteGenesisDataPathTitleLabel);
+		pane.getChildren().addAll(this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField,
+								  this.remoteArtworksDataPathField, this.remoteMameDataPathField, this.remoteSnesDataPathField, this.remoteGenesisDataPathField);
 	}
 	
 	private void createInputAndConfirmButtons(SettingsPane pane) {
@@ -143,14 +189,22 @@ public class SettingsLayout {
 	}
 	
 	private double layoutSettingsFields() {
-		Button[] allButtons = new Button[]{this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.mameExecutablePathButton, this.steamExecutablePathButton};
-		Label[] allLabels = new Label[]{this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.mameExecutablePathLabel, this.steamExecutablePathLabel};
+		Button[] allButtons = new Button[]{
+				this.artworksFolderPathButton, this.mameRomsFolderPathButton, this.snesRomsFolderPathButton, this.genesisRomsFolderPathButton,
+				this.mameExecutablePathButton, this.steamExecutablePathButton, this.snes9xExecutablePathButton, this.kegaExecutablePathButton};
+		Label[] allLabels = new Label[]{
+				this.artworksFolderPathLabel, this.mameRomsFolderPathLabel, this.snesRomsFolderPathLabel, this.genesisRomsFolderPathLabel,
+				this.mameExecutablePathLabel, this.steamExecutablePathLabel, this.snes9xExecutablePathLabel, this.kegaExecutablePathLabel};
 		return UIUtils.layoutControlPairsInGridWithTitleStartingAtPosition(this.localSettingsGroupTitle, allButtons, allLabels, new Point2D(0, 0));
 	}
 	
 	private double layoutFTPFieldsAtStartingHeight(double startingHeight) {
-		Label[] allTitles = new Label[]{this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel};
-		Control[] allFields = new Control[]{this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField, this.remoteArtworksDataPathField, this.remoteMameDataPathField};
+		Label[] allTitles = new Label[]{
+				this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel,
+				this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel, this.remoteGenesisDataPathTitleLabel};
+		Control[] allFields = new Control[]{
+				this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField,
+				this.remoteArtworksDataPathField, this.remoteMameDataPathField, this.remoteSnesDataPathField, this.remoteGenesisDataPathField};
 		return UIUtils.layoutControlPairsInGridWithTitleStartingAtPosition(this.ftpSettingsGroupTitle, allTitles, allFields, new Point2D(0, (float)startingHeight));
 	}
 	

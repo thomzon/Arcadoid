@@ -25,7 +25,7 @@ public class UIUtils {
 	/**
 	 * Constants for all UI elements
 	 */
-	public static final double	FORM_FIELDS_SEPARATION			= 20;
+	public static final double	FORM_FIELDS_SEPARATION			= 10;
 	public static final double 	BORDER_NODE_MARGIN 				= 30;
 	public static final double  BUTTON_LABEL_MARGIN				= 50;
 	public static final int		SCREEN_REPLACE_FADE_TIME 		= 200;

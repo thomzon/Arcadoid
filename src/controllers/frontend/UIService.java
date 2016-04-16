@@ -3,7 +3,7 @@ package controllers.frontend;
 import java.util.ArrayList;
 import java.util.List;
 
-import data.settings.Settings;
+import applications.ApplicationVersionService;
 import data.settings.Settings.PropertyId;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
@@ -90,7 +90,7 @@ public class UIService {
 	}
 	
 	private void checkForAppUpdate() {
-		this.updateChecker.checkForEditorUpdate(new CompletionCallable() {
+		this.updateChecker.checkForUpdate(new CompletionCallable() {
 			@Override
 			public Void call() throws Exception {
 				Platform.runLater(() -> {
@@ -106,7 +106,7 @@ public class UIService {
 			TransferUtils.showRepositoryOperationError(result);
 		} else if (this.updateChecker.updateAvailableForUpdater) {
 			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
-				Settings.setSetting(PropertyId.UPDATER_VERSION_NUMBER, "" + updateChecker.remoteUpdaterVersionNumber);
+				ApplicationVersionService.updateVersionNumberForProperty("" + updateChecker.remoteUpdaterVersionNumber, PropertyId.UPDATER_VERSION_NUMBER);
 				checkForAppUpdate();
 			});
 		} else if (this.updateChecker.updateAvailableForFrontend) {
