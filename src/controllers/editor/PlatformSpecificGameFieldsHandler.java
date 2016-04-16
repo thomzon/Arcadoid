@@ -69,6 +69,10 @@ abstract class PlatformSpecificGameFieldsHandler {
 				return new MameGameFieldsHandler();
 			case STEAM:
 				return new SteamGameFieldsHandler();
+			case SNES:
+				return new SnesGameFieldsHandler();
+			case GENESIS:
+				return new GenesisGameFieldsHandler();
 			default:
 				return null;
 		}

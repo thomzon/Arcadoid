@@ -101,6 +101,7 @@ public class GamesViewController implements Initializable {
 		}
 		this.platformSpecificFieldsHandler = PlatformSpecificGameFieldsHandler.handlerForPlatform(platform);
 		this.platformSpecificFieldsHandler.setupInGridPane(this.gameFieldsGridPane);
+		this.platformSpecificFieldsHandler.setEditedGame(this.editedGame);
 		this.allGamesListView.getSelectionModel().select(selectedIndex);
 	}
 	
