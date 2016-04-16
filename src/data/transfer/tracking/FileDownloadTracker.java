@@ -43,8 +43,18 @@ public class FileDownloadTracker extends FileOperationTracker {
 		if (!existingMameRomsDirectories.success) {
 			return existingMameRomsDirectories;
 		}
+		FileListingResult existingSnesRomsFiles = this.transfer.getFilesList(this.ftpSettings.snesDataPath);
+		if (!existingSnesRomsFiles.success) {
+			return existingSnesRomsFiles;
+		}
+		FileListingResult existingGenesisRomsFiles = this.transfer.getFilesList(this.ftpSettings.genesisDataPath);
+		if (!existingGenesisRomsFiles.success) {
+			return existingGenesisRomsFiles;
+		}
 		this.analyzeRemoteDataFile(existingDataFiles.foundFiles);
-		this.compareLocalAndRemoteArtworks(existingArtworkFiles.foundFiles);
+		this.compareLocalAndRemoteFiles(existingArtworkFiles.foundFiles, Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), this.artworksToTransfer);
+		this.compareLocalAndRemoteFiles(existingSnesRomsFiles.foundFiles, Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH), this.snesRomFilesToTransfer);
+		this.compareLocalAndRemoteFiles(existingGenesisRomsFiles.foundFiles, Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH), this.genesisRomFilesToTransfer);
 		CompletionResult mameCompareResult = this.compareLocalAndRemoteMameRoms(existingMameRomsDirectories.foundFiles);
 		if (mameCompareResult != null) {
 			return mameCompareResult;
@@ -62,11 +72,27 @@ public class FileDownloadTracker extends FileOperationTracker {
 	public CompletionResult getNextArtworkFile() {
 		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		String next = this.nextArtworkFileToTransfer();
-		String fullPath = Settings.fullPathWithRootAndLeaf(artworksDirectoryPath, next);
-		long fileSize = this.artworksToTransfer.get(next).longValue();
-		this.artworksToTransfer.remove(next);
+		return this.getNextFile(this.artworksToTransfer, artworksDirectoryPath, next);
+	}
+	
+	public CompletionResult getNextSnesRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
+		String next = this.nextSnesRomFileToTransfer();
+		return this.getNextFile(this.snesRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	public CompletionResult getNextGenesisRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		String next = this.nextGenesisRomFileToTransfer();
+		return this.getNextFile(this.genesisRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	private CompletionResult getNextFile(Map<String, Number> transferMap, String directoryPath, String nextFile) {
+		String fullPath = Settings.fullPathWithRootAndLeaf(directoryPath, nextFile);
+		long fileSize = transferMap.get(nextFile).longValue();
+		transferMap.remove(nextFile);
 		this.transferWillStart(fileSize);
-		CompletionResult result = this.transfer.getFile(next, fullPath);
+		CompletionResult result = this.transfer.getFile(nextFile, fullPath);
 		this.transferDidEnd();
 		return result;
 	}
@@ -100,11 +126,10 @@ public class FileDownloadTracker extends FileOperationTracker {
 		}
 	}
 	
-	private void compareLocalAndRemoteArtworks(FTPFile[] remoteArtworks) {
-		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteArtworks);
-		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
+	private void compareLocalAndRemoteFiles(FTPFile[] remoteFiles, String localDirectoryPath, Map<String, Number> transferMap) {
+		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteFiles);
 		for (Entry<String, Number> remoteFile : remoteFilesList.entrySet()) {
-			this.checkAndAddFileToListIfNeeded(remoteFile, artworksDirectoryPath, this.artworksToTransfer);
+			this.checkAndAddFileToListIfNeeded(remoteFile, localDirectoryPath, transferMap);
 		}
 	}
 	

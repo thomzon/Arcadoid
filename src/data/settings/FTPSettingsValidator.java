@@ -23,7 +23,14 @@ public class FTPSettingsValidator {
 		this.folderCreationCallback = folderCreationCallback;
 		this.completionCallback = completionCallback;
 		this.ftpSettings = ftpSettings;
-		this.pathsToCheck = new String[]{ftpSettings.applicationPath, ftpSettings.catalogDataPath, ftpSettings.artworksDataPath, ftpSettings.mameDataPath};
+		this.pathsToCheck = new String[]{
+				ftpSettings.applicationPath,
+				ftpSettings.catalogDataPath,
+				ftpSettings.artworksDataPath,
+				ftpSettings.mameDataPath,
+				ftpSettings.snesDataPath,
+				ftpSettings.genesisDataPath,
+				};
 	}
 	
 	public void validate() {

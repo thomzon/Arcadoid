@@ -12,8 +12,10 @@ import data.json.DataPersistence;
 import data.model.BaseItem;
 import data.model.Game;
 import data.model.Game.Platform;
+import data.model.GenesisGame;
 import data.model.MameGame;
 import data.model.NavigationItem;
+import data.model.SnesGame;
 import data.model.SteamGame;
 import data.model.Tag;
 import data.settings.Messages;
@@ -190,7 +192,13 @@ public class ArcadoidData {
 			break;
 		case STEAM:
 			newGame = new SteamGame(currentGame);
-			break;		
+			break;
+		case SNES:
+			newGame = new SnesGame(currentGame);
+			break;
+		case GENESIS:
+			newGame = new GenesisGame(currentGame);
+			break;
 		}
 		this.allGames.set(this.allGames.indexOf(currentGame), newGame);
 		return newGame;

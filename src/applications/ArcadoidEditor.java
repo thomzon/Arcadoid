@@ -1,32 +1,27 @@
 package applications;
 	
-import java.io.IOException;
-
-import controllers.editor.RootController;
-import data.settings.Messages;
 import data.settings.Settings.PropertyId;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 
 public class ArcadoidEditor extends Application {
 	
-	private RootController rootController;
+//	private RootController rootController;
     
 	@Override
 	public void start(Stage primaryStage) {
-		ApplicationVersionService.updateVersionNumberForProperty(ApplicationVersionService.EDITOR_VERSION_NUMBER, PropertyId.EDITOR_VERSION_NUMBER);
 		try {
-            FXMLLoader loader = new FXMLLoader();
-            Messages.setupLoader(loader);
-            loader.setLocation(ArcadoidEditor.class.getResource("/views/editor/RootController.fxml"));
-            loader.load();
-            this.rootController = loader.getController();
-            this.rootController.setPrimaryStage(primaryStage);
-            this.rootController.show();
-        } catch (IOException e) {
+			ApplicationVersionService.updateVersionNumberForProperty(ApplicationVersionService.EDITOR_VERSION_NUMBER, PropertyId.EDITOR_VERSION_NUMBER);
+//            FXMLLoader loader = new FXMLLoader();
+//            Messages.setupLoader(loader);
+//            loader.setLocation(ArcadoidEditor.class.getResource("/views/editor/RootController.fxml"));
+//            loader.load();
+//            this.rootController = loader.getController();
+//            this.rootController.setPrimaryStage(primaryStage);
+//            this.rootController.show();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 	}

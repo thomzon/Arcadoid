@@ -1,7 +1,6 @@
 package data.model;
 
 import java.io.File;
-import java.io.IOException;
 
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
@@ -50,26 +49,9 @@ public class MameGame extends Game {
 	 */
 	@Override
 	public void execute() {
-		if (this.process != null) return;
 		String mamePath = Settings.getSetting(PropertyId.MAME_PATH);
 		String executable = mamePath + " " + this.gameName();
-		try {
-			this.process = Runtime.getRuntime().exec(executable, null, new File(mamePath).getParentFile());
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
-	}
-
-	/**
-	 * Terminating a MAME emulator process is as simple as killing it.
-	 */
-	@Override
-	public void terminate() {
-		if (this.process != null) {
-			this.process.destroy();
-		}
-		this.process = null;
+		this.execute(executable, new File(mamePath).getParentFile());
 	}
 
 }

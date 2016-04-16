@@ -20,10 +20,18 @@ public class FrontendSettingsValidator {
 			result.errorType = ErrorType.ARTWORKS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.mameRomsFolderPath == null || this.frontendSettings.mameRomsFolderPath.isEmpty() || !new File(this.frontendSettings.mameRomsFolderPath).exists()) {
 			result.errorType = ErrorType.MAME_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.frontendSettings.snesRomsFolderPath == null || this.frontendSettings.snesRomsFolderPath.isEmpty() || !new File(this.frontendSettings.snesRomsFolderPath).exists()) {
+			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.frontendSettings.genesisRomsFolderPath == null || this.frontendSettings.genesisRomsFolderPath.isEmpty() || !new File(this.frontendSettings.genesisRomsFolderPath).exists()) {
+			result.errorType = ErrorType.GENESIS_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.mameExecutablePath == null || this.frontendSettings.mameExecutablePath.isEmpty() || !new File(this.frontendSettings.mameExecutablePath).exists()) {
 			result.errorType = ErrorType.MAME_EXECUTABLE_NOT_FOUND;
 		} else if (this.frontendSettings.steamExecutablePath == null || this.frontendSettings.steamExecutablePath.isEmpty() || !new File(this.frontendSettings.steamExecutablePath).exists()) {
 			result.errorType = ErrorType.STEAM_EXECUTABLE_NOT_FOUND;
+		} else if (this.frontendSettings.snes9xExecutablePath == null || this.frontendSettings.snes9xExecutablePath.isEmpty() || !new File(this.frontendSettings.snes9xExecutablePath).exists()) {
+			result.errorType = ErrorType.SNES9X_EXECUTABLE_NOT_FOUND;
+		} else if (this.frontendSettings.kegaExecutablePath == null || this.frontendSettings.kegaExecutablePath.isEmpty() || !new File(this.frontendSettings.kegaExecutablePath).exists()) {
+			result.errorType = ErrorType.KEGA_EXECUTABLE_NOT_FOUND;
 		} else {
 			result.success = true;
 		}

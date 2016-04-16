@@ -66,14 +66,8 @@ public class SteamGame extends Game {
 	 */
 	@Override
 	public void execute() {
-		if (this.process != null) return;
 		String executable = Settings.getSetting(PropertyId.STEAM_PATH) + " -applaunch " + this.appId();
-		try {
-			this.process = Runtime.getRuntime().exec(executable);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
+		this.execute(executable, null);
 	}
 
 	/**
@@ -81,8 +75,7 @@ public class SteamGame extends Game {
 	 */
 	@Override
 	public void terminate() {
-		if (this.process != null) this.process.destroy();
-		this.process = null;
+		super.terminate();
 		if (this.processName() == null) return;
 		try {
 			Runtime.getRuntime().exec("taskkill /im " + this.processName() +" /f");

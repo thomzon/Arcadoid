@@ -20,6 +20,10 @@ public class EditorSettingsValidator {
 			result.errorType = ErrorType.ARTWORKS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.editorSettings.mameRomsFolderPath == null || this.editorSettings.mameRomsFolderPath.isEmpty() || !new File(this.editorSettings.mameRomsFolderPath).exists()) {
 			result.errorType = ErrorType.MAME_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.editorSettings.snesRomsFolderPath == null || this.editorSettings.snesRomsFolderPath.isEmpty() || !new File(this.editorSettings.snesRomsFolderPath).exists()) {
+			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.editorSettings.genesisRomsFolderPath == null || this.editorSettings.genesisRomsFolderPath.isEmpty() || !new File(this.editorSettings.genesisRomsFolderPath).exists()) {
+			result.errorType = ErrorType.GENESIS_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else {
 			result.success = true;
 		}

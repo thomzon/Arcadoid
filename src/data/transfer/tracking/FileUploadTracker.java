@@ -14,7 +14,9 @@ import data.access.ArcadoidData;
 import data.model.BaseItem;
 import data.model.Game;
 import data.model.Game.Platform;
+import data.model.GenesisGame;
 import data.model.MameGame;
+import data.model.SnesGame;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import data.transfer.CompletionResult;
@@ -46,7 +48,17 @@ public class FileUploadTracker extends FileOperationTracker {
 		if (!existingMameRomsDirectories.success) {
 			return existingMameRomsDirectories;
 		}
+		FileListingResult existingSnesRomsFiles = this.transfer.getFilesList(this.ftpSettings.snesDataPath);
+		if (!existingSnesRomsFiles.success) {
+			return existingSnesRomsFiles;
+		}
+		FileListingResult existingGenesisRomsFiles = this.transfer.getFilesList(this.ftpSettings.genesisDataPath);
+		if (!existingGenesisRomsFiles.success) {
+			return existingGenesisRomsFiles;
+		}
 		this.compareLocalAndRemoteArtworks(existingArtworkFiles.foundFiles);
+		this.compareLocalAndRemoteSnesGames(existingSnesRomsFiles.foundFiles);
+		this.compareLocalAndRemoteGenesisGames(existingGenesisRomsFiles.foundFiles);
 		CompletionResult mameCompareResult = this.compareLocalAndRemoteMameRoms(existingMameRomsDirectories.foundFiles);
 		if (mameCompareResult != null) {
 			return mameCompareResult;
@@ -64,11 +76,27 @@ public class FileUploadTracker extends FileOperationTracker {
 	public CompletionResult sendNextArtworkFile() {
 		String artworksDirectoryPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		String next = this.nextArtworkFileToTransfer();
-		String fullPath = Settings.fullPathWithRootAndLeaf(artworksDirectoryPath, next);
-		long fileSize = this.artworksToTransfer.get(next).longValue();
-		this.artworksToTransfer.remove(next);
+		return this.sendNextFile(this.artworksToTransfer, artworksDirectoryPath, next);
+	}
+	
+	public CompletionResult sendNextSnesRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
+		String next = this.nextSnesRomFileToTransfer();
+		return this.sendNextFile(this.snesRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	public CompletionResult sendNextGenesisRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		String next = this.nextGenesisRomFileToTransfer();
+		return this.sendNextFile(this.genesisRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	private CompletionResult sendNextFile(Map<String, Number> transferMap, String directoryPath, String nextFile) {
+		String fullPath = Settings.fullPathWithRootAndLeaf(directoryPath, nextFile);
+		long fileSize = transferMap.get(nextFile).longValue();
+		transferMap.remove(nextFile);
 		this.transferWillStart(fileSize);
-		CompletionResult result = this.transfer.transferFile(fullPath, next);
+		CompletionResult result = this.transfer.transferFile(fullPath, nextFile);
 		this.transferDidEnd();
 		return result;
 	}
@@ -108,6 +136,24 @@ public class FileUploadTracker extends FileOperationTracker {
 		for (BaseItem item : ArcadoidData.sharedInstance().getAllItems()) {
 			this.checkAndAddFileToListIfNeeded(item.getBackgroundArtworkPath(), artworksDirectoryPath, remoteFilesList, this.artworksToTransfer);
 			this.checkAndAddFileToListIfNeeded(item.getThumbnailArtworkPath(), artworksDirectoryPath, remoteFilesList, this.artworksToTransfer);
+		}
+	}
+	
+	private void compareLocalAndRemoteSnesGames(FTPFile[] remoteGames) {
+		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteGames);
+		String romDirectoryPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
+		for (Game game : ArcadoidData.sharedInstance().getAllGamesForPlatform(Platform.SNES)) {
+			SnesGame snesGame = (SnesGame)game;
+			this.checkAndAddFileToListIfNeeded(snesGame.romFileName(), romDirectoryPath, remoteFilesList, this.snesRomFilesToTransfer);
+		}
+	}
+	
+	private void compareLocalAndRemoteGenesisGames(FTPFile[] remoteGames) {
+		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteGames);
+		String romDirectoryPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		for (Game game : ArcadoidData.sharedInstance().getAllGamesForPlatform(Platform.GENESIS)) {
+			GenesisGame genesisGame = (GenesisGame)game;
+			this.checkAndAddFileToListIfNeeded(genesisGame.romFileName(), romDirectoryPath, remoteFilesList, this.genesisRomFilesToTransfer);
 		}
 	}
 	

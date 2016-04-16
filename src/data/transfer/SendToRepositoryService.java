@@ -128,6 +128,50 @@ public class SendToRepositoryService extends Service<Void> {
 						nextRomName = this.tracker.nextMameRomToTransfer();
 					}
 				}
+				this.sendSnesRomsFiles();
+			}
+		}
+		
+		private void sendSnesRomsFiles() {
+			CompletionResult result = this.tracker.prepareForSnesRomsOperation();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextSnesRomFileToTransfer();
+				while (nextFileName != null) {
+					String newMessage = Messages.get("progress.body.sendingSnesRomFile", nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
+					result = this.tracker.sendNextSnesRomFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						nextFileName = this.tracker.nextSnesRomFileToTransfer();
+					}
+				}
+				this.sendGenesisRomsFiles();
+			}
+		}
+		
+		private void sendGenesisRomsFiles() {
+			CompletionResult result = this.tracker.prepareForGenesisRomsOperation();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+				while (nextFileName != null) {
+					String newMessage = Messages.get("progress.body.sendingGenesisRomFile", nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
+					result = this.tracker.sendNextGenesisRomFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+					}
+				}
 				this.finish();
 			}
 		}

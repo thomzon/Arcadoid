@@ -40,13 +40,17 @@ import utils.transfer.TransferUtils;
 public class SettingsViewController implements Initializable {
 
 	@FXML
-	private TextField ftpAddressField, ftpPortNumberField, ftpApplicationPathField, ftpDataPathField, ftpArtworksPathField, ftpMameRomsPathField, ftpUserField;
+	private TextField 	ftpAddressField, ftpPortNumberField, ftpApplicationPathField, ftpDataPathField,
+						ftpArtworksPathField, ftpMameRomsPathField, ftpUserField, ftpSnesRomsPathField, ftpGenesisRomsPathField;
 	@FXML
 	private PasswordField ftpPasswordField;
 	@FXML
-	private Button resetButton, saveButton, pickArtworksFolderButton, clearArtworksFolderButton, pickMameRomsFolderButton, clearMameRomsFolderButton;
+	private Button 	resetButton, saveButton, pickArtworksFolderButton, clearArtworksFolderButton,
+					pickMameRomsFolderButton, clearMameRomsFolderButton,
+					pickSnesRomsFolderButton, clearSnesRomsFolderButton,
+					pickGenesisRomsFolderButton, clearGenesisRomsFolderButton;
 	@FXML
-	private Label artworksFolderLabel, mameRomsFolderLabel;
+	private Label artworksFolderLabel, mameRomsFolderLabel, snesRomsFolderLabel, genesisRomsFolderLabel;
 
 	private DataUpdateChecker updateChecker = new DataUpdateChecker();
 
@@ -81,12 +85,8 @@ public class SettingsViewController implements Initializable {
 	}
 	
 	@FXML private void pickArtworksFolderAction() {
-		DirectoryChooser folderChooser = new DirectoryChooser();
-		folderChooser.setTitle(Messages.get("title.selectFolder"));
-		File folder = folderChooser.showDialog(this.artworksFolderLabel.getScene().getWindow());
-		if (folder != null) {
-			this.artworksFolderLabel.setText(folder.getAbsolutePath());
-		}
+		this.pickRomsFolderForField(this.artworksFolderLabel);
+
 	}
 	
 	@FXML private void clearArtworksFolderAction() {
@@ -94,16 +94,36 @@ public class SettingsViewController implements Initializable {
 	}
 	
 	@FXML private void pickMameRomsFolderAction() {
-		DirectoryChooser folderChooser = new DirectoryChooser();
-		folderChooser.setTitle(Messages.get("title.selectFolder"));
-		File folder = folderChooser.showDialog(this.mameRomsFolderLabel.getScene().getWindow());
-		if (folder != null) {
-			this.mameRomsFolderLabel.setText(folder.getAbsolutePath());
-		}
+		this.pickRomsFolderForField(this.mameRomsFolderLabel);
 	}
 	
 	@FXML private void clearMameRomsFolderAction() {
 		this.mameRomsFolderLabel.setText("");
+	}
+	
+	@FXML private void pickSnesRomsFolderAction() {
+		this.pickRomsFolderForField(this.snesRomsFolderLabel);
+	}
+	
+	@FXML private void clearSnesRomsFolderAction() {
+		this.snesRomsFolderLabel.setText("");
+	}
+	
+	@FXML private void pickGenesisRomsFolderAction() {
+		this.pickRomsFolderForField(this.genesisRomsFolderLabel);
+	}
+	
+	@FXML private void clearGenesisRomsFolderAction() {
+		this.genesisRomsFolderLabel.setText("");
+	}
+	
+	private void pickRomsFolderForField(Label field) {
+		DirectoryChooser folderChooser = new DirectoryChooser();
+		folderChooser.setTitle(Messages.get("title.selectFolder"));
+		File folder = folderChooser.showDialog(field.getScene().getWindow());
+		if (folder != null) {
+			field.setText(folder.getAbsolutePath());
+		}
 	}
 	
 	@FXML private void resetAction() {
@@ -112,10 +132,14 @@ public class SettingsViewController implements Initializable {
 		this.ftpDataPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_DATA_PATH));
 		this.ftpArtworksPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_ARTWORKS_PATH));
 		this.ftpMameRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH));
+		this.ftpSnesRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_SNES_ROMS_PATH));
+		this.ftpGenesisRomsPathField.setText(Settings.getSetting(PropertyId.REPOSITORY_GENESIS_ROMS_PATH));
 		this.ftpUserField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_USER));
 		this.ftpPasswordField.setText(Settings.getSetting(PropertyId.REPOSITORY_FTP_PASSWORD));
 		this.artworksFolderLabel.setText(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH));
 		this.mameRomsFolderLabel.setText(Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH));
+		this.snesRomsFolderLabel.setText(Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH));
+		this.genesisRomsFolderLabel.setText(Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH));
 	}
 	
 	@FXML private void saveAction() {
@@ -168,6 +192,8 @@ public class SettingsViewController implements Initializable {
 		settings.catalogDataPath = this.ftpDataPathField.getText();
 		settings.artworksDataPath = this.ftpArtworksPathField.getText();
 		settings.mameDataPath = this.ftpMameRomsPathField.getText();
+		settings.snesDataPath = this.ftpSnesRomsPathField.getText();
+		settings.genesisDataPath = this.ftpGenesisRomsPathField.getText();
 		return settings;
 	}
 	
@@ -175,6 +201,8 @@ public class SettingsViewController implements Initializable {
 		EditorSettings editorSettings = new EditorSettings();
 		editorSettings.artworksFolderPath = this.artworksFolderLabel.getText();
 		editorSettings.mameRomsFolderPath = this.mameRomsFolderLabel.getText();
+		editorSettings.snesRomsFolderPath = this.snesRomsFolderLabel.getText();
+		editorSettings.genesisRomsFolderPath = this.genesisRomsFolderLabel.getText();
 		return editorSettings;
 	}
 	
@@ -183,6 +211,10 @@ public class SettingsViewController implements Initializable {
 		this.clearArtworksFolderButton.setDisable(!enabled);
 		this.pickMameRomsFolderButton.setDisable(!enabled);
 		this.clearMameRomsFolderButton.setDisable(!enabled);
+		this.pickSnesRomsFolderButton.setDisable(!enabled);
+		this.clearSnesRomsFolderButton.setDisable(!enabled);
+		this.pickGenesisRomsFolderButton.setDisable(!enabled);
+		this.clearGenesisRomsFolderButton.setDisable(!enabled);
 		this.ftpAddressField.setDisable(!enabled);
 		this.ftpPortNumberField.setDisable(!enabled);
 		this.ftpUserField.setDisable(!enabled);
@@ -191,6 +223,8 @@ public class SettingsViewController implements Initializable {
 		this.ftpDataPathField.setDisable(!enabled);
 		this.ftpArtworksPathField.setDisable(!enabled);
 		this.ftpMameRomsPathField.setDisable(!enabled);
+		this.ftpSnesRomsPathField.setDisable(!enabled);
+		this.ftpGenesisRomsPathField.setDisable(!enabled);
 		this.resetButton.setDisable(!enabled);
 		this.saveButton.setDisable(!enabled);
 	}
@@ -262,6 +296,12 @@ public class SettingsViewController implements Initializable {
 			break;
 		case MAME_ROMS_FOLDER_PATH_NOT_FOUND:
 			message = Messages.get("error.body.mameRomsPathNotFound");
+			break;
+		case SNES_ROMS_FOLDER_PATH_NOT_FOUND:
+			message = Messages.get("error.body.snesRomsPathNotFound");
+			break;
+		case GENESIS_ROMS_FOLDER_PATH_NOT_FOUND:
+			message = Messages.get("error.body.genesisRomsPathNotFound");
 			break;
 		default:
 			Messages.get("error.body.unexpectedSettingsCheckError");

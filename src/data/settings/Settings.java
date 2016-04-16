@@ -52,13 +52,19 @@ public class Settings
 		REPOSITORY_DATA_PATH("repo_base_path", Messages.get("field.catalogDataPath")),
 		REPOSITORY_ARTWORKS_PATH("repo_artworks_path", Messages.get("field.artworksDataPath")),
 		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path", Messages.get("field.mameDataPath")),
+		REPOSITORY_SNES_ROMS_PATH("repo_snes_roms_path", Messages.get("field.snesDataPath")),
+		REPOSITORY_GENESIS_ROMS_PATH("repo_genesis_roms_path", Messages.get("fields.genesisDataPath")),
 		
 		// Common settings
 		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path", Messages.get("field.mameRomsFolderPath")),
+		SNES_ROMS_FOLDER_PATH("snes_roms_folder_path", Messages.get("field.snesRomsFolderPath")),
+		GENESIS_ROMS_FOLDER_PATH("genesis_roms_folder_path", Messages.get("field.genesisRomsFolderPath")),
 		
 		// Front-end specific settings
 		MAME_PATH("mame_path", Messages.get("field.mameExecutablePath")),
 		STEAM_PATH("steam_path", Messages.get("field.steamExecutablePath")),
+		SNES9X_PATH("snes9x_path", Messages.get("field.snes9xExecutablePath")),
+		KEGA_PATH("kega_path", Messages.get("field.kegaExecutablePath")),
 		KEY_P1_UP("key_p1_up", Messages.get("inputkey.p1.up")),
 		KEY_P1_LEFT("key_p1_left", Messages.get("inputkey.p1.left")),
 		KEY_P1_DOWN("key_p1_down", Messages.get("inputkey.p1.down")),

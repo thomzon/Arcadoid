@@ -1,5 +1,8 @@
 package data.model;
 
+import java.io.File;
+import java.io.IOException;
+
 import data.settings.Messages;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +24,9 @@ public abstract class Game extends BaseItem {
 	 */
 	public enum Platform {
 		MAME(1, Messages.get("platform.MAME")),
-		STEAM(2, Messages.get("platform.Steam"));
+		STEAM(2, Messages.get("platform.Steam")),
+		SNES(3, Messages.get("platform.Snes")),
+		GENESIS(4, Messages.get("platform.Genesis"));
 		
 		public final int intValue;
 		public final String stringValue;
@@ -59,9 +64,25 @@ public abstract class Game extends BaseItem {
 	 */
 	public abstract void execute();
 	
+	protected void execute(String commandLine, File directory) {
+		if (this.process != null) return;
+		try {
+			this.process = Runtime.getRuntime().exec(commandLine, null, directory);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(4);
+		}
+	}
+	
 	/**
 	 * Stops the game process and return to Arcadoid front-end.
+	 * Most games can be terminated by just destroying the associated emulator process.
 	 */
-	public abstract void terminate();
+	public void terminate() {
+		if (this.process != null) {
+			this.process.destroy();
+		}
+		this.process = null;
+	}
 
 }
