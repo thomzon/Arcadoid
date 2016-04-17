@@ -1,5 +1,6 @@
 package controllers.frontend;
 
+import java.io.File;
 import java.util.List;
 import java.util.Stack;
 
@@ -12,6 +13,10 @@ import data.model.BaseItem;
 import data.model.Game;
 import data.model.NavigationItem;
 import data.settings.Messages;
+import data.settings.Settings;
+import data.settings.Settings.PropertyId;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utils.frontend.GameLaunchService;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
@@ -20,6 +25,7 @@ import views.frontend.InfoPopup;
 public class GameNavigationPane extends FrontendPane implements PlayerInputObserver {
 
 	private GameNavigationLayout layout;
+	private ImageView backgroundImageView = new ImageView();
 	private boolean firstAppearance = true;
 	private FrontendPopup gameRunningMessagePopup;
 	private List<BaseItem> displayedItems;
@@ -37,6 +43,12 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	public void setupPane() {
 		super.setupPane();
 		if (this.layout == null) {
+			this.getChildren().add(this.backgroundImageView);
+			this.backgroundImageView.fitWidthProperty().bind(this.widthProperty()); 
+			this.backgroundImageView.fitHeightProperty().bind(this.heightProperty());
+			this.backgroundImageView.setPreserveRatio(true);
+			this.backgroundImageView.setLayoutX(0);
+			this.backgroundImageView.setLayoutY(0);
 			this.layout = new GameNavigationLayoutFactory().createLayoutForTypeInParentPane(GameNavigationLayoutType.COVERFLOW, this);
 			this.makeChildrenVisible(false);
 		}
@@ -45,6 +57,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	@Override
 	public void doLayout() {
 		this.layout.setupSettingsAccess();
+		this.backgroundImageView.setOpacity(1);
 		if (this.firstAppearance) {
 			this.firstAppearance = false;
 			this.initialAppearance();
@@ -77,6 +90,22 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		}
 	}
 	
+	private void updateBackgroundImage() {
+		if (this.currentItem.getBackgroundArtworkPath() == null || this.currentItem.getBackgroundArtworkPath().length() == 0) return;
+		File backgroundImageFile = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), this.currentItem.getBackgroundArtworkPath());
+		if (backgroundImageFile.exists()) {
+			Image image = new Image(backgroundImageFile.toURI().toString(), false);
+			this.backgroundImageView.setImage(image);
+			double imageHeight = this.backgroundImageView.getBoundsInParent().getHeight();
+			double imageWidth = this.backgroundImageView.getBoundsInParent().getWidth();
+			if (imageHeight < this.getHeight()) {
+				System.out.println("Image height is " + imageHeight);
+				this.backgroundImageView.setLayoutY(10);
+//				this.backgroundImageView.setLayoutY((this.getHeight() - imageHeight) / 2);
+			}
+		}
+	}
+	
 	@Override
 	public void navigateLeft() {
 		if (this.currentItem == null || this.gameRunningMessagePopup != null) return;
@@ -84,6 +113,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (currentIndex >= 1) {
 			this.currentItem = this.displayedItems.get(currentIndex - 1);
 			this.layout.navigateToSiblingInItems(this.currentItem, this.displayedItems);
+			this.updateBackgroundImage();
 		}
 	}
 	
@@ -94,6 +124,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (currentIndex >= 0 && currentIndex+1 < this.displayedItems.size()) {
 			this.currentItem = this.displayedItems.get(currentIndex + 1);
 			this.layout.navigateToSiblingInItems(this.currentItem, this.displayedItems);
+			this.updateBackgroundImage();
 		}
 	}
 	
@@ -108,6 +139,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 				this.displayedItems = children;
 				this.currentItem = children.get(0);
 				this.layout.navigateToChildren(children);
+				this.updateBackgroundImage();
 			}
 		}
 	}
@@ -120,6 +152,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		this.displayedItems = siblings;
 		this.currentItem = parentItem;
 		this.layout.navigateToParentWithSiblings(parentItem, siblings);
+		this.updateBackgroundImage();
 	}
 	
 	@Override

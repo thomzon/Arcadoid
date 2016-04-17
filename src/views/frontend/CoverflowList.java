@@ -23,13 +23,14 @@ public class CoverflowList extends Group {
     private static final double LEFT_OFFSET = -110;
     private static final double RIGHT_OFFSET = 110;
     private static final double SCALE_SMALL = 0.7;
-    private static final double LEFT_SIDE_ANGLE = 90.0;//45.0;
-    private static final double RIGHT_SIDE_ANGLE = 90.0;//135.0;
+    private static final double LEFT_SIDE_ANGLE = 60.0;//45.0;
+    private static final double RIGHT_SIDE_ANGLE = 120.0;//135.0;
 	
 	private CoverflowListDataSource dataSource;
 	private List<CoverflowItem> visibleItems = new ArrayList<CoverflowItem>();
 	private int centeredIndex = 0;
 	private Timeline itemScrollAnimationsTimeline, listAnimationsTimeline;
+	private boolean focusedMode = true;
 	
 	public CoverflowList(CoverflowListDataSource dataSource) {
 		this.dataSource = dataSource;
@@ -43,6 +44,7 @@ public class CoverflowList extends Group {
 		for (int index = 0; index < numberOfItems; ++index) {
 			CoverflowItem newItem = this.nodeForIndex(index);
 			if (newItem != null) {
+				newItem.setReflection(this.focusedMode ? 0.5 : 0);
 				this.visibleItems.add(newItem);
 				this.getChildren().add(newItem);
 				newItem.toBack();
@@ -73,20 +75,33 @@ public class CoverflowList extends Group {
 	}
 	
 	public void moveToVerticalPositionAndFocusedMode(double verticalPosition, boolean focusedMode, boolean animated) {
+		this.focusedMode = focusedMode;
 		this.stopListAnimations();
 		double newOpacity = focusedMode ? 1.0 : 0.5;
 		if (animated) {
+			this.listAnimationsTimeline = new Timeline();
 			KeyFrame keyFrame = new KeyFrame(
 					DURATION,
 		            new KeyValue(this.layoutYProperty(), verticalPosition, INTERPOLATOR),
 		            new KeyValue(this.opacityProperty(), newOpacity, INTERPOLATOR)
 		            );
-			this.listAnimationsTimeline = new Timeline();
 			this.listAnimationsTimeline.getKeyFrames().add(keyFrame);
+			double reflection = focusedMode ? 0.5 : 0;
+			for (CoverflowItem item : this.visibleItems) {
+				KeyFrame reflectionKeyFrame = new KeyFrame(
+						DURATION,
+			            new KeyValue(item.reflectionModel(), reflection, INTERPOLATOR)
+			            );
+				this.listAnimationsTimeline.getKeyFrames().add(reflectionKeyFrame);
+			}
 			this.listAnimationsTimeline.play();
 		} else {
 			this.setLayoutY(verticalPosition);
 			this.setOpacity(newOpacity);
+			double reflection = focusedMode ? 0.5 : 0;
+			for (CoverflowItem item : this.visibleItems) {
+				item.setReflection(reflection);
+			}
 		}
 	}
 	

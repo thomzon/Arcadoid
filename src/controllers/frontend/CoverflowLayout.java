@@ -1,5 +1,6 @@
 package controllers.frontend;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import data.access.ArcadoidData;
@@ -21,6 +22,11 @@ import views.frontend.FrontendPane;
 
 public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataSource {
    
+	/**
+	 * Constants
+	 */
+	private static final int UNUSED_LIST_POOL_SIZE = 10;
+	
     /**
      * UI elements
      */
@@ -29,7 +35,8 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	private MouseAutohideBehaviour mouseBehaviour = new MouseAutohideBehaviour();
     private StackPane selectedTextContainer;
     private Text selectedText;
-    private CoverflowList focusedCoverflowList, previousCoverflowList, nextCoverflowList, unusedCoverflowList;
+    private CoverflowList focusedCoverflowList, previousCoverflowList, nextCoverflowList;
+    private List<CoverflowList> unusedCoverflowLists = new ArrayList<CoverflowList>();
     
 	/**
 	 * Items model
@@ -56,7 +63,9 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.focusedCoverflowList.setOpacity(1);
 		this.previousCoverflowList.setOpacity(1);
 		this.nextCoverflowList.setOpacity(1);
-		this.unusedCoverflowList.setOpacity(1);
+		this.unusedCoverflowLists.forEach((list) -> {
+			list.setOpacity(1);
+		});
 		this.selectedTextContainer.setOpacity(1);
 		this.layoutAllNode();
 	}
@@ -83,14 +92,14 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.previousItems = this.displayedItems;
 		this.parentItem = (NavigationItem)this.focusedItem;
 		
-		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForLeavingUnusedList(), false, true);
+		CoverflowList unusedList = this.unpoolCoverflowList();
+		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForTopArrivingList(), false, true);
 		this.focusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, true);
 		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForCurrentList(), true, true);
-		this.unusedCoverflowList.setLayoutY(this.verticalPositionForEnteringUnusedList());
-		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, true);
+		unusedList.setLayoutY(this.verticalPositionForBottomArrivingList());
+		unusedList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, true);
 		
-		CoverflowList unusedList = this.unusedCoverflowList;
-		this.unusedCoverflowList = this.previousCoverflowList;
+		this.recycleCoverflowList(this.previousCoverflowList);
 		this.previousCoverflowList = this.focusedCoverflowList;
 		this.focusedCoverflowList = this.nextCoverflowList;
 		this.nextCoverflowList = unusedList;
@@ -103,9 +112,11 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	
 	@Override
 	public void navigateToParentWithSiblings(BaseItem parent, List<BaseItem> siblings) {
+		int parentIndex = 0;
 		if (this.parentItem != null && this.parentItem.getParentItem() != null) {
 			this.previousItems = ArcadoidData.sharedInstance().getSiblingsForNavigationItem(this.parentItem.getParentItem());
 			this.parentItem = this.parentItem.getParentItem();
+			parentIndex = this.previousItems.indexOf(this.parentItem);
 		} else {
 			this.previousItems = null;
 			this.parentItem = null;
@@ -113,19 +124,20 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		
 		this.displayedItems = siblings;
 		
-		this.unusedCoverflowList.setLayoutY(this.verticalPositionForLeavingUnusedList());
-		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, true);
+		CoverflowList unusedList = this.unpoolCoverflowList();
+		unusedList.setLayoutY(this.verticalPositionForTopArrivingList());
+		unusedList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, true);
 		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForCurrentList(), true, true);
 		this.focusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, true);
-		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForEnteringUnusedList(), false, true);
-		
-		CoverflowList unusedList = this.unusedCoverflowList;
-		this.unusedCoverflowList = this.nextCoverflowList;
+		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForBottomArrivingList(), false, true);
+
+		this.recycleCoverflowList(this.nextCoverflowList);
 		this.nextCoverflowList = this.focusedCoverflowList;
 		this.focusedCoverflowList = this.previousCoverflowList;
 		this.previousCoverflowList = unusedList;
 		
 		this.previousCoverflowList.reloadData();
+		this.previousCoverflowList.scrollToItemAtIndexAnimated(parentIndex, false);
 		this.focusedItem = parent;
 	}
 	
@@ -160,8 +172,12 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.focusedCoverflowList = new CoverflowList(this);
 		this.previousCoverflowList = new CoverflowList(this);
 		this.nextCoverflowList = new CoverflowList(this);
-		this.unusedCoverflowList = new CoverflowList(this);
-		this.parentPane.getChildren().addAll(this.focusedCoverflowList, this.previousCoverflowList, this.nextCoverflowList, this.unusedCoverflowList);//, this.selectedTextContainer);
+		for (int index = 0; index < UNUSED_LIST_POOL_SIZE; ++index) {
+			CoverflowList unusedList = new CoverflowList(this);
+			this.unusedCoverflowLists.add(unusedList);
+			this.parentPane.getChildren().add(unusedList);
+		}
+		this.parentPane.getChildren().addAll(this.focusedCoverflowList, this.previousCoverflowList, this.nextCoverflowList);//, this.selectedTextContainer);
 	}
 	
 	private void layoutAllNode() {
@@ -173,8 +189,10 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.previousCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
 		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, false);
 		this.nextCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
-		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForEnteringUnusedList(), false, false);
-		this.unusedCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		this.unusedCoverflowLists.forEach((list) -> {
+			list.moveToVerticalPositionAndFocusedMode(this.verticalPositionForBottomArrivingList(), false, false);
+			list.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		});
 		
 		this.syncButton.setLayoutX(screenBounds.getWidth() - this.syncButton.getWidth());
         this.selectedTextContainer.setLayoutY(screenBounds.getHeight()/2 - CoverflowItem.HEIGHT);
@@ -189,28 +207,37 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 			this.nextCoverflowList.reloadData();
 		}
 	}
+	
+	private void recycleCoverflowList(CoverflowList list) {
+		this.unusedCoverflowLists.add(list);
+	}
+	
+	private CoverflowList unpoolCoverflowList() {
+		CoverflowList list = this.unusedCoverflowLists.remove(0);
+		return list;
+	}
 
 	private double verticalPositionForCurrentList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/2 - CoverflowItem.HEIGHT/2;
+		return screenBounds.getHeight()/2 - CoverflowItem.WIDTH/2;
 	}
 	
 	private double verticalPositionForPreviousList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/5 - CoverflowItem.HEIGHT/2;
+		return screenBounds.getHeight()/6 - CoverflowItem.WIDTH/2;
 	}
 	
 	private double verticalPositionForNextList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/5 * 4 - CoverflowItem.HEIGHT/2;
+		return screenBounds.getHeight()/6 * 5 - CoverflowItem.WIDTH/2;
 	}
 	
-	private double verticalPositionForLeavingUnusedList() {
+	private double verticalPositionForTopArrivingList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		return -screenBounds.getHeight() / 5 * 2;
 	}
 	
-	private double verticalPositionForEnteringUnusedList() {
+	private double verticalPositionForBottomArrivingList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		return screenBounds.getHeight() / 5 * 7;
 	}
