@@ -2,7 +2,9 @@ package controllers.frontend;
 
 import java.util.List;
 
+import data.access.ArcadoidData;
 import data.model.BaseItem;
+import data.model.NavigationItem;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -27,12 +29,15 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	private MouseAutohideBehaviour mouseBehaviour = new MouseAutohideBehaviour();
     private StackPane selectedTextContainer;
     private Text selectedText;
-    private CoverflowList coverflowList;
+    private CoverflowList focusedCoverflowList, previousCoverflowList, nextCoverflowList, unusedCoverflowList;
     
 	/**
 	 * Items model
 	 */
 	private List<BaseItem> displayedItems;
+	private List<BaseItem> previousItems;
+	private NavigationItem parentItem;
+    private BaseItem focusedItem;
 	
 	public CoverflowLayout(FrontendPane parentPane) {
 		this.parentPane = parentPane;
@@ -46,43 +51,82 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	
 	@Override
 	public void setupSettingsAccess() {
-		this.layoutAllNode();
 		this.mouseBehaviour.setupInPane(this.parentPane, new Node[]{this.settingsButton, this.syncButton});
 		this.mouseBehaviour.startBehaviour();
-		this.coverflowList.setOpacity(1);
+		this.focusedCoverflowList.setOpacity(1);
+		this.previousCoverflowList.setOpacity(1);
+		this.nextCoverflowList.setOpacity(1);
+		this.unusedCoverflowList.setOpacity(1);
 		this.selectedTextContainer.setOpacity(1);
+		this.layoutAllNode();
 	}
 	
 	@Override
 	public void reloadWithDisplayedItems(List<BaseItem> items) {
 		this.displayedItems = items;
-		this.coverflowList.reloadData();
-		this.selectedText.setText(items.get(0).getName());
+		this.setFocusedItem(items.get(0), true);
+		this.focusedCoverflowList.reloadData();
+		this.previousCoverflowList.reloadData();
 	}
 	
 	@Override
 	public void navigateToSiblingInItems(BaseItem item, List<BaseItem> items) {
 		int itemIndex = items.indexOf(item);
 		if (itemIndex >= 0) {
-			this.coverflowList.scrollToItemAtIndexAnimated(itemIndex, true);
-			this.selectedText.setText(item.getName());
+			this.focusedCoverflowList.scrollToItemAtIndexAnimated(itemIndex, true);
+			this.setFocusedItem(item, false);
 		}
 	}
 	
 	@Override
 	public void navigateToChildren(List<BaseItem> childrenItems) {
-		this.reloadWithDisplayedItems(childrenItems);
+		this.previousItems = this.displayedItems;
+		this.parentItem = (NavigationItem)this.focusedItem;
+		
+		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForLeavingUnusedList(), false, true);
+		this.focusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, true);
+		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForCurrentList(), true, true);
+		this.unusedCoverflowList.setLayoutY(this.verticalPositionForEnteringUnusedList());
+		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, true);
+		
+		CoverflowList unusedList = this.unusedCoverflowList;
+		this.unusedCoverflowList = this.previousCoverflowList;
+		this.previousCoverflowList = this.focusedCoverflowList;
+		this.focusedCoverflowList = this.nextCoverflowList;
+		this.nextCoverflowList = unusedList;
+		
+		this.displayedItems = childrenItems;
+		this.focusedItem = childrenItems.get(0);
+		
+		this.nextCoverflowList.reloadData();
 	}
 	
 	@Override
 	public void navigateToParentWithSiblings(BaseItem parent, List<BaseItem> siblings) {
-		this.displayedItems = siblings;
-		this.coverflowList.reloadData();
-		this.selectedText.setText(parent.getName());
-		int itemIndex = siblings.indexOf(parent);
-		if (itemIndex >= 0) {
-			this.coverflowList.scrollToItemAtIndexAnimated(itemIndex, false);
+		if (this.parentItem != null && this.parentItem.getParentItem() != null) {
+			this.previousItems = ArcadoidData.sharedInstance().getSiblingsForNavigationItem(this.parentItem.getParentItem());
+			this.parentItem = this.parentItem.getParentItem();
+		} else {
+			this.previousItems = null;
+			this.parentItem = null;
 		}
+		
+		this.displayedItems = siblings;
+		
+		this.unusedCoverflowList.setLayoutY(this.verticalPositionForLeavingUnusedList());
+		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, true);
+		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForCurrentList(), true, true);
+		this.focusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, true);
+		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForEnteringUnusedList(), false, true);
+		
+		CoverflowList unusedList = this.unusedCoverflowList;
+		this.unusedCoverflowList = this.nextCoverflowList;
+		this.nextCoverflowList = this.focusedCoverflowList;
+		this.focusedCoverflowList = this.previousCoverflowList;
+		this.previousCoverflowList = unusedList;
+		
+		this.previousCoverflowList.reloadData();
+		this.focusedItem = parent;
 	}
 	
 	private void createAllNodes() {
@@ -113,26 +157,91 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.selectedTextContainer.setPrefWidth(Screen.getPrimary().getBounds().getWidth());
 		this.selectedTextContainer.getChildren().add(this.selectedText);
 		
-		this.coverflowList = new CoverflowList(this);
-		this.parentPane.getChildren().addAll(this.coverflowList, this.selectedTextContainer);
+		this.focusedCoverflowList = new CoverflowList(this);
+		this.previousCoverflowList = new CoverflowList(this);
+		this.nextCoverflowList = new CoverflowList(this);
+		this.unusedCoverflowList = new CoverflowList(this);
+		this.parentPane.getChildren().addAll(this.focusedCoverflowList, this.previousCoverflowList, this.nextCoverflowList, this.unusedCoverflowList);//, this.selectedTextContainer);
 	}
 	
 	private void layoutAllNode() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		
+		this.focusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForCurrentList(), true, false);
+		this.focusedCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		this.previousCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForPreviousList(), false, false);
+		this.previousCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		this.nextCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForNextList(), false, false);
+		this.nextCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		this.unusedCoverflowList.moveToVerticalPositionAndFocusedMode(this.verticalPositionForEnteringUnusedList(), false, false);
+		this.unusedCoverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
+		
 		this.syncButton.setLayoutX(screenBounds.getWidth() - this.syncButton.getWidth());
-		this.coverflowList.setLayoutY(screenBounds.getHeight()/2 - CoverflowItem.HEIGHT/2);
-		this.coverflowList.setLayoutX(screenBounds.getWidth()/2 - CoverflowItem.WIDTH/2);
         this.selectedTextContainer.setLayoutY(screenBounds.getHeight()/2 - CoverflowItem.HEIGHT);
 	}
+	
+	private void setFocusedItem(BaseItem item, boolean showChildrenImmediately) {
+		this.focusedItem = item;
+		this.selectedText.setText(this.focusedItem.getName());
+		if (showChildrenImmediately) {
+			this.nextCoverflowList.reloadData();
+		} else {
+			this.nextCoverflowList.reloadData();
+		}
+	}
 
+	private double verticalPositionForCurrentList() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		return screenBounds.getHeight()/2 - CoverflowItem.HEIGHT/2;
+	}
+	
+	private double verticalPositionForPreviousList() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		return screenBounds.getHeight()/5 - CoverflowItem.HEIGHT/2;
+	}
+	
+	private double verticalPositionForNextList() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		return screenBounds.getHeight()/5 * 4 - CoverflowItem.HEIGHT/2;
+	}
+	
+	private double verticalPositionForLeavingUnusedList() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		return -screenBounds.getHeight() / 5 * 2;
+	}
+	
+	private double verticalPositionForEnteringUnusedList() {
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		return screenBounds.getHeight() / 5 * 7;
+	}
+	
 	@Override
-	public int numberOfItems() {
-		return this.displayedItems.size();
+	public int numberOfItemsInCoverflowList(CoverflowList coverflowList) {
+		List<BaseItem> itemsList = this.relevantListForCoverflowList(coverflowList);
+		return itemsList != null ? itemsList.size() : 0;
 	}
 
 	@Override
-	public CoverflowItem nodeForItemAtIndex(int index) {
-		return CoverflowItemPool.dequeueItem();
+	public CoverflowItem nodeForItemAtIndex(int index, CoverflowList coverflowList) {
+		CoverflowItem coverflowItem = CoverflowItemPool.dequeueItem();
+		coverflowItem.setBaseItem(this.relevantListForCoverflowList(coverflowList).get(index));
+		return coverflowItem;
+	}
+	
+	private List<BaseItem> relevantListForCoverflowList(CoverflowList coverflowList) {
+		if (coverflowList == this.focusedCoverflowList) {
+			return this.displayedItems;
+		} else if (coverflowList == this.previousCoverflowList) {
+			return this.previousItems;
+		} else if (coverflowList == this.nextCoverflowList) {
+			if (this.focusedItem instanceof NavigationItem) {
+				return ((NavigationItem)this.focusedItem).getAllChildItems();
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
 	}
 
 }

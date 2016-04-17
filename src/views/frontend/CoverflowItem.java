@@ -2,15 +2,20 @@ package views.frontend;
 
 import java.io.File;
 
+import data.model.BaseItem;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 public class CoverflowItem extends Parent {
 
@@ -21,6 +26,7 @@ public class CoverflowItem extends Parent {
 	private static final double BACK = WIDTH / 10;
 	
 	private PerspectiveTransform transform = new PerspectiveTransform();
+	private Label itemNameLabel = new Label();
 //	private BaseItem item;
 
 	private final DoubleProperty angle = new SimpleDoubleProperty(45) {
@@ -40,9 +46,22 @@ public class CoverflowItem extends Parent {
 			imageView.setEffect(reflection);
 			setEffect(this.transform);
 			getChildren().addAll(imageView);
+			
+			this.itemNameLabel.setTextFill(Color.WHITE);
+			this.itemNameLabel.setTextAlignment(TextAlignment.CENTER);
+			this.itemNameLabel.setAlignment(Pos.CENTER);
+			this.itemNameLabel.setPrefWidth(200);
+			this.itemNameLabel.setMinWidth(200);
+			this.itemNameLabel.setMaxWidth(200);
+			this.itemNameLabel.setLayoutY(150);
+			getChildren().addAll(this.itemNameLabel);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setBaseItem(BaseItem item) {
+		this.itemNameLabel.setText(item.getName());
 	}
 	
 	public final double getAngle() {
