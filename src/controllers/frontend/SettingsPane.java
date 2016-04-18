@@ -63,7 +63,7 @@ public class SettingsPane extends FrontendPane {
 		InputValidationPopup popup = new InputValidationPopup(validator, () -> {
 			
 		});
-		UIService.getInstance().displayPopup(popup);
+		UIService.sharedInstance().displayPopup(popup);
 	}
 	
 	public void startRecordingAllInputs() {
@@ -71,11 +71,11 @@ public class SettingsPane extends FrontendPane {
 		InputValidationPopup popup = new InputValidationPopup(validator, () -> {
 			
 		});
-		UIService.getInstance().displayPopup(popup);
+		UIService.sharedInstance().displayPopup(popup);
 	}
 	
 	public void cancel() {
-		UIService.getInstance().displayGameNavigation(true);
+		UIService.sharedInstance().displayGameNavigation(true);
 	}
 
 	public void confirm() {
@@ -99,7 +99,7 @@ public class SettingsPane extends FrontendPane {
 	
 	public void reportSaveError() {
 		InfoPopup infoPopup = new InfoPopup(400, 200, Messages.get("frontend.settings.saveError"), true);
-		UIService.getInstance().displayPopup(infoPopup);
+		UIService.sharedInstance().displayPopup(infoPopup);
 	}
 	
 	private boolean checkMandatorySettings() {
@@ -133,7 +133,7 @@ public class SettingsPane extends FrontendPane {
 	}
 	
 	private void handleSaveSuccess() {
-		UIService.getInstance().displayGameNavigation(true);
+		UIService.sharedInstance().displayGameNavigation(true);
 	}
 	
 	private void handleErrorForFrontendSettingsCheckResult(CompletionResult result) {

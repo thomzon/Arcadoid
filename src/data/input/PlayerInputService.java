@@ -39,26 +39,19 @@ public class PlayerInputService implements KeyboardDelegate {
 	}
 	
 	/**
-	 * Starts the service (listening to input, checking settings validity...)
+	 * Starts the service (listening to input, checking settings validity...).
 	 */
 	public void startService() {
+		this.stopKeyboardHook();
 		this.startKeyboardHook();
 		this.checkInputSettings();
 	}
 	
 	/**
-	 * Switch the service to 'Full' mode, i.e. all player inputs are forwarded to observers.
+	 * Stops the service.
 	 */
-	public void switchToFullService() {
-		
-	}
-	
-	/**
-	 * Switch the service to 'Background' mode, i.e. only vital player inputs are forwarded to observers.
-	 * Vital inputs only contains game shutdown.
-	 */
-	public void switchToBackgroundService() {
-		
+	public void stopService() {
+		this.stopKeyboardHook();
 	}
 	
 	/**
@@ -91,6 +84,12 @@ public class PlayerInputService implements KeyboardDelegate {
 		}
 	}
 	
+	private void stopKeyboardHook() {
+		if (SystemUtils.IS_OS_WINDOWS) {
+			GlobalScreen.unregisterNativeHook();
+		}
+	}
+	
 	private void setupListenedCombinations() {
 		this.keyboardListener.resetListenedCombinations();
 		InputSettings inputSettings = new InputSettings();
@@ -108,7 +107,7 @@ public class PlayerInputService implements KeyboardDelegate {
 				this.setupListenedCombinations();
 				this.keyboardListener.start();
 			});
-			UIService.getInstance().displayPopup(popup);
+			UIService.sharedInstance().displayPopup(popup);
 		}
 	}
 

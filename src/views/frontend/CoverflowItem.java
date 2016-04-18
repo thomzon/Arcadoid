@@ -86,8 +86,7 @@ public class CoverflowItem extends Parent {
 	}
 	
 	private void setDefaultImage() {
-		File artworkPathFolder = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH));
-		File coverFile = new File(artworkPathFolder, "ubercade_cover.jpg");
+		File coverFile = new File("images", "default_thumbnail.jpg");
 		Image image = new Image(coverFile.toURI().toString(), false);
 		this.itemNameLabel.setVisible(true);
 		this.setImage(image);

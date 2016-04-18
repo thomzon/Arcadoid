@@ -18,13 +18,13 @@
 
 #settings-button
 {
-	-fx-graphic: url(../images/settings_button.png);
+	-fx-graphic: url(images/settings_button.png);
 	-fx-background-color: transparent;
 }
 
 #sync-button
 {
-	-fx-graphic: url(../images/sync_button.png);
+	-fx-graphic: url(images/sync_button.png);
 	-fx-background-color: transparent;
 }
 

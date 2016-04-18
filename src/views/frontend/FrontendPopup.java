@@ -45,7 +45,7 @@ public class FrontendPopup extends Group {
 	 * Display popup by asking UIService to do it
 	 */
 	public void display() {
-		UIService.getInstance().displayPopup(this);
+		UIService.sharedInstance().displayPopup(this);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class FrontendPopup extends Group {
 	 */
 	public void discard() {
 		setDisable(true);
-		UIService.getInstance().discardPopup(this);
+		UIService.sharedInstance().discardPopup(this);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class FrontendPopup extends Group {
 	 * Notifies UIService that popup has disappeared.
 	 */
 	public void hasDisappeared() {
-		UIService.getInstance().popupHasDisappeared(this);
+		UIService.sharedInstance().popupHasDisappeared(this);
 	}
 
 	/**

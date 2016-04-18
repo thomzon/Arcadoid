@@ -15,8 +15,15 @@ import data.model.NavigationItem;
 import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
+import javafx.util.Duration;
 import utils.frontend.GameLaunchService;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
@@ -25,12 +32,15 @@ import views.frontend.InfoPopup;
 public class GameNavigationPane extends FrontendPane implements PlayerInputObserver {
 
 	private GameNavigationLayout layout;
-	private ImageView backgroundImageView = new ImageView();
+	private ImageView unusedBackgroundImageView = new ImageView();
+	private ImageView usedBackgroundImageView = new ImageView();
 	private boolean firstAppearance = true;
 	private FrontendPopup gameRunningMessagePopup;
 	private List<BaseItem> displayedItems;
 	private BaseItem currentItem;
 	private Stack<NavigationItem> parentStack = new Stack<NavigationItem>();
+	private String lastDisplayedBackgroundImagePath;
+	private Timeline backgroundFadeTimeline;
 	
 	@Override
 	public void prepareForAppearance() {
@@ -43,21 +53,23 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	public void setupPane() {
 		super.setupPane();
 		if (this.layout == null) {
-			this.getChildren().add(this.backgroundImageView);
-			this.backgroundImageView.fitWidthProperty().bind(this.widthProperty()); 
-			this.backgroundImageView.fitHeightProperty().bind(this.heightProperty());
-			this.backgroundImageView.setPreserveRatio(true);
-			this.backgroundImageView.setLayoutX(0);
-			this.backgroundImageView.setLayoutY(0);
+			this.setupBackgroundImageView(this.usedBackgroundImageView);
+			this.setupBackgroundImageView(this.unusedBackgroundImageView);
 			this.layout = new GameNavigationLayoutFactory().createLayoutForTypeInParentPane(GameNavigationLayoutType.COVERFLOW, this);
 			this.makeChildrenVisible(false);
 		}
 	}
 	
+	private void setupBackgroundImageView(ImageView imageView) {
+		this.getChildren().add(imageView);
+		imageView.fitWidthProperty().bind(this.widthProperty()); 
+		imageView.fitHeightProperty().bind(this.heightProperty());
+		imageView.setPreserveRatio(true);
+	}
+	
 	@Override
 	public void doLayout() {
 		this.layout.setupSettingsAccess();
-		this.backgroundImageView.setOpacity(1);
 		if (this.firstAppearance) {
 			this.firstAppearance = false;
 			this.initialAppearance();
@@ -91,19 +103,75 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	}
 	
 	private void updateBackgroundImage() {
-		if (this.currentItem.getBackgroundArtworkPath() == null || this.currentItem.getBackgroundArtworkPath().length() == 0) return;
-		File backgroundImageFile = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), this.currentItem.getBackgroundArtworkPath());
-		if (backgroundImageFile.exists()) {
-			Image image = new Image(backgroundImageFile.toURI().toString(), false);
-			this.backgroundImageView.setImage(image);
-			double imageHeight = this.backgroundImageView.getBoundsInParent().getHeight();
-			double imageWidth = this.backgroundImageView.getBoundsInParent().getWidth();
-			if (imageHeight < this.getHeight()) {
-				System.out.println("Image height is " + imageHeight);
-				this.backgroundImageView.setLayoutY(10);
-//				this.backgroundImageView.setLayoutY((this.getHeight() - imageHeight) / 2);
+		if (this.backgroundFadeTimeline != null) return;
+		String backgroundArtworkPath = this.getMostRelevantBackgroundArtworkPath();
+		if (!this.backgroundImageIsDifferentThanCurrent(backgroundArtworkPath)) return;
+		this.lastDisplayedBackgroundImagePath = backgroundArtworkPath;
+		Image backgroundImage = null;
+		if (backgroundArtworkPath != null && backgroundArtworkPath.length() > 0) {
+			File backgroundImageFile = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), backgroundArtworkPath);
+			if (backgroundImageFile.exists()) {
+				backgroundImage = new Image(backgroundImageFile.toURI().toString(), false);
 			}
 		}
+		this.setCurrentBackgroundImage(backgroundImage);
+	}
+	
+	private void setCurrentBackgroundImage(Image backgroundImage) {
+		this.unusedBackgroundImageView.setImage(backgroundImage);
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		this.unusedBackgroundImageView.setLayoutX(0);
+		this.unusedBackgroundImageView.setLayoutY(0);
+		if (backgroundImage != null) {
+			double imageHeight = this.unusedBackgroundImageView.getBoundsInParent().getHeight();
+			double imageWidth = this.unusedBackgroundImageView.getBoundsInParent().getWidth();
+			if (imageHeight < screenBounds.getHeight()) {
+				this.unusedBackgroundImageView.setLayoutY((screenBounds.getHeight() - imageHeight) / 2);
+			}
+			if (imageWidth < screenBounds.getWidth()) {
+				this.unusedBackgroundImageView.setLayoutX((screenBounds.getWidth() - imageWidth) / 2);
+			}
+		}
+		ImageView unusedImageView = this.unusedBackgroundImageView;
+		this.unusedBackgroundImageView = this.usedBackgroundImageView;
+		this.usedBackgroundImageView = unusedImageView;
+		this.animateBackgroundImageChange();
+	}
+	
+	private void animateBackgroundImageChange() {
+		this.backgroundFadeTimeline = new Timeline();
+		KeyFrame keyFrame = new KeyFrame(
+				Duration.millis(300),
+	            new KeyValue(this.unusedBackgroundImageView.opacityProperty(), 0, Interpolator.LINEAR),
+	            new KeyValue(this.usedBackgroundImageView.opacityProperty(), 1, Interpolator.LINEAR)
+	            );
+		this.backgroundFadeTimeline.getKeyFrames().add(keyFrame);
+		this.backgroundFadeTimeline.setOnFinished((event) -> {
+			this.backgroundFadeTimeline = null;
+			this.updateBackgroundImage();
+		});
+		this.backgroundFadeTimeline.play();
+	}
+	
+	private boolean backgroundImageIsDifferentThanCurrent(String backgroundArtworkPath) {
+		if ((backgroundArtworkPath == null || backgroundArtworkPath.length() == 0) && (this.lastDisplayedBackgroundImagePath == null || this.lastDisplayedBackgroundImagePath.length() == 0)) {
+			return false;
+		}
+		if (backgroundArtworkPath == null || backgroundArtworkPath.length() == 0) return true;
+		if (this.lastDisplayedBackgroundImagePath == null || this.lastDisplayedBackgroundImagePath.length() == 0) return true;
+		return !backgroundArtworkPath.equals(this.lastDisplayedBackgroundImagePath);
+	}
+	
+	private String getMostRelevantBackgroundArtworkPath() {
+		String backgroundArtworkPath = this.currentItem.getBackgroundArtworkPath();
+		if ((backgroundArtworkPath == null || backgroundArtworkPath.length() == 0) && !this.parentStack.isEmpty()) {
+			NavigationItem navigationItem = this.parentStack.peek();
+			while ((backgroundArtworkPath == null || backgroundArtworkPath.length() == 0) && navigationItem != null) {
+				backgroundArtworkPath = navigationItem.getBackgroundArtworkPath();
+				navigationItem = navigationItem.getParentItem();
+			}
+		}
+		return backgroundArtworkPath;
 	}
 	
 	@Override
@@ -158,7 +226,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	@Override
 	public void quitGame() {
 		if (this.gameRunningMessagePopup != null) {
-			UIService.getInstance().discardPopup(this.gameRunningMessagePopup);
+			UIService.sharedInstance().discardPopup(this.gameRunningMessagePopup);
 			this.gameRunningMessagePopup = null;
 		}
 	}
@@ -176,7 +244,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	
 	private void displayGameRunningMessage() {
 		this.gameRunningMessagePopup = new InfoPopup(600, 200, Messages.get("frontend.msg.quitCombToDismiss"), false);
-		UIService.getInstance().displayPopup(gameRunningMessagePopup);
+		UIService.sharedInstance().displayPopup(gameRunningMessagePopup);
 	}
 	
 }

@@ -149,13 +149,13 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	private void createButtons() {
 		this.settingsButton = UIUtils.createButton("", false);
 		this.settingsButton.setOnAction((event) -> {
-			UIService.getInstance().displaySettings(true);
+			UIService.sharedInstance().displaySettings(true);
 		});
 		this.settingsButton.setId("settings-button");
 		
 		this.syncButton = UIUtils.createButton("", false);
 		this.syncButton.setOnAction((event) -> {
-			UIService.getInstance().startCatalogSync();
+			UIService.sharedInstance().startCatalogSync();
 		});
 		this.syncButton.setId("sync-button");
 		

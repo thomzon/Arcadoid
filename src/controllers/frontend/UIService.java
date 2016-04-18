@@ -60,7 +60,7 @@ public class UIService {
 		this.createDimLayer();
 	}
 	
-	public static UIService getInstance() {
+	public static UIService sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new UIService();
 		}
@@ -81,7 +81,7 @@ public class UIService {
 		this.rootPane = new Pane();
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());
-		scene.getStylesheets().add("frontend.css");
+		scene.getStylesheets().add("css/frontend.css");
 		primaryStage.setScene(scene);
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
