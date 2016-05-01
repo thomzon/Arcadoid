@@ -141,17 +141,6 @@ public class Settings
 		setSetting(PropertyId.ARTWORKS_FOLDER_PATH, artworksFolder.getAbsolutePath());
 	}
 	
-	public static String getSettingsValueForPropertyFromFile(PropertyId property, String file) {
-		String value = null;
-		Properties properties = new Properties();
-		try	{
-			properties.load(new FileInputStream(file));
-			value = properties.getProperty(property.stringValue);
-		} catch (Exception e) {
-		}
-		return value;
-	}
-	
 	/**
 	 * Returns value for given property as a list of Integer.
 	 * The property must be a series of Integer separated by the SETTING_LIST_SEPARATOR constant value.

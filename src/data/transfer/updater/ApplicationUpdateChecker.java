@@ -1,6 +1,7 @@
 package data.transfer.updater;
 
 import java.io.File;
+import java.io.IOException;
 
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
@@ -67,7 +68,6 @@ public class ApplicationUpdateChecker {
 		this.dataTransfer.getFileWithCompletion(ApplicationUpdater.REMOTE_VERSION_FILE, TEMPORARY_VERSION_FILE_NAME, new CompletionCallable() {
 			@Override public Void call() throws Exception {
 				if (this.result == null || this.result.success) {
-					fetchRemoteVersionNumbers();
 					doCheckForUpdate();
 				} else {
 					completion(this.result);
@@ -77,29 +77,26 @@ public class ApplicationUpdateChecker {
 		});
 	}
 	
-	private void fetchRemoteVersionNumbers() {
-//		this.remoteEditorVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.EDITOR_VERSION_NUMBER);
-//		this.remoteFrontendVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.FRONTEND_VERSION_NUMBER);
-//		this.remoteUpdaterVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.UPDATER_VERSION_NUMBER);
-	}
-	
 	private void doCheckForUpdate() {
-		this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER, this.remoteEditorVersionNumber);
-		this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER, this.remoteFrontendVersionNumber);
-		this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER, this.remoteUpdaterVersionNumber);
+		ApplicationUpdateData updateData = this.getUpdateData();
+		if (updateData != null) {
+			this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER, updateData.editorVersionNumber);
+			this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER, updateData.frontEndVersionNumber);
+			this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER, updateData.updaterVersionNumber);
+		}
 		this.cleanup();
 		this.completion(null);
 	}
 	
-//	private int retrieveRemoteVersionNumberForProperty(PropertyId property) {
-//		try {
-//			String remoteValue = Settings.getSettingsValueForPropertyFromFile(property, TEMPORARY_VERSION_FILE_NAME);
-//			int remoteVersionNumber = remoteValue != null ? Integer.parseInt(remoteValue) : 0;
-//			return remoteVersionNumber;
-//		} catch (Exception e) {
-//			return 0;
-//		}
-//	}
+	private ApplicationUpdateData getUpdateData() {
+		try {
+			ApplicationUpdateData updateData = ApplicationUpdateData.dataFromFile(TEMPORARY_VERSION_FILE_NAME);
+			return updateData;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	private boolean checkForUpdateForProperty(PropertyId property, int remoteVersionNumber) {
 		try {
