@@ -78,9 +78,9 @@ public class ApplicationUpdateChecker {
 	}
 	
 	private void fetchRemoteVersionNumbers() {
-		this.remoteEditorVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.EDITOR_VERSION_NUMBER);
-		this.remoteFrontendVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.FRONTEND_VERSION_NUMBER);
-		this.remoteUpdaterVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.UPDATER_VERSION_NUMBER);
+//		this.remoteEditorVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.EDITOR_VERSION_NUMBER);
+//		this.remoteFrontendVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.FRONTEND_VERSION_NUMBER);
+//		this.remoteUpdaterVersionNumber = this.retrieveRemoteVersionNumberForProperty(PropertyId.UPDATER_VERSION_NUMBER);
 	}
 	
 	private void doCheckForUpdate() {
@@ -91,15 +91,15 @@ public class ApplicationUpdateChecker {
 		this.completion(null);
 	}
 	
-	private int retrieveRemoteVersionNumberForProperty(PropertyId property) {
-		try {
-			String remoteValue = Settings.getSettingsValueForPropertyFromFile(property, TEMPORARY_VERSION_FILE_NAME);
-			int remoteVersionNumber = remoteValue != null ? Integer.parseInt(remoteValue) : 0;
-			return remoteVersionNumber;
-		} catch (Exception e) {
-			return 0;
-		}
-	}
+//	private int retrieveRemoteVersionNumberForProperty(PropertyId property) {
+//		try {
+//			String remoteValue = Settings.getSettingsValueForPropertyFromFile(property, TEMPORARY_VERSION_FILE_NAME);
+//			int remoteVersionNumber = remoteValue != null ? Integer.parseInt(remoteValue) : 0;
+//			return remoteVersionNumber;
+//		} catch (Exception e) {
+//			return 0;
+//		}
+//	}
 	
 	private boolean checkForUpdateForProperty(PropertyId property, int remoteVersionNumber) {
 		try {
