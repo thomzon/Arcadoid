@@ -1,5 +1,10 @@
 package data.transfer.updater;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import com.enterprisedt.net.ftp.FTPFile;
 
 import data.settings.FTPSettings;
@@ -15,7 +20,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 /**
- * Service that handles downloading an application executable from the remote FTP repository.
+ * Service that handles downloading an application applicationExecutable from the remote FTP repository.
  * The work is actually done by the ApplicationUpdateTask inner class. The idea is:
  * - At all steps, if anything FTP related goes wrong, stop everything and forwards the faulty CompletionResult object.
  * - Verify that FTP settings are OK.
@@ -26,27 +31,35 @@ import javafx.concurrent.Task;
 public class ApplicationUpdateService extends Service<Void> {
 
 	private CompletionCallable completion;
-	private String applicationName;
+	private ApplicationExecutable applicationExecutable;
 	
 	public ApplicationUpdateService(CompletionCallable completion, String applicationName) {
 		this.completion = completion;
-		this.applicationName = applicationName;
+	}
+	
+	public ApplicationUpdateService(CompletionCallable completion, ApplicationExecutable executable) {
+		this.completion = completion;
+		this.applicationExecutable = executable;
 	}
 	
 	@Override
 	protected Task<Void> createTask() {
-		return new ApplicationUpdateTask(this.applicationName);
+		return new ApplicationUpdateTask(this.applicationExecutable);
 	}
 	
 	private class ApplicationUpdateTask extends Task<Void> {
 
+		private static final String TEMPORARY_VERSION_FILE_NAME = "tmp_version";
 		private DataTransfer transfer;
 		private FTPSettings ftpSettings = new FTPSettings();
-		private String applicationName;
+		private ApplicationExecutable applicationExecutable;
 		private long expectedFileSize;
+		private Map<String, List<String>> otherFiles;
+		private String currentOtherFilesDirectory;
+		private List<String> currentOtherFiles;
 		
-		private ApplicationUpdateTask(String applicationName) {
-			this.applicationName = applicationName;
+		private ApplicationUpdateTask(ApplicationExecutable applicationExecutable) {
+			this.applicationExecutable = applicationExecutable;
 		}
 		
 		@Override
@@ -77,7 +90,7 @@ public class ApplicationUpdateService extends Service<Void> {
 		
 		private void findRemoteFileSize(FileListingResult fileListingResult) {
 			for (FTPFile file : fileListingResult.foundFiles) {
-				if (file.getName().equals(this.applicationName)) {
+				if (file.getName().equals(this.applicationExecutable.getExecutableName())) {
 					this.expectedFileSize = file.size();
 				}
 			}
@@ -96,12 +109,45 @@ public class ApplicationUpdateService extends Service<Void> {
 			if (result != null && !result.success) {
 	        	completion.call(result);
 	        } else {
-	        	this.startApplicationDownload();
+	        	this.getTemporaryDataFile();
 	        }
 		}
 		
+		private void getTemporaryDataFile() {
+			CompletionResult result = this.transfer.getFile(ApplicationUpdater.REMOTE_VERSION_FILE, TEMPORARY_VERSION_FILE_NAME);
+			if (result != null && !result.success) {
+	        	completion.call(result);
+	        } else {
+	        	try {
+	    			ApplicationUpdateData updateData = ApplicationUpdateData.dataFromFile(TEMPORARY_VERSION_FILE_NAME);
+	    			this.checkOtherFilesToDownloadFromUpdateData(updateData);
+	    			new File(TEMPORARY_VERSION_FILE_NAME).delete();
+	    			this.startApplicationDownload();
+	    		} catch (IOException e) {
+	    			result = new CompletionResult();
+	    			result.success = false;
+	    			result.errorType = ErrorType.CANNOT_PARSE_APPLICATION_UPDATE_DATA;
+	    			completion.call(result);
+	    		}
+	        }
+		}
+		
+		private void checkOtherFilesToDownloadFromUpdateData(ApplicationUpdateData updateData) {
+			switch (this.applicationExecutable) {
+			case EDITOR:
+				this.otherFiles = updateData.editorFiles;
+				break;
+			case FRONTEND:
+				this.otherFiles = updateData.frontEndFiles;
+				break;
+			case UPDATER:
+				this.otherFiles = updateData.updaterFiles;
+				break;
+			}
+		}
+		
 		private void startApplicationDownload() {
-			updateMessage(Messages.get("progress.body.downloadingFile", this.applicationName));
+			updateMessage(Messages.get("progress.body.downloadingFile", this.applicationExecutable.getExecutableName()));
 			new TransferProgressListener(this.transfer, new TransferProgressCallable() {
 				@Override
 				public Void call() throws Exception {
@@ -109,12 +155,59 @@ public class ApplicationUpdateService extends Service<Void> {
 					return null;
 				}
 			});
-			this.transfer.getFile(this.applicationName);
-			this.finish();
+			this.transfer.getFile(this.applicationExecutable.getExecutableName());
+			this.startOtherFilesDownload();
 		}
 		
 		private void updateProgressForBytesTransferred(long bytesTransferred) {
 			updateProgress(bytesTransferred, this.expectedFileSize);
+		}
+		
+		private void startOtherFilesDownload() {
+			if (this.otherFiles.size() > 0) {
+				this.startNextOtherFilesDirectory();
+			} else {
+				this.finish();
+			}
+		}
+		
+		private void startNextOtherFilesDirectory() {
+			if (this.otherFiles.isEmpty()) {
+				this.finish();
+				return;
+			}
+			String directory = (String)this.otherFiles.keySet().toArray()[0];
+			this.currentOtherFilesDirectory = directory;
+			this.currentOtherFiles = this.otherFiles.remove(directory);
+			new File(directory).mkdirs();
+			CompletionResult result = this.transfer.goToDirectory(ftpSettings.applicationPath, directory);
+			if (result != null && !result.success) {
+	        	completion.call(result);
+			} else {
+				this.downloadNextOtherFile();
+			}
+		}
+		
+		private void downloadNextOtherFile() {
+			if (this.currentOtherFiles.isEmpty()) {
+				this.startNextOtherFilesDirectory();
+				return;
+			}
+			String fileName = this.currentOtherFiles.remove(0);
+			String localPath = new File(this.currentOtherFilesDirectory, fileName).getPath();
+			updateMessage(Messages.get("progress.body.downloadingFile", fileName));
+			new TransferProgressListener(this.transfer, new TransferProgressCallable() {
+				@Override
+				public Void call() throws Exception {
+					return null;
+				}
+			});
+			CompletionResult result = this.transfer.getFile(fileName, localPath);
+			if (result != null && !result.success) {
+	        	completion.call(result);
+			} else {
+				this.downloadNextOtherFile();
+			}
 		}
 		
 		private void finish() {

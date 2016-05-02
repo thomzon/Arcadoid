@@ -19,38 +19,19 @@ public class ApplicationUpdater {
 	public static final String FRONTEND_EXECUTABLE_NAME = "Arcadoid.jar";
 	public static final String UPDATER_EXECUTABLE_NAME = "ArcadoidUpdater.jar";
 	
-	public enum ApplicationExecutable {
-		EDITOR("ArcadoidEditor.jar"),
-		FRONTEND("Arcadoid.jar"),
-		UPDATER("ArcadoidUpdater.jar");
-		
-		private final String executableName;
-		private ApplicationExecutable(final String executableName) {
-			this.executableName = executableName;
-		}
-	}
-	
-	private ApplicationExecutable executable;
+	private ApplicationExecutable applicationExecutable;
 	
 	public ApplicationUpdater(ApplicationExecutable executable) {
-		this.executable = executable;
+		this.applicationExecutable = executable;
 	}
 	
 	public ApplicationUpdater(String executableName) throws IllegalArgumentException {
-		if (executableName.equals(ApplicationExecutable.EDITOR.executableName)) {
-			this.executable = ApplicationExecutable.EDITOR;
-		} else if (executableName.equals(ApplicationExecutable.FRONTEND.executableName)) {
-			this.executable = ApplicationExecutable.FRONTEND;
-		} else if (executableName.equals(ApplicationExecutable.UPDATER.executableName)) {
-			this.executable = ApplicationExecutable.UPDATER;
-		} else {
-			throw new IllegalArgumentException();
-		}
+		this.applicationExecutable = ApplicationExecutable.executableForExecutableName(executableName);
 	}
 	
 	public static void launchUpdaterForExecutable(ApplicationExecutable executable) {
 		try {
-			Runtime.getRuntime().exec("java -jar " + ApplicationExecutable.UPDATER.executableName + " --update " + executable.executableName, null, null);
+			Runtime.getRuntime().exec("java -jar " + ApplicationExecutable.UPDATER.getExecutableName() + " --update " + executable.getExecutableName(), null, null);
 			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -66,11 +47,11 @@ public class ApplicationUpdater {
 			}
 		};
 		
-		Service<Void> service = new ApplicationUpdateService(updateCompletion, this.executable.executableName);
+		Service<Void> service = new ApplicationUpdateService(updateCompletion, this.applicationExecutable);
 		ProgressDialog dialog = new ProgressDialog(service);
 		dialog.initOwner(window);
 		dialog.setTitle(Messages.get("alert.title"));
-		dialog.setHeaderText(Messages.get("progress.header.updateApplication", this.executable.executableName));
+		dialog.setHeaderText(Messages.get("progress.header.updateApplication", this.applicationExecutable.getExecutableName()));
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		service.start();
 	}
@@ -80,7 +61,7 @@ public class ApplicationUpdater {
 			TransferUtils.showRepositoryOperationError(result);
 		} else if (executeWhenDone) {
 			try {
-				Runtime.getRuntime().exec("java -jar " + this.executable.executableName, null, null);
+				Runtime.getRuntime().exec("java -jar " + this.applicationExecutable.getExecutableName(), null, null);
 				System.exit(0);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
