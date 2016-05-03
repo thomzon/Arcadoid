@@ -43,14 +43,14 @@
                         <TextField fx:id="ftpDataPathField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="ftpArtworksPathField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <TextField fx:id="ftpMameRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="ftpSnesRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="ftpGenesisRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <TextField fx:id="ftpUserField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                         <PasswordField fx:id="ftpPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <Label text="%field.portNumber" GridPane.rowIndex="1" />
                         <Label text="%field.artworksDataPath" GridPane.rowIndex="4" />
                         <Label text="%field.snesDataPath" GridPane.rowIndex="6" />
                         <Label text="%field.genesisDataPath" GridPane.rowIndex="7" />
-                        <TextField fx:id="ftpSnesRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <TextField fx:id="ftpGenesisRomsPathField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>
                </children>

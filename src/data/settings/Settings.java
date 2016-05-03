@@ -41,7 +41,6 @@ public class Settings
 		
 		// Editor settings
 		EDITOR_SETTINGS_VALID("editor_settings_valid", ""),
-		ARTWORKS_FOLDER_PATH("artworks_folder_path", Messages.get("field.artworksFolderPath")),
 		
 		// FTP settings
 		REPOSITORY_FTP_ADDRESS("repo_ftp_address", Messages.get("field.address")),
@@ -56,6 +55,7 @@ public class Settings
 		REPOSITORY_GENESIS_ROMS_PATH("repo_genesis_roms_path", Messages.get("field.genesisDataPath")),
 		
 		// Common settings
+		ARTWORKS_FOLDER_PATH("artworks_folder_path", Messages.get("field.artworksFolderPath")),
 		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path", Messages.get("field.mameRomsFolderPath")),
 		SNES_ROMS_FOLDER_PATH("snes_roms_folder_path", Messages.get("field.snesRomsFolderPath")),
 		GENESIS_ROMS_FOLDER_PATH("genesis_roms_folder_path", Messages.get("field.genesisRomsFolderPath")),
@@ -119,7 +119,7 @@ public class Settings
 	 * Try to read properties file, and create it if it does not exist yet.
 	 */
 	static {
-		prop = new Properties();
+		prop = new SortedProperties();
 		try	{
 			prop.load(new FileInputStream(CONFIG_FILE_PATH));
 		} catch (IOException e)	{
