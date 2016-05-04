@@ -15,8 +15,18 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
+/**
+ * Application class for the updater GUI.
+ * @author Thomas Debouverie
+ *
+ */
 public class ArcadoidUpdater extends Application {
 
+	/**
+	 * Updater can either be started normally, or with a --update parameter.
+	 * In the first case, the main GUI is shown.
+	 * In the other, an update process will directly start for the application given after the --update parameter.
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		ApplicationVersionService.updateVersionNumberForProperty(ApplicationVersionService.UPDATER_VERSION_NUMBER, PropertyId.UPDATER_VERSION_NUMBER);

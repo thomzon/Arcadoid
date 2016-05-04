@@ -23,6 +23,11 @@ import views.frontend.FrontendPane;
 import views.frontend.InfoPopup;
 import views.frontend.InputValidationPopup;
 
+/**
+ * Settings screen for the front-end UI. Handles settings confirmation and saving.
+ * @author Thomas Debouverie
+ *
+ */
 public class SettingsPane extends FrontendPane {
 	
 	private SettingsLayout layout = new SettingsLayout();

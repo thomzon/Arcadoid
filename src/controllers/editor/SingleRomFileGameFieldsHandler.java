@@ -10,6 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
+/**
+ * Extension on PlatformSpecificGameFieldsHandler to manage game platforms that require a single game file and a title.
+ * @author Thomas Debouverie
+ *
+ */
 public abstract class SingleRomFileGameFieldsHandler extends PlatformSpecificGameFieldsHandler {
 
 	private Label titleLabel = new Label();

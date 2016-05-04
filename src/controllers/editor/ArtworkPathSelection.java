@@ -17,6 +17,11 @@ import javafx.stage.Window;
  */
 public class ArtworkPathSelection {
 	
+	/**
+	 * Open a file selection dialog to select an artwork (image) file, starting in the artwork folder path defined in current settings.
+	 * @param window The window in which the dialog must be opened. Can be null.
+	 * @return The File object associated with the selected image.
+	 */
 	public static File selectArtworkFile(Window window) {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle(Messages.get("title.selectImage"));

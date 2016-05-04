@@ -8,6 +8,11 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import utils.frontend.GameLaunchService;
 
+/**
+ * Application class for the front-end GUI.
+ * @author Thomas Debouverie
+ *
+ */
 public class Arcadoid extends Application {
 
 	@Override

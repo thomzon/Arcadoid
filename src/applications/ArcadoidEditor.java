@@ -8,7 +8,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
-
+/**
+ * Application class for the catalog editor GUI.
+ * @author Thomas Debouverie
+ *
+ */
 public class ArcadoidEditor extends Application {
 	
 	private RootController rootController;

@@ -13,6 +13,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Screen;
 import utils.frontend.UIUtils;
 
+/**
+ * Handles layout of UI elements for the settings screen of the front-end UI.
+ * @author Thomas Debouverie
+ *
+ */
 public class SettingsLayout {
 
 	private Label		localSettingsGroupTitle, ftpSettingsGroupTitle;

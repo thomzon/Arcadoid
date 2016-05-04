@@ -4,6 +4,11 @@ import java.util.List;
 
 import data.model.BaseItem;
 
+/**
+ * Defines what an object must respond to in order to present a specific layout of the game catalog.
+ * @author Thomas Debouverie
+ *
+ */
 public interface GameNavigationLayout {
 
 	public void prepareForParentPaneDisappearance();

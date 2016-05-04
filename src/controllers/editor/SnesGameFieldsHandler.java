@@ -5,6 +5,11 @@ import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 
+/**
+ * Concrete SingleRomFileGameFieldsHandler implementation to handle SuperNes games specific fields.
+ * @author Thomas Debouverie
+ *
+ */
 public class SnesGameFieldsHandler extends SingleRomFileGameFieldsHandler {
 
 	private SnesGame getSnesGame() {

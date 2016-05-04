@@ -29,6 +29,12 @@ import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 import views.frontend.InfoPopup;
 
+/**
+ * Main screen of the front-end UI. Handles user input and presents the game catalog by relying on
+ * an object conforming to the GameNavigationLayout interface.
+ * @author Thomas Debouverie
+ *
+ */
 public class GameNavigationPane extends FrontendPane implements PlayerInputObserver {
 
 	private GameNavigationLayout layout;

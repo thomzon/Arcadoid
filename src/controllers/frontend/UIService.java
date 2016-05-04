@@ -29,7 +29,7 @@ import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 
 /**
- * Singleton class that coordinates all global UI operations.
+ * Singleton class that coordinates all global UI operations for the front-end UI.
  * @author Thomas Debouverie
  *
  */
@@ -127,15 +127,26 @@ public class UIService {
 		});
 	}
 	
+	/**
+	 * Navigates to the game catalog screen.
+	 * @param animated If true, navigation will be animated.
+	 */
 	public void displayGameNavigation(boolean animated) {
 		this.replacePane(this.gameNavigationPane, animated);
 	}
 	
+	/**
+	 * Navigates to the settings screen.
+	 * @param animated If true, navigation will be animated.
+	 */
 	public void displaySettings(boolean animated) {
 		FrontendPane newPane = new SettingsPane();
 		this.replacePane(newPane, animated);
 	}
 	
+	/**
+	 * Starts catalog synchronization with remote FTP.
+	 */
 	public void startCatalogSync() {
 		LoadFromRepositoryHandler handler = new LoadFromRepositoryHandler();
 		handler.startInWindow(this.rootPane.getScene().getWindow());
@@ -207,10 +218,6 @@ public class UIService {
 		UIUtils.callMethodAfterTime(this, "removeObsoletePanes", UIUtils.SCREEN_REPLACE_FADE_TIME);
 	}
 	
-	/**
-	 * Replaces current displayed pane with fade out/fade in effect
-	 * @param newPane
-	 */
 	private void replacePane(FrontendPane newPane, boolean animated) {
 		int animationDurations = animated ? UIUtils.SCREEN_REPLACE_FADE_TIME : 0;
 		for (Node child : this.rootPane.getChildren()) {

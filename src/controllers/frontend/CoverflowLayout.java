@@ -20,6 +20,11 @@ import views.frontend.CoverflowList;
 import views.frontend.CoverflowListDataSource;
 import views.frontend.FrontendPane;
 
+/**
+ * Presents the game catalog with a 'coverflow' style.
+ * @author Thomas Debouverie
+ *
+ */
 public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataSource {
    
 	/**

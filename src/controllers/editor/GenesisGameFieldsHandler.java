@@ -5,6 +5,11 @@ import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 
+/**
+ * Concrete SingleRomFileGameFieldsHandler implementation to handle Genesis games specific fields.
+ * @author Thomas Debouverie
+ *
+ */
 public class GenesisGameFieldsHandler extends SingleRomFileGameFieldsHandler {
 
 	private GenesisGame getGenesisGame() {
