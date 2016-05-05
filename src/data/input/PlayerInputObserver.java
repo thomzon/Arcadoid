@@ -1,5 +1,10 @@
 package data.input;
 
+/**
+ * Defines an object capable of reacting to player input.
+ * @author Thomas Debouverie
+ *
+ */
 public interface PlayerInputObserver {
 
 	default public void navigateUp() {}

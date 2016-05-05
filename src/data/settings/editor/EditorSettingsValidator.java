@@ -5,6 +5,12 @@ import java.io.File;
 import data.transfer.CompletionResult;
 import data.transfer.CompletionCallable.ErrorType;
 
+/**
+ * Simple editor-mandatory settings validator.
+ * Checks that all required paths are configured.
+ * @author Thomas Debouverie
+ *
+ */
 public class EditorSettingsValidator {
 
 	private EditorSettings editorSettings;

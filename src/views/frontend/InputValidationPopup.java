@@ -14,7 +14,7 @@ import javafx.scene.text.TextAlignment;
 import utils.frontend.UIUtils;
 
 /**
- * Handles recording of all necessary user inputs.
+ * Handles UI feedback during recording of all necessary user inputs.
  * @author Thomas Debouverie
  *
  */

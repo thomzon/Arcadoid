@@ -14,6 +14,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+/**
+ * JSON deserializer for ApplicationUpdateData objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class ApplicationUpdateDataDeserializer implements JsonDeserializer<ApplicationUpdateData> {
 
 	@Override

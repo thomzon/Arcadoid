@@ -8,6 +8,12 @@ import data.input.KeyboardListener;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 
+/**
+ * Handles validating of all necessary user input keys.
+ * It will sequentially go through all missing keys and record them.
+ * @author Thomas Debouverie
+ *
+ */
 public class InputSettingsValidator implements KeyboardDelegate {
 
 	private InputSettings inputSettings;

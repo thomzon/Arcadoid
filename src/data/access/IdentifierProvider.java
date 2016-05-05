@@ -4,6 +4,8 @@ import data.model.BaseItem;
 
 /**
  * Simple static unique identifier generator.
+ * These identifiers are not randomly generated, but sequentially incremented.
+ * Initially, it scans the entire catalog to get the current highest identifier used, and starts from there.
  * @author Thomas Debouverie
  *
  */

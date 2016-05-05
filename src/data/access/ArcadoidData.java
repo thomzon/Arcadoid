@@ -52,6 +52,10 @@ public class ArcadoidData {
 	private ArcadoidData() {
 	}
 
+	/**
+	 * Singleton access.
+	 * @return ArcadoidData unique instance.
+	 */
 	public static ArcadoidData sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new ArcadoidData();
@@ -59,14 +63,24 @@ public class ArcadoidData {
 		return sharedInstance;
 	}
 	
+	/**
+	 * Get the current version number for game catalog.
+	 */
 	public int getArcadoidDataVersionNumber() {
 		return arcadoidDataVersionNumber;
 	}
 
+	/**
+	 * Changes the current version number for game catalog.
+	 * @param arcadoidDataVersionNumber New version number
+	 */
 	public void setArcadoidDataVersionNumber(int arcadoidDataVersionNumber) {
 		this.arcadoidDataVersionNumber = arcadoidDataVersionNumber;
 	}
 	
+	/**
+	 * Increment by 1 the current version number for game catalog.
+	 */
 	public void incrementArcadoidDataVersionNumber() {
 		this.arcadoidDataVersionNumber += 1;
 	}
@@ -89,10 +103,18 @@ public class ArcadoidData {
 		}
 	}
 	
+	/**
+	 * Get all tags as an observable list.
+	 */
 	public ObservableList<Tag> getAllTags() {
 		return this.allTags;
 	}
 	
+	/**
+	 * Retrieve a list of all tags, without given tags.
+	 * @param tagsToIgnore The tags that must be in the received list.
+	 * @return Observable list of tags.
+	 */
 	public ObservableList<Tag> getAllTagsExcept(List<Tag> tagsToIgnore) {
 		ObservableList<Tag> relevantTags = FXCollections.observableArrayList();
 		for (Tag tag : this.allTags) {
@@ -103,6 +125,11 @@ public class ArcadoidData {
 		return relevantTags;
 	}
 	
+	/**
+	 * Get a specific tag.
+	 * @param identifier Identifier of the required tag.
+	 * @return Tag with given identifier, or null if not found.
+	 */
 	public Tag getTagByIdentifier(long identifier) {
 		return this.tagsByIdentifier.get(identifier);
 	}
@@ -120,10 +147,18 @@ public class ArcadoidData {
 		return newTag;
 	}
 	
+	/**
+	 * Delete given tag from the catalog.
+	 * @param tag Tag to delete.
+	 */
 	public void deleteTag(Tag tag) {
 		this.allTags.remove(tag);
 	}
 	
+	/**
+	 * Overwrites current list of tags.
+	 * @param tags New list of tags.
+	 */
 	public void setAllTags(List<Tag> tags) {
 		this.allTags.clear();
 		this.allTags.addAll(tags);
@@ -133,14 +168,27 @@ public class ArcadoidData {
 		}
 	}
 	
+	/**
+	 * Get all games in an observable list.
+	 */
 	public ObservableList<Game> getAllGames() {
 		return this.allGames;
 	}
 	
+	/**
+	 * Get all games belonging to the given game platform.
+	 * @param platform Platform for which a game list is requested.
+	 * @return A list of games.
+	 */
 	public List<Game> getAllGamesForPlatform(Platform platform) {
 		return this.allGames.filtered((game) -> game.getPlatform() == platform);
 	}
 	
+	/**
+	 * Get all games matching given navigation item.
+	 * @param item The navigation item for which a game list is requested.
+	 * @return A list of games.
+	 */
 	public List<Game> getAllGamesForNavigationItem(NavigationItem item) {
 		List<Game> games = new ArrayList<Game>();
 		if (item.getShowEligibleGames()) {
@@ -168,6 +216,10 @@ public class ArcadoidData {
 		return games;
 	}
 		
+	/**
+	 * Creates a new Game object, by default for the MAME platform.
+	 * @return A new Game object.
+	 */
 	public Game createNewGame() {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		Game newGame = new MameGame(newIdentifier);
@@ -204,32 +256,49 @@ public class ArcadoidData {
 		return newGame;
 	}
 	
+	/**
+	 * Deletes given game from the game catalog.
+	 */
 	public void deleteGame(Game game) {
 		this.allGames.remove(game);
 	}
 	
+	/**
+	 * Overwrites list of all games in the game catalog.
+	 * @param games The new list of games.
+	 */
 	public void setAllGames(List<Game> games) {
 		this.allGames.clear();
 		this.allGames.addAll(games);
 	}
 	
+	/**
+	 * Get observable list of all navigation items present on root level.
+
+	 */
 	public ObservableList<NavigationItem> getRootNavigationItems() {
 		return this.rootNavigationItems;
 	}
 	
+	/**
+	 * Get simple list of all items that should be displayed at the root of a catalog representation.
+	 */
 	public List<BaseItem> getRootItems() {
 		List<BaseItem> items = new ArrayList<BaseItem>();
 		items.addAll(this.rootNavigationItems);
 		return items;
 	}
 	
+	/**
+	 * Creates the complete catalog item tree and link it to the current root navigation items.
+	 */
 	public void buildCompleteCatalog() {
 		for (NavigationItem navigationItem : this.rootNavigationItems) {
 			this.fillChildrenForItem(navigationItem);
 		}
 	}
 	
-	public void fillChildrenForItem(BaseItem item) {
+	private void fillChildrenForItem(BaseItem item) {
 		if (item instanceof NavigationItem) {
 			NavigationItem navigationItem = (NavigationItem)item;
 			navigationItem.setAllChildItems(this.getChildrenForNavigationItem(navigationItem));
@@ -246,6 +315,11 @@ public class ArcadoidData {
 		return children;
 	}
 	
+	/**
+	 * Get a list of all siblings of given navigation item.
+	 * @param navigationItem Navigation item for which siblings are required.
+	 * @return List of navigation items.
+	 */
 	public List<BaseItem> getSiblingsForNavigationItem(NavigationItem navigationItem) {
 		List<BaseItem> siblings = new ArrayList<BaseItem>();
 		NavigationItem parentItem = navigationItem.getParentItem();
@@ -257,6 +331,11 @@ public class ArcadoidData {
 		return siblings;
 	}
 	
+	/**
+	 * Creates a new navigation item with given parent. If parent is null, the newly created item will be considered root.
+	 * @param parent Parent of navigation item to create. May be null.
+	 * @return The newly created navigation item.
+	 */
 	public NavigationItem createNewNavigationItemWithParent(NavigationItem parent) {
 		long newIdentifier = IdentifierProvider.newIdentifier();
 		NavigationItem item = new NavigationItem(newIdentifier);
@@ -268,6 +347,9 @@ public class ArcadoidData {
 		return item;
 	}
 	
+	/**
+	 * Deletes given navigation item from the game catalog.
+	 */
 	public void deleteNavigationItem(NavigationItem navigationItem) {
 		if (navigationItem.getParentItem() == null) {
 			this.rootNavigationItems.remove(navigationItem);
@@ -276,6 +358,10 @@ public class ArcadoidData {
 		}
 	}
 	
+	/**
+	 * Overwrites current list of root navigation items.
+	 * @param rootItems New list of root navigation items.
+	 */
 	public void setRootNavigationItems(List<NavigationItem> rootItems) {
 		this.rootNavigationItems.clear();
 		this.rootNavigationItems.addAll(rootItems);

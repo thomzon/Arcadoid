@@ -10,8 +10,8 @@ import data.transfer.CompletionResult;
 import data.transfer.DataTransfer;
 
 /**
- * Has the responsibility to check the application version file on the FTP repository,
- * and check if it is more recent than the local one.
+ * Has the responsibility to check the applications version files on the FTP repository,
+ * and check if it is more recent than the local ones.
  * @author Thomas Debouverie
  *
  */
@@ -23,7 +23,7 @@ public class ApplicationUpdateChecker {
 	private DataTransfer dataTransfer;
 	
 	public boolean updateAvailableForEditor, updateAvailableForFrontend, updateAvailableForUpdater;
-	public int remoteEditorVersionNumber, remoteFrontendVersionNumber, remoteUpdaterVersionNumber;
+	public ApplicationUpdateData updateData;
 	
 	public boolean anyUpdateAvailable() {
 		return this.updateAvailableForEditor || this.updateAvailableForFrontend || this.updateAvailableForUpdater;
@@ -78,11 +78,11 @@ public class ApplicationUpdateChecker {
 	}
 	
 	private void doCheckForUpdate() {
-		ApplicationUpdateData updateData = this.getUpdateData();
+		this.updateData = this.getUpdateData();
 		if (updateData != null) {
-			this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER, updateData.editorVersionNumber);
-			this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER, updateData.frontEndVersionNumber);
-			this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER, updateData.updaterVersionNumber);
+			this.updateAvailableForEditor = this.checkForUpdateForProperty(PropertyId.EDITOR_VERSION_NUMBER, this.updateData.editorVersionNumber);
+			this.updateAvailableForFrontend = this.checkForUpdateForProperty(PropertyId.FRONTEND_VERSION_NUMBER, this.updateData.frontEndVersionNumber);
+			this.updateAvailableForUpdater = this.checkForUpdateForProperty(PropertyId.UPDATER_VERSION_NUMBER, this.updateData.updaterVersionNumber);
 		}
 		this.cleanup();
 		this.completion(null);

@@ -5,6 +5,12 @@ import data.input.PlayerInputObserver;
 import data.input.PlayerInputService;
 import data.model.Game;
 
+/**
+ * Handles launching of games from the frontend. Notifications are sent trough
+ * NotificationCenter to inform when a game is launched or quitted.
+ * @author Thomas Debouverie
+ *
+ */
 public class GameLaunchService implements PlayerInputObserver {
 
 	public static final String GAME_WILL_LAUNCH_NOTIFICATION = "GAME_WILL_LAUNCH_NOTIFICATION";

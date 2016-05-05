@@ -12,12 +12,14 @@ import javafx.stage.Modality;
 import javafx.stage.Window;
 import utils.transfer.TransferUtils;
 
+/**
+ * Handles basic coordination for the update of one application.
+ * @author Thomas Debouverie
+ *
+ */
 public class ApplicationUpdater {
 
 	public static final String REMOTE_VERSION_FILE = "versions.json";
-	public static final String EDITOR_EXECUTABLE_NAME = "AracoidEditor.jar";
-	public static final String FRONTEND_EXECUTABLE_NAME = "Arcadoid.jar";
-	public static final String UPDATER_EXECUTABLE_NAME = "ArcadoidUpdater.jar";
 	
 	private ApplicationExecutable applicationExecutable;
 	
@@ -25,10 +27,18 @@ public class ApplicationUpdater {
 		this.applicationExecutable = executable;
 	}
 	
+	/**
+	 * Creates a new instance for given executable name.
+	 * @param executableName Name of the executable for the application to update.
+	 * @throws IllegalArgumentException If the executable name does not match any of the known applications.
+	 */
 	public ApplicationUpdater(String executableName) throws IllegalArgumentException {
 		this.applicationExecutable = ApplicationExecutable.executableForExecutableName(executableName);
 	}
 	
+	/**
+	 * Launches the updater application to immediately start update for given application.
+	 */
 	public static void launchUpdaterForExecutable(ApplicationExecutable executable) {
 		try {
 			Runtime.getRuntime().exec("java -jar " + ApplicationExecutable.UPDATER.getExecutableName() + " --update " + executable.getExecutableName(), null, null);
@@ -39,6 +49,12 @@ public class ApplicationUpdater {
 		}
 	}
 	
+	/**
+	 * Starts the update.
+	 * @param window Window in which any dialog will be presented
+	 * @param executeWhenDone If true, the application that is updated will be started directly once the update is finished
+	 * @param completionRunnable Completion to run when finished
+	 */
 	public void startUpdate(Window window, boolean executeWhenDone, Runnable completionRunnable) {
 		CompletionCallable updateCompletion = new CompletionCallable() {
 			@Override public Void call() throws Exception {

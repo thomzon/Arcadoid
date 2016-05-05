@@ -12,6 +12,11 @@ import javafx.util.Duration;
 import utils.frontend.EaseOutInterpolator;
 import utils.frontend.EaseOutInterpolator.EaseOutFunction;
 
+/**
+ * Horizontal list that displays CoverflowItem objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class CoverflowList extends Group {
 
 	/**
@@ -36,6 +41,9 @@ public class CoverflowList extends Group {
 		this.dataSource = dataSource;
 	}
 	
+	/**
+	 * Stops all animations and reloads all nodes.
+	 */
 	public void reloadData() {
 		this.stopItemScrollAnimations();
 		this.clearList();
@@ -53,6 +61,11 @@ public class CoverflowList extends Group {
 		}
 	}
 	
+	/**
+	 * Centers item at given index.
+	 * @param index Index of item to center
+	 * @param animated If true, the move to centering the item will be animated
+	 */
 	public void scrollToItemAtIndexAnimated(int index, boolean animated) {
 		this.stopItemScrollAnimations();
 		this.centeredIndex = index;
@@ -74,6 +87,12 @@ public class CoverflowList extends Group {
 		}
 	}
 	
+	/**
+	 * Moves the list vertically and changes its "focused" mode.
+	 * @param verticalPosition Vertical position in its parent where the list must move
+	 * @param focusedMode If true, all items will be full opacity and with reflection. If false, opacity will be redued and reflection removed.
+	 * @param animated If true, the move will be animated
+	 */
 	public void moveToVerticalPositionAndFocusedMode(double verticalPosition, boolean focusedMode, boolean animated) {
 		this.focusedMode = focusedMode;
 		this.stopListAnimations();

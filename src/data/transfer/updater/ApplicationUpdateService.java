@@ -25,6 +25,11 @@ import javafx.concurrent.Task;
  * - At all steps, if anything FTP related goes wrong, stop everything and forwards the faulty CompletionResult object.
  * - Verify that FTP settings are OK.
  * - Download remote file with detailed progress updates.
+ * - Download and overwrites any other required remote files.
+ * 
+ * Current limitations are:
+ * - Other remote files are simply overwritten, so any replaced images/css/... will be lost if not saved beforehand
+ * - Download of other remote files have no impact on overall progress.
  * @author Thomas Debouverie
  *
  */

@@ -18,6 +18,10 @@ public class NotificationCenter {
 	private NotificationCenter() {
 	}
 	
+	/**
+	 * Singleton access.
+	 * @return Unique notification center object.
+	 */
 	public static NotificationCenter sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new NotificationCenter();

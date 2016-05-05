@@ -9,6 +9,11 @@ import data.transfer.CompletionResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Static utilities for file transfer errors handling.
+ * @author Thomas Debouverie
+ *
+ */
 public class TransferUtils {
 
 	public static void resetFromFileWithUnknownFileAlert(boolean showUnknownFileAlert) {

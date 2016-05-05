@@ -3,6 +3,11 @@ package views.frontend;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles pooling and upooling CoverflowItem objects.
+ * @author Thomas Debouverie
+ *
+ */
 public class CoverflowItemPool {
 
 	private static final int INITIAL_POOL_SIZE = 40;

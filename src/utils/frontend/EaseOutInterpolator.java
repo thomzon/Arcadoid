@@ -2,6 +2,11 @@ package utils.frontend;
 
 import javafx.animation.Interpolator;
 
+/**
+ * Animation interpolator that supports several EaseOut styles.
+ * @author Thomas Debouverie
+ *
+ */
 public class EaseOutInterpolator extends Interpolator {
 
 	public enum EaseOutFunction {

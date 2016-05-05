@@ -1,5 +1,11 @@
 package data.transfer.updater;
 
+/**
+ * Represents one of the executables of the Arcadoid suite.
+ * Capable of given the actual file name of the executable.
+ * @author Thomas Debouverie
+ *
+ */
 public enum ApplicationExecutable {
 	EDITOR("ArcadoidEditor.jar"),
 	FRONTEND("Arcadoid.jar"),

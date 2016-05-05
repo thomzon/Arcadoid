@@ -17,6 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Handles display of one catalog item on screen, coverflow style.
+ * @author Thomas Debouverie
+ *
+ */
 public class CoverflowItem extends Parent {
 
 	private static final double REFLECTION_SIZE = 0.4;
@@ -30,6 +35,9 @@ public class CoverflowItem extends Parent {
 	private Reflection reflectionEffect = new Reflection();
 	private ImageView imageView = new ImageView();
 
+	/**
+	 * Angle determines rotation on its Y axis.
+	 */
 	private final DoubleProperty angle = new SimpleDoubleProperty(45) {
         @Override protected void invalidated() {
             // When angle changes calculate new transform
@@ -37,6 +45,9 @@ public class CoverflowItem extends Parent {
         }
     };
     
+    /**
+     * Reflection determines the amount of itself that is reflected vertically.
+     */
     private final DoubleProperty reflection = new SimpleDoubleProperty(0.5) {
     	@Override protected void invalidated() {
             // When reflection changes calculate new reflectionEffect

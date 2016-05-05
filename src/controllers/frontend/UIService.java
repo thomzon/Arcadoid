@@ -106,7 +106,7 @@ public class UIService {
 			TransferUtils.showRepositoryOperationError(result);
 		} else if (this.updateChecker.updateAvailableForUpdater) {
 			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
-				ApplicationVersionService.updateVersionNumberForProperty("" + updateChecker.remoteUpdaterVersionNumber, PropertyId.UPDATER_VERSION_NUMBER);
+				ApplicationVersionService.updateVersionNumberForProperty("" + updateChecker.updateData.editorVersionNumber, PropertyId.UPDATER_VERSION_NUMBER);
 				checkForAppUpdate();
 			});
 		} else if (this.updateChecker.updateAvailableForFrontend) {

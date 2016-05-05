@@ -7,6 +7,12 @@ import javafx.scene.Node;
 import javafx.util.Duration;
 import views.frontend.FrontendPane;
 
+/**
+ * Handles autohiding the mouse curser in a given pane when the mouse stops moving for
+ * specific amount of time.
+ * @author Thomas Debouverie
+ *
+ */
 public class MouseAutohideBehaviour {
 
 	private FrontendPane pane;

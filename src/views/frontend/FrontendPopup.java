@@ -9,11 +9,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
 
+/**
+ * Simple popup dialog class.
+ * @author Thomas Debouverie
+ *
+ */
 public class FrontendPopup extends Group {
 
-	/**
-	 * Size properties
-	 */
 	private double width, height;
 
 	/**

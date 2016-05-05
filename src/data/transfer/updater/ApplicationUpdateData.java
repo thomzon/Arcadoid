@@ -10,6 +10,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
+/**
+ * Simple wrapper class for data required when updating an application. That includes the version
+ * number of each of the executables, but also the additional resource files.
+ * @author Thomas Debouverie
+ *
+ */
 public class ApplicationUpdateData {
 
 	public static final String DATA_KEY_FRONTEND = "arcadoid_frontend";

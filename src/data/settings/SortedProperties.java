@@ -6,6 +6,12 @@ import java.util.Vector;
 
 import data.settings.Settings.PropertyId;
 
+/**
+ * Properties standard class extensions that will write properties in a specific order,
+ * to improve readability.
+ * @author Thomas Debouverie
+ *
+ */
 public class SortedProperties extends Properties {
 
 	private static final long serialVersionUID = -4965482554409716528L;

@@ -5,6 +5,12 @@ import java.io.File;
 import data.transfer.CompletionCallable.ErrorType;
 import data.transfer.CompletionResult;
 
+/**
+ * Handles validation of front-end mandatory settings.
+ * Will check that all required paths and executable are defined.
+ * @author Thomas Debouverie
+ *
+ */
 public class FrontendSettingsValidator {
 
 	private FrontendSettings frontendSettings;
