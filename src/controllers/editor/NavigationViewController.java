@@ -16,7 +16,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -26,9 +25,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import utils.global.GlobalUtils;
 import views.editor.NavigationItemTreeCell;
 
 /**
@@ -223,11 +222,7 @@ public class NavigationViewController implements Initializable {
 		if (this.editedItem.getValue().getSubItems().isEmpty()) {
 			this.doDeleteCurrentItem();
 		} else {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle(Messages.get("alert.title"));
-			alert.setHeaderText(Messages.get("confirmation.header.deleteNavigationItem"));
-			alert.setContentText(Messages.get("confirmation.body.deleteNavigationItemWithSubitems"));
-			Optional<ButtonType> result = alert.showAndWait();
+			Optional<ButtonType> result = GlobalUtils.simpleConfirmationAlertForKeys("confirmation.header.deleteNavigationItem", "confirmation.body.deleteNavigationItemWithSubitems");
 			if (result.isPresent() && result.get() == ButtonType.OK) {
 				this.doDeleteCurrentItem();
 			}

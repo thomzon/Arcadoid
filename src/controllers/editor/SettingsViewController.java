@@ -22,14 +22,13 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import utils.global.GlobalUtils;
 import utils.transfer.TransferUtils;
 
 /**
@@ -174,11 +173,7 @@ public class SettingsViewController implements Initializable {
 	}
 	
 	private boolean askToCreatePath(String path) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("confirmation.header.ftpPathUnknown"));
-		alert.setContentText(Messages.get("confirmation.body.ftpPathUnknown", path));
-		Optional<ButtonType> result = alert.showAndWait();
+		Optional<ButtonType> result = GlobalUtils.simpleConfirmationAlertForKeys("confirmation.header.ftpPathUnknown", "confirmation.body.ftpPathUnknown", path);
 		return result.isPresent() && result.get() == ButtonType.OK;		
 	}
 	
@@ -266,11 +261,7 @@ public class SettingsViewController implements Initializable {
 	}
 	
 	private void handleSaveSuccess() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("info.header.ftpCheckSuccess"));
-		alert.setContentText(Messages.get("info.body.ftpCheckSuccess"));
-		alert.showAndWait();
+		GlobalUtils.simpleInfoAlertForKeys("info.header.ftpCheckSuccess", "info.body.ftpCheckSuccess");
 	}
 	
 	private void handleErrorForStartupSettingsCheck(CompletionResult result) {
@@ -281,45 +272,33 @@ public class SettingsViewController implements Initializable {
 			this.handleErrorSavingSettings();
 			return;
 		}
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("info.header.incompleteSettings"));
-		alert.setContentText(Messages.get("info.body.incompleteSettings"));
-		alert.show();
+		GlobalUtils.simpleInfoAlertForKeys("info.header.incompleteSettings", "info.body.incompleteSettings");
 	}
 	
 	private void handleErrorForEditorSettingsCheckResult(CompletionResult result) {
-		String message = null;
+		String messageKey = null;
 		switch (result.errorType) {
 		case ARTWORKS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.artworksPathNotFound");
+			messageKey = "error.body.artworksPathNotFound";
 			break;
 		case MAME_ROMS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.mameRomsPathNotFound");
+			messageKey = "error.body.mameRomsPathNotFound";
 			break;
 		case SNES_ROMS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.snesRomsPathNotFound");
+			messageKey = "error.body.snesRomsPathNotFound";
 			break;
 		case GENESIS_ROMS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.genesisRomsPathNotFound");
+			messageKey = "error.body.genesisRomsPathNotFound";
 			break;
 		default:
-			Messages.get("error.body.unexpectedSettingsCheckError");
+			messageKey = "error.body.unexpectedSettingsCheckError";
 			break;
 		}
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.localPathCheckError"));
-		alert.setContentText(message);
-		alert.show();
+		GlobalUtils.simpleErrorAlertForKeys("error.header.localPathCheckError", messageKey);
 	}
 	
 	private void handleErrorSavingSettings() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.settingsSave"));
-		alert.setContentText(Messages.get("error.body.settingsSave"));
-		alert.show();
+		GlobalUtils.simpleErrorAlertForKeys("error.header.settingsSave", "error.body.settingsSave");
 	}
 
 }

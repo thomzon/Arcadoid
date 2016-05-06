@@ -2,11 +2,9 @@ package applications;
 
 import java.io.IOException;
 
-import data.settings.Messages;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import utils.global.GlobalUtils;
 
 /**
  * Handles the update of all applications version number.
@@ -38,14 +36,7 @@ public class ApplicationVersionService {
 	}
 	
 	private static void handleSettingsSaveFailure() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.saveToFile"));
-		alert.setContentText(Messages.get("error.body.versionNumberUpdate"));
-		alert.setOnCloseRequest((event) -> {
-			System.exit(0);
-		});
-		alert.show();
+		GlobalUtils.simpleErrorAlertForKeys("error.header.saveToFile", "error.body.versionNumberUpdate", true);
 	}
 	
 }

@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import utils.global.GlobalUtils;
 
 /**
  * Application class for the catalog editor GUI.
@@ -29,7 +30,7 @@ public class ArcadoidEditor extends Application {
             this.rootController.setPrimaryStage(primaryStage);
             this.rootController.show();
         } catch (Exception e) {
-            e.printStackTrace();
+        	GlobalUtils.simpleErrorAlertForKeys("error.header.fxmlLoad", "error.body.fxmlLoad");
         }
 	}
 	

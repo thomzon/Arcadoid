@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import data.access.ArcadoidData;
 import data.json.DataPersistence;
+import utils.global.GlobalUtils;
 
 /**
  * Has the responsability to rapidly check the data file on the FTP repository,
@@ -63,19 +64,18 @@ public class DataUpdateChecker {
 			int remoteVersionNumber = DataPersistence.getVersionNumberFromFile(TEMPORARY_DATA_FILE_NAME);
 			this.compareWithRemoteVersionNumber(remoteVersionNumber);
 		} catch (IOException e) {
-			e.printStackTrace();
+			GlobalUtils.simpleErrorAlertForKeys("error.header.remoteCatalog", "error.body.remoteCatalogVersionReadError");
 		} finally {
 			this.cleanup();
 		}
 	}
 	
 	private void compareWithRemoteVersionNumber(int remoteVersionNumber) {
-		System.out.println("Remote version number is " + remoteVersionNumber + ", local one is " + ArcadoidData.sharedInstance().getArcadoidDataVersionNumber());
 		if (remoteVersionNumber > ArcadoidData.sharedInstance().getArcadoidDataVersionNumber() && this.updateAvailableCompletion != null) {
 			try {
 				this.updateAvailableCompletion.call();
 			} catch (Exception e) {
-				e.printStackTrace();
+				GlobalUtils.simpleErrorAlertForKeys("error.header.unknown", "error.body.unknownError", true);
 			}
 		}
 	}

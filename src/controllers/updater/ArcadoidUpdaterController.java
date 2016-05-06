@@ -3,7 +3,6 @@ package controllers.updater;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import data.settings.Messages;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
 import data.transfer.updater.ApplicationExecutable;
@@ -12,10 +11,9 @@ import data.transfer.updater.ApplicationUpdater;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import utils.global.GlobalUtils;
 import utils.transfer.TransferUtils;
 
 /**
@@ -71,21 +69,13 @@ public class ArcadoidUpdaterController implements Initializable {
 	}
 	
 	private void handleNoUpdateAvailable() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("info.header.updateCheckSuccess"));
-		alert.setContentText(Messages.get("info.body.noUpdatesAvailable"));
-		alert.show();
+		GlobalUtils.simpleInfoAlertForKeys("info.header.updateCheckSuccess", "info.body.noUpdatesAvailable");
 	}
 	
 	private void handleSomeUpdatesAvailable() {
 		this.updateEditorButton.setDisable(!this.updateChecker.updateAvailableForEditor);
 		this.updateFrontendButton.setDisable(!this.updateChecker.updateAvailableForFrontend);
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("info.header.updateCheckSuccess"));
-		alert.setContentText(Messages.get("info.body.someUpdatesAvailable"));
-		alert.show();
+		GlobalUtils.simpleInfoAlertForKeys("info.header.updateCheckSuccess", "info.body.someUpdatesAvailable");
 	}
 
 	private void startUpdateForExecutable(ApplicationExecutable executable, boolean executeWhenDone) {

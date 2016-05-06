@@ -20,7 +20,6 @@ public class ConfirmationDialogCallable implements Callable<Boolean> {
 		try {
 			return this.call();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

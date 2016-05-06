@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import data.access.NotificationCenter;
+import utils.global.GlobalUtils;
 
 /**
  * Static methods for access to application settings.
@@ -127,7 +128,7 @@ public class Settings
 			try	{
 				saveSettings();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				GlobalUtils.simpleErrorAlertForKeys("error.header.settingsSave", "error.body.initialSettingsSave", true);
 			}
 		}
 	}

@@ -56,28 +56,24 @@ public class CoverflowItem extends Parent {
     };
     
 	public CoverflowItem() {
-		try {
-			this.setDefaultImage();
-			this.reflectionEffect.setFraction(REFLECTION_SIZE);
-			this.reflectionEffect.setTopOpacity(this.reflection.get());
-			this.imageView.setEffect(this.reflectionEffect);
-			this.imageView.setFitHeight(WIDTH);
-			this.imageView.setFitWidth(WIDTH);
-			this.imageView.setPreserveRatio(true);
-			this.setEffect(this.transform);
-			this.getChildren().addAll(this.imageView);
-			
-			this.itemNameLabel.setTextFill(Color.WHITE);
-			this.itemNameLabel.setTextAlignment(TextAlignment.CENTER);
-			this.itemNameLabel.setAlignment(Pos.CENTER);
-			this.itemNameLabel.setPrefWidth(200);
-			this.itemNameLabel.setMinWidth(200);
-			this.itemNameLabel.setMaxWidth(200);
-			this.itemNameLabel.setLayoutY(150);
-			getChildren().addAll(this.itemNameLabel);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.setDefaultImage();
+		this.reflectionEffect.setFraction(REFLECTION_SIZE);
+		this.reflectionEffect.setTopOpacity(this.reflection.get());
+		this.imageView.setEffect(this.reflectionEffect);
+		this.imageView.setFitHeight(WIDTH);
+		this.imageView.setFitWidth(WIDTH);
+		this.imageView.setPreserveRatio(true);
+		this.setEffect(this.transform);
+		this.getChildren().addAll(this.imageView);
+		
+		this.itemNameLabel.setTextFill(Color.WHITE);
+		this.itemNameLabel.setTextAlignment(TextAlignment.CENTER);
+		this.itemNameLabel.setAlignment(Pos.CENTER);
+		this.itemNameLabel.setPrefWidth(200);
+		this.itemNameLabel.setMinWidth(200);
+		this.itemNameLabel.setMaxWidth(200);
+		this.itemNameLabel.setLayoutY(150);
+		this.getChildren().addAll(this.itemNameLabel);
 	}
 	
 	public void setBaseItem(BaseItem item) {

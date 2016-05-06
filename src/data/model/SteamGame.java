@@ -1,7 +1,5 @@
 package data.model;
 
-import java.io.IOException;
-
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.beans.property.SimpleStringProperty;
@@ -63,9 +61,10 @@ public class SteamGame extends Game {
 
 	/**
 	 * Running a Steam game is just a command line to the Steam app, with the -applaunch command and the relevant Steam application ID.
+	 * @throws Exception 
 	 */
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		String executable = Settings.getSetting(PropertyId.STEAM_PATH) + " -applaunch " + this.appId();
 		this.execute(executable, null);
 	}
@@ -74,15 +73,10 @@ public class SteamGame extends Game {
 	 * To terminate a Steam game, the Steam process started must be killed, but the actual Windows process specific to the game must also be killed.
 	 */
 	@Override
-	public void terminate() {
+	public void terminate() throws Exception {
 		super.terminate();
 		if (this.processName() == null) return;
-		try {
-			Runtime.getRuntime().exec("taskkill /im " + this.processName() +" /f");
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
+		Runtime.getRuntime().exec("taskkill /im " + this.processName() +" /f");
 	}
 
 }

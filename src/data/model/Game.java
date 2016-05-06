@@ -1,7 +1,6 @@
 package data.model;
 
 import java.io.File;
-import java.io.IOException;
 
 import data.settings.Messages;
 import javafx.collections.FXCollections;
@@ -62,23 +61,18 @@ public abstract class Game extends BaseItem {
 	/**
 	 * Start the game within its own platform. Execution depends on actual subclass.
 	 */
-	public abstract void execute();
+	public abstract void execute() throws Exception;
 	
-	protected void execute(String commandLine, File directory) {
+	protected void execute(String commandLine, File directory) throws Exception {
 		if (this.process != null) return;
-		try {
-			this.process = Runtime.getRuntime().exec(commandLine, null, directory);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(4);
-		}
+		this.process = Runtime.getRuntime().exec(commandLine, null, directory);
 	}
 	
 	/**
 	 * Stops the game process and return to Arcadoid front-end.
 	 * Most games can be terminated by just destroying the associated emulator process.
 	 */
-	public void terminate() {
+	public void terminate() throws Exception {
 		if (this.process != null) {
 			this.process.destroy();
 		}

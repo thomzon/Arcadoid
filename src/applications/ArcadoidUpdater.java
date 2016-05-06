@@ -10,10 +10,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import utils.global.GlobalUtils;
 
 /**
  * Application class for the updater GUI.
@@ -52,11 +51,7 @@ public class ArcadoidUpdater extends Application {
 			ApplicationUpdater updater = new ApplicationUpdater(executableName);
 			updater.startUpdate(null, true, null);
 		} catch (IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle(Messages.get("alert.title"));
-			alert.setHeaderText(Messages.get("error.header.illegalApplicationName"));
-			alert.setContentText(Messages.get("error.body.illegalApplicationName", executableName));
-			alert.show();
+			GlobalUtils.simpleErrorAlertForKeys("error.header.illegalApplicationName", "error.body.illegalApplicationName", executableName);
 		}
 	}
 	
@@ -71,7 +66,7 @@ public class ArcadoidUpdater extends Application {
             primaryStage.show();
             ((ArcadoidUpdaterController)loader.getController()).setPrimaryStage(primaryStage);
         } catch (IOException e) {
-            e.printStackTrace();
+        	GlobalUtils.simpleErrorAlertForKeys("error.header.fxmlLoad", "error.body.fxmlLoad");
         }
 	}
 

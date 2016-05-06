@@ -13,11 +13,10 @@ import data.settings.frontend.InputSettingsValidator;
 import data.transfer.CompletionCallable;
 import data.transfer.CompletionResult;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import utils.global.GlobalUtils;
 import utils.transfer.TransferUtils;
 import views.frontend.FrontendPane;
 import views.frontend.InfoPopup;
@@ -142,29 +141,25 @@ public class SettingsPane extends FrontendPane {
 	}
 	
 	private void handleErrorForFrontendSettingsCheckResult(CompletionResult result) {
-		String message = null;
+		String messageKey = null;
 		switch (result.errorType) {
 		case ARTWORKS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.artworksPathNotFound");
+			messageKey = "error.body.artworksPathNotFound";
 			break;
 		case MAME_ROMS_FOLDER_PATH_NOT_FOUND:
-			message = Messages.get("error.body.mameRomsPathNotFound");
+			messageKey = "error.body.mameRomsPathNotFound";
 			break;
 		case MAME_EXECUTABLE_NOT_FOUND:
-			message = Messages.get("error.body.mameExecutableNotFound");
+			messageKey = "error.body.mameExecutableNotFound";
 			break;
 		case STEAM_EXECUTABLE_NOT_FOUND:
-			message = Messages.get("error.body.steamExecutableNotFound");
+			messageKey = "error.body.steamExecutableNotFound";
 			break;
 		default:
-			Messages.get("error.body.unexpectedSettingsCheckError");
+			messageKey = "error.body.unexpectedSettingsCheckError";
 			break;
 		}
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.localPathCheckError"));
-		alert.setContentText(message);
-		alert.show();
+		GlobalUtils.simpleErrorAlertForKeys("error.header.localPathCheckError", messageKey);
 	}
 	
 }

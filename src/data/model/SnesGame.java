@@ -45,7 +45,7 @@ public class SnesGame extends Game {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		String snes9xPath = Settings.getSetting(PropertyId.SNES9X_PATH);
 		String romsPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);

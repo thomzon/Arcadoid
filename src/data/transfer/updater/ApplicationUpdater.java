@@ -10,6 +10,7 @@ import data.transfer.CompletionResult;
 import javafx.concurrent.Service;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import utils.global.GlobalUtils;
 import utils.transfer.TransferUtils;
 
 /**
@@ -44,9 +45,12 @@ public class ApplicationUpdater {
 			Runtime.getRuntime().exec("java -jar " + ApplicationExecutable.UPDATER.getExecutableName() + " --update " + executable.getExecutableName(), null, null);
 			System.exit(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			reportUpdaterLaunchError();
 		}
+	}
+	
+	private static void reportUpdaterLaunchError() {
+		GlobalUtils.simpleErrorAlertForKeys("error.header.updaterError", "error.body.updaterLaunch");
 	}
 	
 	/**
@@ -80,12 +84,15 @@ public class ApplicationUpdater {
 				Runtime.getRuntime().exec("java -jar " + this.applicationExecutable.getExecutableName(), null, null);
 				System.exit(0);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				reportExecutableLaunchError();
 			}
 		} else if (completionRunnable != null) {
 			completionRunnable.run();
 		}
+	}
+	
+	private static void reportExecutableLaunchError() {
+		GlobalUtils.simpleErrorAlertForKeys("error.header.updaterError", "error.body.executableLaunch");
 	}
 	
 }

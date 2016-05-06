@@ -2,6 +2,8 @@ package data.transfer;
 
 import com.enterprisedt.net.ftp.EventListener;
 
+import utils.global.GlobalUtils;
+
 /**
  * Simple EDTFTPJ EventListener that only monitors file transfer progress.
  * It forwards the information using a TransferProgressCallable object.
@@ -23,7 +25,7 @@ public class TransferProgressListener implements EventListener {
 		try {
 			this.progressCallable.call();
 		} catch (Exception e) {
-			e.printStackTrace();
+			GlobalUtils.simpleErrorAlertForKeys("error.header.unknown", "error.body.unknownError", true);
 		}
 	}
 

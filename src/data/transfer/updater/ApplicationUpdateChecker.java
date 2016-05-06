@@ -93,7 +93,6 @@ public class ApplicationUpdateChecker {
 			ApplicationUpdateData updateData = ApplicationUpdateData.dataFromFile(TEMPORARY_VERSION_FILE_NAME);
 			return updateData;
 		} catch (IOException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

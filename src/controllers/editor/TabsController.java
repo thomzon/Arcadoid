@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import utils.global.GlobalUtils;
 
 /**
  * View controller in charge of the main tabs for the Arcadoid Editor application.
@@ -50,7 +51,7 @@ public class TabsController implements Initializable {
             AnchorPane tagsPane = (AnchorPane) loader.load();
             tab.setContent(tagsPane);
         } catch (IOException e) {
-            e.printStackTrace();
+        	GlobalUtils.simpleErrorAlertForKeys("error.header.fxmlLoad", "error.body.fxmlLoad");
         }
 	}
 	

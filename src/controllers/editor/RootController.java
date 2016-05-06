@@ -26,14 +26,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import utils.global.GlobalUtils;
 import utils.transfer.LoadFromRepositoryHandler;
 import utils.transfer.TransferUtils;
 
@@ -104,7 +103,7 @@ public class RootController implements Initializable {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+        	GlobalUtils.simpleErrorAlertForKeys("error.header.fxmlLoad", "error.body.fxmlLoad");
         }
 	}
 	
@@ -116,16 +115,12 @@ public class RootController implements Initializable {
             AnchorPane tabsControllerPane = (AnchorPane)loader.load();
             rootLayout.setCenter(tabsControllerPane);
         } catch (IOException e) {
-            e.printStackTrace();
+        	GlobalUtils.simpleErrorAlertForKeys("error.header.fxmlLoad", "error.body.fxmlLoad");
         }
     }
 	
 	public void askAboutDataUpdate() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("confirmation.header.dataUpdateAvailable"));
-		alert.setContentText(Messages.get("confirmation.body.dataUpdateAvailable"));
-		Optional<ButtonType> result = alert.showAndWait();
+		Optional<ButtonType> result = GlobalUtils.simpleConfirmationAlertForKeys("confirmation.header.dataUpdateAvailable", "confirmation.body.dataUpdateAvailable");
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			this.getFromRepositoryAction();
 		}
@@ -141,11 +136,11 @@ public class RootController implements Initializable {
 			ArcadoidData.sharedInstance().saveData();
 			return true;
 		} catch (FileNotFoundException e) {
-			this.showFileSaveErrorForMessage(Messages.get("error.body.cannotAccessFile"));
+			GlobalUtils.simpleErrorAlertForKeys("error.header.saveToFile", "error.body.cannotAccessFile");
 		} catch (IOException e) {
-			this.showFileSaveErrorForMessage(Messages.get("error.body.errorDuringFileIO"));
+			GlobalUtils.simpleErrorAlertForKeys("error.header.saveToFile", "error.body.errorDuringFileIO");
 		} catch (Exception e) {
-			this.showFileSaveErrorForMessage(Messages.get("error.body.unexpectedFileError"));
+			GlobalUtils.simpleErrorAlertForKeys("error.header.saveToFile", "error.body.unexpectedFileError");
 		}
 		return false;
 	}
@@ -177,14 +172,6 @@ public class RootController implements Initializable {
 	private void getFromRepositoryAction() {
 		LoadFromRepositoryHandler handler = new LoadFromRepositoryHandler();
 		handler.startInWindow(this.primaryStage);
-	}
-	
-	private void showFileSaveErrorForMessage(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(Messages.get("alert.title"));
-		alert.setHeaderText(Messages.get("error.header.saveToFile"));
-		alert.setContentText(message);
-		alert.show();
 	}
 	
 	private void handleSendToRepositoryResult(CompletionResult result) {

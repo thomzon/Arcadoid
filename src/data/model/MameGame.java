@@ -48,7 +48,7 @@ public class MameGame extends Game {
 	 * MAME games are run using the base MAME emulator via command-line.
 	 */
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		String mamePath = Settings.getSetting(PropertyId.MAME_PATH);
 		String executable = mamePath + " " + this.gameName();
 		this.execute(executable, new File(mamePath).getParentFile());

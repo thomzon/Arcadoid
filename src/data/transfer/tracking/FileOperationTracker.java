@@ -8,6 +8,7 @@ import data.transfer.CompletionResult;
 import data.transfer.DataTransfer;
 import data.transfer.TransferProgressCallable;
 import data.transfer.TransferProgressListener;
+import utils.global.GlobalUtils;
 
 /**
  * Object responsible of:
@@ -68,7 +69,7 @@ abstract class FileOperationTracker {
 			try {
 				this.progressCallable.call();
 			} catch (Exception e) {
-				e.printStackTrace();
+				GlobalUtils.simpleErrorAlertForKeys("error.header.unknown", "error.body.unknownError", true);
 			}
 		}
 	}

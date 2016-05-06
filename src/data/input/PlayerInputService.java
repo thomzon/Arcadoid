@@ -13,6 +13,7 @@ import data.settings.Settings.PropertyId;
 import data.settings.frontend.InputSettings;
 import data.settings.frontend.InputSettingsValidator;
 import javafx.application.Platform;
+import utils.global.GlobalUtils;
 import views.frontend.InputValidationPopup;
 
 /**
@@ -75,8 +76,7 @@ public class PlayerInputService implements KeyboardDelegate {
 			try {
 				GlobalScreen.registerNativeHook();
 			} catch (NativeHookException e) {
-				e.printStackTrace();
-				System.exit(4);
+	        	GlobalUtils.simpleErrorAlertForKeys("error.header.inputError", "error.body.keyboardHookInitFailure", true);
 			}
 			this.keyboardListener = new KeyboardListener(this);
 			this.setupListenedCombinations();

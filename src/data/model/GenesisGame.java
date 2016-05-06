@@ -45,7 +45,7 @@ public class GenesisGame extends Game {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		String kegaPath = Settings.getSetting(PropertyId.KEGA_PATH);
 		String romsPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);

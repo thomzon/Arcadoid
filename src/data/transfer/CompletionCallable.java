@@ -3,6 +3,7 @@ package data.transfer;
 import java.util.concurrent.Callable;
 
 import javafx.application.Platform;
+import utils.global.GlobalUtils;
 
 /**
  * Represents code that is executed after an operation (most often asynchronous) has been completed.
@@ -45,7 +46,7 @@ public class CompletionCallable implements Callable<Void> {
 				try {
 					call();
 				} catch (Exception e) {
-					e.printStackTrace();
+					GlobalUtils.simpleErrorAlertForKeys("error.header.unknown", "error.body.unknownError", true);
 				}
 			}
 		});

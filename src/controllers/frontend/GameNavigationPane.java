@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import utils.frontend.GameLaunchService;
+import utils.global.GlobalUtils;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 import views.frontend.InfoPopup;
@@ -86,8 +87,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		try {
 			ArcadoidData.sharedInstance().loadData();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			GlobalUtils.simpleErrorAlertForKeys("error.header.catalogLoad", "error.body.catalogLoad");
 		}
 	}
 	
