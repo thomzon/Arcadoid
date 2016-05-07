@@ -12,7 +12,7 @@ import data.settings.Settings.PropertyId;
  */
 public class FrontendSettings {
 
-	public String artworksFolderPath, mameRomsFolderPath, snesRomsFolderPath, genesisRomsFolderPath;
+	public String artworksFolderPath, mameRomsFolderPath, snesRomsFolderPath, fusionRomsFolderPath;
 	public String mameExecutablePath, steamExecutablePath, snes9xExecutablePath, kegaExecutablePath;
 
 	/**
@@ -22,7 +22,7 @@ public class FrontendSettings {
 		this.artworksFolderPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		this.mameRomsFolderPath = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
 		this.snesRomsFolderPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
-		this.genesisRomsFolderPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		this.fusionRomsFolderPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
 		this.mameExecutablePath = Settings.getSetting(PropertyId.MAME_PATH);
 		this.steamExecutablePath = Settings.getSetting(PropertyId.STEAM_PATH);
 		this.snes9xExecutablePath = Settings.getSetting(PropertyId.SNES9X_PATH);
@@ -37,7 +37,7 @@ public class FrontendSettings {
 		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderPath);
 		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderPath);
 		Settings.setSetting(PropertyId.SNES_ROMS_FOLDER_PATH, this.snesRomsFolderPath);
-		Settings.setSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH, this.genesisRomsFolderPath);
+		Settings.setSetting(PropertyId.FUSION_ROMS_FOLDER_PATH, this.fusionRomsFolderPath);
 		Settings.setSetting(PropertyId.MAME_PATH, this.mameExecutablePath);
 		Settings.setSetting(PropertyId.STEAM_PATH, this.steamExecutablePath);
 		Settings.setSetting(PropertyId.SNES9X_PATH, this.snes9xExecutablePath);

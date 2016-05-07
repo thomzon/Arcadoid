@@ -59,6 +59,9 @@ public class CoverflowList extends Group {
 				this.moveItemToPositionIndexAnimated(newItem, index, false);
 			}
 		}
+		// Force scroll forward then back, otherwise item at index 0 does not display its image correctly...
+		this.scrollToItemAtIndexAnimated(1, false);
+		this.scrollToItemAtIndexAnimated(0, false);
 	}
 	
 	/**

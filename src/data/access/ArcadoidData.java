@@ -12,7 +12,7 @@ import data.json.DataPersistence;
 import data.model.BaseItem;
 import data.model.Game;
 import data.model.Game.Platform;
-import data.model.GenesisGame;
+import data.model.FusionGame;
 import data.model.MameGame;
 import data.model.NavigationItem;
 import data.model.SnesGame;
@@ -162,6 +162,7 @@ public class ArcadoidData {
 	public void setAllTags(List<Tag> tags) {
 		this.allTags.clear();
 		this.allTags.addAll(tags);
+		this.allTags.sort(BaseItem.defaultComparator());
 		this.tagsByIdentifier.clear();
 		for (Tag tag : tags) {
 			this.tagsByIdentifier.put(tag.getIdentifier(), tag);
@@ -248,8 +249,8 @@ public class ArcadoidData {
 		case SNES:
 			newGame = new SnesGame(currentGame);
 			break;
-		case GENESIS:
-			newGame = new GenesisGame(currentGame);
+		case FUSION:
+			newGame = new FusionGame(currentGame);
 			break;
 		}
 		this.allGames.set(this.allGames.indexOf(currentGame), newGame);
@@ -270,6 +271,7 @@ public class ArcadoidData {
 	public void setAllGames(List<Game> games) {
 		this.allGames.clear();
 		this.allGames.addAll(games);
+		this.allGames.sort(BaseItem.defaultComparator());
 	}
 	
 	/**
@@ -365,6 +367,10 @@ public class ArcadoidData {
 	public void setRootNavigationItems(List<NavigationItem> rootItems) {
 		this.rootNavigationItems.clear();
 		this.rootNavigationItems.addAll(rootItems);
+		this.rootNavigationItems.sort(BaseItem.defaultComparator());
+		this.rootNavigationItems.forEach((item) -> {
+			item.sortChildren();
+		});
 	}
 	
 	/**

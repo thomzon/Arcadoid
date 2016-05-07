@@ -53,13 +53,13 @@ public class Settings
 		REPOSITORY_ARTWORKS_PATH("repo_artworks_path", Messages.get("field.artworksDataPath")),
 		REPOSITORY_MAME_ROMS_PATH("repo_mame_roms_path", Messages.get("field.mameDataPath")),
 		REPOSITORY_SNES_ROMS_PATH("repo_snes_roms_path", Messages.get("field.snesDataPath")),
-		REPOSITORY_GENESIS_ROMS_PATH("repo_genesis_roms_path", Messages.get("field.genesisDataPath")),
+		REPOSITORY_FUSION_ROMS_PATH("repo_fusion_roms_path", Messages.get("field.fusionDataPath")),
 		
 		// Common settings
 		ARTWORKS_FOLDER_PATH("artworks_folder_path", Messages.get("field.artworksFolderPath")),
 		MAME_ROMS_FOLDER_PATH("mame_roms_folder_path", Messages.get("field.mameRomsFolderPath")),
 		SNES_ROMS_FOLDER_PATH("snes_roms_folder_path", Messages.get("field.snesRomsFolderPath")),
-		GENESIS_ROMS_FOLDER_PATH("genesis_roms_folder_path", Messages.get("field.genesisRomsFolderPath")),
+		FUSION_ROMS_FOLDER_PATH("fusion_roms_folder_path", Messages.get("field.fusionRomsFolderPath")),
 		
 		// Front-end specific settings
 		MAME_PATH("mame_path", Messages.get("field.mameExecutablePath")),

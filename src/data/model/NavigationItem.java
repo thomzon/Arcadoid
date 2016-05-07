@@ -106,6 +106,13 @@ public class NavigationItem extends BaseItem {
 		return super.getBackgroundArtworkPath() != null && !super.getBackgroundArtworkPath().isEmpty();
 	}
 	
+	public void sortChildren() {
+		this.subItems.sort(BaseItem.defaultComparator());
+		this.subItems.forEach((item) -> {
+			item.sortChildren();
+		});
+	}
+	
 	@Override
 	public String getName() {
 		if (this.hasOwnName()) {

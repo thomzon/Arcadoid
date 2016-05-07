@@ -12,7 +12,7 @@ import com.google.gson.JsonParseException;
 import data.access.ArcadoidData;
 import data.model.Game;
 import data.model.Game.Platform;
-import data.model.GenesisGame;
+import data.model.FusionGame;
 import data.model.MameGame;
 import data.model.SnesGame;
 import data.model.SteamGame;
@@ -56,8 +56,8 @@ public class GameDeserializer implements JsonDeserializer<Game> {
 				return this.createSteamGame(identifier, jsonObject);
 			case SNES:
 				return this.createSnesGame(identifier, jsonObject);
-			case GENESIS:
-				return this.createGenesisGame(identifier, jsonObject);
+			case FUSION:
+				return this.createFusionGame(identifier, jsonObject);
 			default:
 				return null;
 		}
@@ -82,10 +82,10 @@ public class GameDeserializer implements JsonDeserializer<Game> {
 		return snesGame;
 	}
 	
-	private GenesisGame createGenesisGame(long identifier, JsonObject jsonObject) {
-		GenesisGame genesisGame = new GenesisGame(identifier);
-		genesisGame.setRomFileName(jsonObject.get(JsonConstants.PROPERTY_ROM_FILE_NAME).getAsString());
-		return genesisGame;
+	private FusionGame createFusionGame(long identifier, JsonObject jsonObject) {
+		FusionGame fusionGame = new FusionGame(identifier);
+		fusionGame.setRomFileName(jsonObject.get(JsonConstants.PROPERTY_ROM_FILE_NAME).getAsString());
+		return fusionGame;
 	}
 
 }

@@ -47,14 +47,14 @@ public class FileDownloadTracker extends FileOperationTracker {
 		if (!existingSnesRomsFiles.success) {
 			return existingSnesRomsFiles;
 		}
-		FileListingResult existingGenesisRomsFiles = this.transfer.getFilesList(this.ftpSettings.genesisDataPath);
-		if (!existingGenesisRomsFiles.success) {
-			return existingGenesisRomsFiles;
+		FileListingResult existingFusionRomsFiles = this.transfer.getFilesList(this.ftpSettings.fusionDataPath);
+		if (!existingFusionRomsFiles.success) {
+			return existingFusionRomsFiles;
 		}
 		this.analyzeRemoteDataFile(existingDataFiles.foundFiles);
 		this.compareLocalAndRemoteFiles(existingArtworkFiles.foundFiles, Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), this.artworksToTransfer);
 		this.compareLocalAndRemoteFiles(existingSnesRomsFiles.foundFiles, Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH), this.snesRomFilesToTransfer);
-		this.compareLocalAndRemoteFiles(existingGenesisRomsFiles.foundFiles, Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH), this.genesisRomFilesToTransfer);
+		this.compareLocalAndRemoteFiles(existingFusionRomsFiles.foundFiles, Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH), this.fusionRomFilesToTransfer);
 		CompletionResult mameCompareResult = this.compareLocalAndRemoteMameRoms(existingMameRomsDirectories.foundFiles);
 		if (mameCompareResult != null) {
 			return mameCompareResult;
@@ -81,10 +81,10 @@ public class FileDownloadTracker extends FileOperationTracker {
 		return this.getNextFile(this.snesRomFilesToTransfer, romDirectoryPath, next);
 	}
 	
-	public CompletionResult getNextGenesisRomFile() {
-		String romDirectoryPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
-		String next = this.nextGenesisRomFileToTransfer();
-		return this.getNextFile(this.genesisRomFilesToTransfer, romDirectoryPath, next);
+	public CompletionResult getNextFusionRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
+		String next = this.nextFusionRomFileToTransfer();
+		return this.getNextFile(this.fusionRomFilesToTransfer, romDirectoryPath, next);
 	}
 	
 	private CompletionResult getNextFile(Map<String, Number> transferMap, String directoryPath, String nextFile) {

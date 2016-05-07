@@ -28,8 +28,8 @@ public class EditorSettingsValidator {
 			result.errorType = ErrorType.MAME_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.editorSettings.snesRomsFolderPath == null || this.editorSettings.snesRomsFolderPath.isEmpty() || !new File(this.editorSettings.snesRomsFolderPath).exists()) {
 			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
-		} else if (this.editorSettings.genesisRomsFolderPath == null || this.editorSettings.genesisRomsFolderPath.isEmpty() || !new File(this.editorSettings.genesisRomsFolderPath).exists()) {
-			result.errorType = ErrorType.GENESIS_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.editorSettings.fusionRomsFolderPath == null || this.editorSettings.fusionRomsFolderPath.isEmpty() || !new File(this.editorSettings.fusionRomsFolderPath).exists()) {
+			result.errorType = ErrorType.FUSION_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else {
 			result.success = true;
 		}

@@ -8,22 +8,22 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Game running on the Sega Genesis platform.
+ * Game running on the Sega Fusion emulator platform.
  * @author Thomas Debouverie
  *
  */
-public class GenesisGame extends Game {
+public class FusionGame extends Game {
 
 	/**
 	 * Exact rom file name.
 	 */
 	private StringProperty romFileName = new SimpleStringProperty();
 	
-	public GenesisGame(long identifier) {
+	public FusionGame(long identifier) {
 		super(identifier);
 	}
 	
-	public GenesisGame(Game model) {
+	public FusionGame(Game model) {
 		super(model);
 	}
 	
@@ -41,13 +41,13 @@ public class GenesisGame extends Game {
 	
 	@Override
 	public Platform getPlatform() {
-		return Platform.GENESIS;
+		return Platform.FUSION;
 	}
 
 	@Override
 	public void execute() throws Exception {
 		String kegaPath = Settings.getSetting(PropertyId.KEGA_PATH);
-		String romsPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		String romsPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);
 		File romFile = new File(romsFolder, this.romFileName());
 		String executable = "\"" + kegaPath + "\" \"" + romFile.getAbsolutePath() + "\"";

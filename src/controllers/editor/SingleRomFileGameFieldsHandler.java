@@ -1,6 +1,7 @@
 package controllers.editor;
 
 import java.io.File;
+import java.util.List;
 
 import data.model.Game;
 import data.settings.Messages;
@@ -9,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * Extension on PlatformSpecificGameFieldsHandler to manage game platforms that require a single game file and a title.
@@ -61,8 +63,7 @@ public abstract class SingleRomFileGameFieldsHandler extends PlatformSpecificGam
 		FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle(Messages.get("field.romFileName"));
     	fileChooser.setInitialDirectory(new File(this.getRomsFolderPath()));
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(this.getRomFileDescription(), this.getExtensionFilter());
-        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.getExtensionFilters().addAll(this.getAllExtensionFilters());
         File file = fileChooser.showOpenDialog(this.titleLabel.getScene().getWindow());
         if (file != null) {
         	this.fileNameLabel.setText(file.getName());
@@ -78,8 +79,7 @@ public abstract class SingleRomFileGameFieldsHandler extends PlatformSpecificGam
 	}
 	
 	abstract protected String getRomsFolderPath();
-	abstract protected String getRomFileDescription();
-	abstract protected String getExtensionFilter();
+	abstract protected List<ExtensionFilter> getAllExtensionFilters();
 	abstract protected String getRomFileName();
 	abstract protected void setNewRomFileName(String romFileName);
 	abstract protected void clearRomFileName();

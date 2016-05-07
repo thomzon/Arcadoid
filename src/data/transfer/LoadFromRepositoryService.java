@@ -150,26 +150,26 @@ public class LoadFromRepositoryService extends Service<Void> {
 						nextFileName = this.tracker.nextSnesRomFileToTransfer();
 					}
 				}
-				this.getGenesisRomsFiles();
+				this.getFusionRomsFiles();
 			}
 		}
 		
-		private void getGenesisRomsFiles() {
-			CompletionResult result = this.tracker.prepareForGenesisRomsOperation();
+		private void getFusionRomsFiles() {
+			CompletionResult result = this.tracker.prepareForFusionRomsOperation();
 			if (result != null && !result.success) {
 				completion.call(result);
 			} else {
-				String nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+				String nextFileName = this.tracker.nextFusionRomFileToTransfer();
 				while (nextFileName != null) {
-					String newMessage = Messages.get("progress.body.downloadingGenesisRomFile", nextFileName);
+					String newMessage = Messages.get("progress.body.downloadingFusionRomFile", nextFileName);
 					updateMessage(newMessage);
 					progressCallable.setCurrentMessage(newMessage);
-					result = this.tracker.getNextGenesisRomFile();
+					result = this.tracker.getNextFusionRomFile();
 					if (result != null && !result.success) {
 						completion.call(result);
 						return;
 					} else {
-						nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+						nextFileName = this.tracker.nextFusionRomFileToTransfer();
 					}
 				}
 				this.finish();

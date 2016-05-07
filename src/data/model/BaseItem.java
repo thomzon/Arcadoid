@@ -1,5 +1,7 @@
 package data.model;
 
+import java.util.Comparator;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -60,6 +62,14 @@ public abstract class BaseItem extends IdentifiableItem {
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+	
+	public static Comparator<BaseItem> defaultComparator() {
+		return new Comparator<BaseItem>() {
+			@Override public int compare(BaseItem item1, BaseItem item2) {
+	            return item1.getName().compareTo(item2.getName());
+	        }
+		};
 	}
 	
 }

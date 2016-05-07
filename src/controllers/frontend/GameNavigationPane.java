@@ -1,6 +1,7 @@
 package controllers.frontend;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Stack;
 
@@ -86,6 +87,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	private void initialAppearance() {
 		try {
 			ArcadoidData.sharedInstance().loadData();
+		} catch (FileNotFoundException e) {
 		} catch (Exception e) {
 			GlobalUtils.simpleErrorAlertForKeys("error.header.catalogLoad", "error.body.catalogLoad");
 		}

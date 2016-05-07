@@ -28,8 +28,8 @@ public class FrontendSettingsValidator {
 			result.errorType = ErrorType.MAME_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.snesRomsFolderPath == null || this.frontendSettings.snesRomsFolderPath.isEmpty() || !new File(this.frontendSettings.snesRomsFolderPath).exists()) {
 			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
-		} else if (this.frontendSettings.genesisRomsFolderPath == null || this.frontendSettings.genesisRomsFolderPath.isEmpty() || !new File(this.frontendSettings.genesisRomsFolderPath).exists()) {
-			result.errorType = ErrorType.GENESIS_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.frontendSettings.fusionRomsFolderPath == null || this.frontendSettings.fusionRomsFolderPath.isEmpty() || !new File(this.frontendSettings.fusionRomsFolderPath).exists()) {
+			result.errorType = ErrorType.FUSION_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.mameExecutablePath == null || this.frontendSettings.mameExecutablePath.isEmpty() || !new File(this.frontendSettings.mameExecutablePath).exists()) {
 			result.errorType = ErrorType.MAME_EXECUTABLE_NOT_FOUND;
 		} else if (this.frontendSettings.steamExecutablePath == null || this.frontendSettings.steamExecutablePath.isEmpty() || !new File(this.frontendSettings.steamExecutablePath).exists()) {

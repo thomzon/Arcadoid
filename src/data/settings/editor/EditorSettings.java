@@ -12,7 +12,7 @@ import data.settings.Settings.PropertyId;
  */
 public class EditorSettings {
 
-	public String artworksFolderPath, mameRomsFolderPath, snesRomsFolderPath, genesisRomsFolderPath; 
+	public String artworksFolderPath, mameRomsFolderPath, snesRomsFolderPath, fusionRomsFolderPath; 
 	
 	/**
 	 * Creates an instance by getting property values from the Settings interface.
@@ -21,7 +21,7 @@ public class EditorSettings {
 		this.artworksFolderPath = Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH);
 		this.mameRomsFolderPath = Settings.getSetting(PropertyId.MAME_ROMS_FOLDER_PATH);
 		this.snesRomsFolderPath = Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH);
-		this.genesisRomsFolderPath = Settings.getSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH);
+		this.fusionRomsFolderPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public class EditorSettings {
 		Settings.setSetting(PropertyId.ARTWORKS_FOLDER_PATH, this.artworksFolderPath);
 		Settings.setSetting(PropertyId.MAME_ROMS_FOLDER_PATH, this.mameRomsFolderPath);
 		Settings.setSetting(PropertyId.SNES_ROMS_FOLDER_PATH, this.snesRomsFolderPath);
-		Settings.setSetting(PropertyId.GENESIS_ROMS_FOLDER_PATH, this.genesisRomsFolderPath);
+		Settings.setSetting(PropertyId.FUSION_ROMS_FOLDER_PATH, this.fusionRomsFolderPath);
 		Settings.saveSettings();
 	}
 

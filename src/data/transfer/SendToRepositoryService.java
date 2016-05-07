@@ -150,26 +150,26 @@ public class SendToRepositoryService extends Service<Void> {
 						nextFileName = this.tracker.nextSnesRomFileToTransfer();
 					}
 				}
-				this.sendGenesisRomsFiles();
+				this.sendFusionRomsFiles();
 			}
 		}
 		
-		private void sendGenesisRomsFiles() {
-			CompletionResult result = this.tracker.prepareForGenesisRomsOperation();
+		private void sendFusionRomsFiles() {
+			CompletionResult result = this.tracker.prepareForFusionRomsOperation();
 			if (result != null && !result.success) {
 				completion.call(result);
 			} else {
-				String nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+				String nextFileName = this.tracker.nextFusionRomFileToTransfer();
 				while (nextFileName != null) {
-					String newMessage = Messages.get("progress.body.sendingGenesisRomFile", nextFileName);
+					String newMessage = Messages.get("progress.body.sendingFusionRomFile", nextFileName);
 					updateMessage(newMessage);
 					progressCallable.setCurrentMessage(newMessage);
-					result = this.tracker.sendNextGenesisRomFile();
+					result = this.tracker.sendNextFusionRomFile();
 					if (result != null && !result.success) {
 						completion.call(result);
 						return;
 					} else {
-						nextFileName = this.tracker.nextGenesisRomFileToTransfer();
+						nextFileName = this.tracker.nextFusionRomFileToTransfer();
 					}
 				}
 				this.finish();

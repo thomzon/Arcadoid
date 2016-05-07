@@ -9,7 +9,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import data.model.Game;
-import data.model.GenesisGame;
+import data.model.FusionGame;
 import data.model.MameGame;
 import data.model.SnesGame;
 import data.model.SteamGame;
@@ -40,7 +40,7 @@ public class GameSerializer implements JsonSerializer<Game> {
 		this.serializeMameSpecificData(src, jsonObject);
 		this.serializeSteamSpecificData(src, jsonObject);
 		this.serializeSnesSpecificData(src, jsonObject);
-		this.serializeGenesisSpecificData(src, jsonObject);
+		this.serializeFusionSpecificData(src, jsonObject);
 	}
 	
 	private void serializeMameSpecificData(Game src, JsonObject jsonObject) {
@@ -65,10 +65,10 @@ public class GameSerializer implements JsonSerializer<Game> {
 		}
 	}
 	
-	private void serializeGenesisSpecificData(Game src, JsonObject jsonObject) {
-		if (src instanceof GenesisGame) {
-			GenesisGame genesisGame = (GenesisGame)src;
-			jsonObject.addProperty(JsonConstants.PROPERTY_ROM_FILE_NAME, genesisGame.romFileName());
+	private void serializeFusionSpecificData(Game src, JsonObject jsonObject) {
+		if (src instanceof FusionGame) {
+			FusionGame fusionGame = (FusionGame)src;
+			jsonObject.addProperty(JsonConstants.PROPERTY_ROM_FILE_NAME, fusionGame.romFileName());
 		}
 	}
 

@@ -35,12 +35,12 @@ public class SortedProperties extends Properties {
 	     keyList.add(PropertyId.REPOSITORY_ARTWORKS_PATH.getKey());
 	     keyList.add(PropertyId.REPOSITORY_MAME_ROMS_PATH.getKey());
 	     keyList.add(PropertyId.REPOSITORY_SNES_ROMS_PATH.getKey());
-	     keyList.add(PropertyId.REPOSITORY_GENESIS_ROMS_PATH.getKey());
+	     keyList.add(PropertyId.REPOSITORY_FUSION_ROMS_PATH.getKey());
 
 	     keyList.add(PropertyId.ARTWORKS_FOLDER_PATH.getKey());
 	     keyList.add(PropertyId.MAME_ROMS_FOLDER_PATH.getKey());
 	     keyList.add(PropertyId.SNES_ROMS_FOLDER_PATH.getKey());
-	     keyList.add(PropertyId.GENESIS_ROMS_FOLDER_PATH.getKey());
+	     keyList.add(PropertyId.FUSION_ROMS_FOLDER_PATH.getKey());
 	     
 	     keyList.add(PropertyId.MAME_PATH.getKey());
 	     keyList.add(PropertyId.STEAM_PATH.getKey());

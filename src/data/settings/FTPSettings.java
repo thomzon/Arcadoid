@@ -12,7 +12,7 @@ import data.settings.Settings.PropertyId;
 public class FTPSettings {
 
 	public String address, portNumber, user, password, applicationPath, catalogDataPath, artworksDataPath;
-	public String mameDataPath, snesDataPath, genesisDataPath;
+	public String mameDataPath, snesDataPath, fusionDataPath;
 	
 	/**
 	 * Creates an instance by getting current settings via the Settings interface.
@@ -27,7 +27,7 @@ public class FTPSettings {
 		this.artworksDataPath = Settings.getSetting(PropertyId.REPOSITORY_ARTWORKS_PATH);
 		this.mameDataPath = Settings.getSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH);
 		this.snesDataPath = Settings.getSetting(PropertyId.REPOSITORY_SNES_ROMS_PATH);
-		this.genesisDataPath = Settings.getSetting(PropertyId.REPOSITORY_GENESIS_ROMS_PATH);
+		this.fusionDataPath = Settings.getSetting(PropertyId.REPOSITORY_FUSION_ROMS_PATH);
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class FTPSettings {
 		Settings.setSetting(PropertyId.REPOSITORY_ARTWORKS_PATH, this.artworksDataPath);
 		Settings.setSetting(PropertyId.REPOSITORY_MAME_ROMS_PATH, this.mameDataPath);
 		Settings.setSetting(PropertyId.REPOSITORY_SNES_ROMS_PATH, this.snesDataPath);
-		Settings.setSetting(PropertyId.REPOSITORY_GENESIS_ROMS_PATH, this.genesisDataPath);
+		Settings.setSetting(PropertyId.REPOSITORY_FUSION_ROMS_PATH, this.fusionDataPath);
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_USER, this.user);
 		Settings.setSetting(PropertyId.REPOSITORY_FTP_PASSWORD, this.password);
 		Settings.saveSettings();
