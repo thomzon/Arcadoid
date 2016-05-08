@@ -54,6 +54,7 @@ public class UIService {
 	 */
 	private Rectangle dimLayer;
 	
+	private int numberOfFTPContactAttempt = 0;
 	private ApplicationUpdateChecker updateChecker = new ApplicationUpdateChecker();
 	
 	private UIService() {
@@ -86,10 +87,10 @@ public class UIService {
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
 		this.displayGameNavigation(false);
-		this.checkForAppUpdate();
+		UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.STARTUP_CONNEXION_DELAY);
 	}
 	
-	private void checkForAppUpdate() {
+	public void checkForAppUpdate() {
 		this.updateChecker.checkForUpdate(new CompletionCallable() {
 			@Override
 			public Void call() throws Exception {
@@ -103,7 +104,12 @@ public class UIService {
 	
 	private void handleUpdateCheckerResult(CompletionResult result) {
 		if (result != null && !result.success) {
-			TransferUtils.showRepositoryOperationError(result);
+			this.numberOfFTPContactAttempt += 1;
+			if (this.numberOfFTPContactAttempt > UIUtils.NUMBER_OF_FTP_ATTEMPT_AT_STARTUP) {
+				TransferUtils.showRepositoryOperationError(result);
+			} else {
+				UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.STARTUP_CONNEXION_DELAY);
+			}
 		} else if (this.updateChecker.updateAvailableForUpdater) {
 			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
 				ApplicationVersionService.updateVersionNumberForProperty("" + updateChecker.updateData.editorVersionNumber, PropertyId.UPDATER_VERSION_NUMBER);

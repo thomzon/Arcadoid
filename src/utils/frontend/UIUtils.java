@@ -25,16 +25,18 @@ public class UIUtils {
 	/**
 	 * Constants for all UI elements
 	 */
-	public static final double	FORM_FIELDS_SEPARATION			= 10;
-	public static final double 	BORDER_NODE_MARGIN 				= 30;
-	public static final double  BUTTON_LABEL_MARGIN				= 50;
-	public static final int		SCREEN_REPLACE_FADE_TIME 		= 200;
-	public static final int		AUTOHIDE_ANIMATIONS_TIME		= 100;
-	public static final int		MOUSE_AUTOHIDE_DELAY			= 1000;
-	public static final int		SETTINGS_INIT_MSG_TIME			= 1000;
-	public static final double  DIM_LAYER_OPACITY				= 0.4;
-	public static final double	POPUP_TEXT_MARGIN				= 20;
-	public static final double	DELAY_BEFORE_LAYOUT				= 200;
+	public static final double	FORM_FIELDS_SEPARATION				= 10;
+	public static final double 	BORDER_NODE_MARGIN 					= 30;
+	public static final double  BUTTON_LABEL_MARGIN					= 50;
+	public static final int		SCREEN_REPLACE_FADE_TIME 			= 200;
+	public static final int		AUTOHIDE_ANIMATIONS_TIME			= 100;
+	public static final int		MOUSE_AUTOHIDE_DELAY				= 1000;
+	public static final int		SETTINGS_INIT_MSG_TIME				= 1000;
+	public static final double  DIM_LAYER_OPACITY					= 0.4;
+	public static final double	POPUP_TEXT_MARGIN					= 20;
+	public static final double	DELAY_BEFORE_LAYOUT					= 200;
+	public static final double	NUMBER_OF_FTP_ATTEMPT_AT_STARTUP 	= 5;
+	public static final double	STARTUP_CONNEXION_DELAY				= 3000;
 	
 	/**
 	 * Assign given CSS class name to one or more nodes
