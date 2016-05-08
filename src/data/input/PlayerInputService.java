@@ -119,6 +119,24 @@ public class PlayerInputService implements KeyboardDelegate {
 					observer.quitGame();
 				});
 			});
+		} else if (combinationKey.equals(PropertyId.KEY_COMB_VOLUME_DOWN.getKey())) {
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.lowerVolume();
+				});
+			});
+		} else if (combinationKey.equals(PropertyId.KEY_COMB_VOLUME_UP.getKey())) {
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.raiseVolume();
+				});
+			});
+		} else if (combinationKey.equals(PropertyId.KEY_COMB_FAVORITE.getKey())) {
+			Platform.runLater(() -> {
+				this.inputObservers.forEach((observer) -> {
+					observer.addFavorite();
+				});
+			});
 		}
 	}
 

@@ -21,6 +21,10 @@ public class GameLaunchService implements PlayerInputObserver {
 	
 	private Game runningGame;
 
+	private GameLaunchService() {
+		
+	}
+	
 	public static GameLaunchService sharedInstance() {
 		if (sharedInstance == null) {
 			sharedInstance = new GameLaunchService();

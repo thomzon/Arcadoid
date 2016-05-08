@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import utils.frontend.GameLaunchService;
+import utils.frontend.VolumeControlService;
 import utils.global.GlobalUtils;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
@@ -248,6 +249,24 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 			GameLaunchService.sharedInstance().runGame((Game)this.currentItem);
 			this.displayGameRunningMessage();
 		}
+	}
+	
+	@Override
+	public void addFavorite() {
+		if (this.gameRunningMessagePopup != null) return;
+		System.out.println("Add favorite !");
+	}
+	
+	@Override
+	public void lowerVolume() {
+		if (this.gameRunningMessagePopup != null) return;
+		VolumeControlService.sharedInstance().lowerVolume();
+	}
+	
+	@Override
+	public void raiseVolume() {
+		if (this.gameRunningMessagePopup != null) return;
+		VolumeControlService.sharedInstance().raiseVolume();
 	}
 	
 	private void displayGameRunningMessage() {

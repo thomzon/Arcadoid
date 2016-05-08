@@ -17,7 +17,7 @@ public class ApplicationVersionService {
 	 * Version number constants for all applications
 	 */
 	public static String EDITOR_VERSION_NUMBER = "1";
-	public static String FRONTEND_VERSION_NUMBER = "1";
+	public static String FRONTEND_VERSION_NUMBER = "2";
 	public static String UPDATER_VERSION_NUMBER = "1";
 	
 	/**
