@@ -24,7 +24,7 @@ public class CoverflowList extends Group {
 	 */
 	private static final Duration DURATION = Duration.millis(500);
     private static final Interpolator INTERPOLATOR = new EaseOutInterpolator(EaseOutFunction.EXPONENTIAL);
-    private static final double SPACING = 150;//90;
+    private static final double SPACING = 180;
     private static final double LEFT_OFFSET = -110;
     private static final double RIGHT_OFFSET = 110;
     private static final double SCALE_SMALL = 0.7;
@@ -60,7 +60,7 @@ public class CoverflowList extends Group {
 			}
 		}
 		// Force scroll forward then back, otherwise item at index 0 does not display its image correctly...
-		this.scrollToItemAtIndexAnimated(1, false);
+		this.scrollToItemAtIndexAnimated(numberOfItems-1, false);
 		this.scrollToItemAtIndexAnimated(0, false);
 	}
 	

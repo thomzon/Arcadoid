@@ -79,6 +79,7 @@ public class UIService {
 	 * Starts the application main UI.
 	 */
 	public void startServiceInPrimaryStage(Stage primaryStage) {
+		primaryStage.setTitle("Arcadoid");
 		this.rootPane = new Pane();
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());

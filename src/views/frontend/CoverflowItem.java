@@ -25,7 +25,7 @@ import javafx.scene.text.TextAlignment;
 public class CoverflowItem extends Parent {
 
 	private static final double REFLECTION_SIZE = 0.4;
-	public static final double WIDTH = 200;
+	public static final double WIDTH = 250;
 	public static final double HEIGHT = WIDTH + (WIDTH*REFLECTION_SIZE);
 	private static final double RADIUS_H = WIDTH / 2;
 	private static final double BACK = WIDTH / 10;
