@@ -71,7 +71,7 @@ public class KeyboardListener implements NativeKeyListener
 					break;
 				}
 			}
-			if (combinationPressed)	{
+			if (combinationPressed && this.pressedCodes.size() == this.listenedCombinations.get(key).size())	{
 				this.delegate.combinationPressed(key);
 			}
 		}

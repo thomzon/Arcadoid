@@ -224,17 +224,17 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 
 	private double verticalPositionForCurrentList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/2 - CoverflowItem.WIDTH;
+		return screenBounds.getHeight()/2 - ((CoverflowItem.WIDTH / 4) * 3);
 	}
 	
 	private double verticalPositionForPreviousList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/6 - CoverflowItem.WIDTH;
+		return screenBounds.getHeight()/6 - ((CoverflowItem.WIDTH / 4) * 3);
 	}
 	
 	private double verticalPositionForNextList() {
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-		return screenBounds.getHeight()/6 * 5 - CoverflowItem.WIDTH;
+		return screenBounds.getHeight()/6 * 5 - ((CoverflowItem.WIDTH / 4) * 3);
 	}
 	
 	private double verticalPositionForTopArrivingList() {
