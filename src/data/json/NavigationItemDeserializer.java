@@ -39,7 +39,9 @@ public class NavigationItemDeserializer implements JsonDeserializer<NavigationIt
 	}
 	
 	private void deserializeAssignedTags(NavigationItem item, JsonObject jsonObject) {
-		JsonArray tagsArray = jsonObject.get(JsonConstants.PROPERTY_TAGS).getAsJsonArray();
+		JsonElement tagsElement = jsonObject.get(JsonConstants.PROPERTY_TAGS);
+		if (tagsElement == null) return;
+		JsonArray tagsArray = tagsElement.getAsJsonArray();
 		for (JsonElement jsonElement : tagsArray) {
 			long tagIdentifier = jsonElement.getAsLong();
 			Tag tag = ArcadoidData.sharedInstance().getTagByIdentifier(tagIdentifier);

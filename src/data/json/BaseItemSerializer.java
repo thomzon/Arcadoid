@@ -24,8 +24,12 @@ class BaseItemSerializer {
 	
 	static void deserializeFromObject(BaseItem item, JsonObject jsonObject) {
 		item.setName(jsonObject.get(JsonConstants.PROPERTY_NAME).getAsString());
-		item.setThumbnailArtworkPath(jsonObject.get(JsonConstants.PROPERTY_THUMBNAIL_PATH).getAsString());
-		item.setBackgroundArtworkPath(jsonObject.get(JsonConstants.PROPERTY_BACKGROUND_PATH).getAsString());
+		if (jsonObject.get(JsonConstants.PROPERTY_THUMBNAIL_PATH) != null) {
+			item.setThumbnailArtworkPath(jsonObject.get(JsonConstants.PROPERTY_THUMBNAIL_PATH).getAsString());
+		}
+		if (jsonObject.get(JsonConstants.PROPERTY_BACKGROUND_PATH) != null) {
+			item.setBackgroundArtworkPath(jsonObject.get(JsonConstants.PROPERTY_BACKGROUND_PATH).getAsString());
+		}
 	}
 
 }
