@@ -35,8 +35,9 @@ public class UIUtils {
 	public static final double  DIM_LAYER_OPACITY					= 0.4;
 	public static final double	POPUP_TEXT_MARGIN					= 20;
 	public static final double	DELAY_BEFORE_LAYOUT					= 200;
+	public static final double 	DELAY_BEFORE_APP_STARTS				= 3000;
 	public static final double	NUMBER_OF_FTP_ATTEMPT_AT_STARTUP 	= 5;
-	public static final double	STARTUP_CONNEXION_DELAY				= 3000;
+	public static final double	DELAY_BETWEEN_CONNEXION_ATTEMPTS	= 1000;
 	public static final int		MUSIC_FADE_DURATION					= 1000;
 	public static final int		AUDIO_FEEDBACK_AUTOSTOP_DELAY		= 5000;
 	

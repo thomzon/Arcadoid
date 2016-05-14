@@ -199,7 +199,7 @@ public class FileUploadTracker extends FileOperationTracker {
 	}
 	
 	private void checkAndAddFileToListIfNeeded(String fileName, String fileDirectory, Map<String, Number> remoteFilesList, Map<String, Number> pendingTransferList) {
-		if (fileName.isEmpty()) return;
+		if (fileName == null || fileName.isEmpty()) return;
 		long localFileSize = DataTransfer.getLocalFileSize(fileName, fileDirectory);
 		if (localFileSize == 0) return;
 		Number remoteFileSize = remoteFilesList.get(fileName);

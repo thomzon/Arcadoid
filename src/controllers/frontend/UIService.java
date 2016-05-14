@@ -38,6 +38,11 @@ public class UIService {
 	private static UIService sharedInstance = null;
 	
 	/**
+	 * Reference to the app's primary stage
+	 */
+	private Stage primaryStage;
+	
+	/**
 	 * Reference to root Pane of displayed Scene
 	 */
 	private Pane rootPane;
@@ -79,6 +84,11 @@ public class UIService {
 	 * Starts the application main UI.
 	 */
 	public void startServiceInPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		UIUtils.callMethodAfterTime(this, "doStartApplication", UIUtils.DELAY_BEFORE_APP_STARTS);
+	}
+	
+	public void doStartApplication() {
 		primaryStage.setTitle("Arcadoid");
 		this.rootPane = new Pane();
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
@@ -88,7 +98,7 @@ public class UIService {
 		primaryStage.setFullScreen(true);
 		primaryStage.show();
 		this.displayGameNavigation(false);
-		UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.STARTUP_CONNEXION_DELAY);
+		this.checkForAppUpdate();
 	}
 	
 	public void checkForAppUpdate() {
@@ -109,7 +119,7 @@ public class UIService {
 			if (this.numberOfFTPContactAttempt > UIUtils.NUMBER_OF_FTP_ATTEMPT_AT_STARTUP) {
 				TransferUtils.showRepositoryOperationError(result);
 			} else {
-				UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.STARTUP_CONNEXION_DELAY);
+				UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.DELAY_BETWEEN_CONNEXION_ATTEMPTS);
 			}
 		} else if (this.updateChecker.updateAvailableForUpdater) {
 			new ApplicationUpdater(ApplicationExecutable.UPDATER).startUpdate(this.rootPane.getScene().getWindow(), false, () -> {
