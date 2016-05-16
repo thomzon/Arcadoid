@@ -55,7 +55,7 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.parentPane = parentPane;
 		this.createAllNodes();
 	}
-
+	
 	@Override
 	public void prepareForParentPaneDisappearance() {
 		this.mouseBehaviour.stopBehaviour();
@@ -78,6 +78,8 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	@Override
 	public void reloadWithDisplayedItems(List<BaseItem> items) {
 		this.displayedItems = items;
+		this.previousItems = null; 
+		this.parentItem = null;
 		this.setFocusedItem(items.get(0), true);
 		this.focusedCoverflowList.reloadData();
 		this.previousCoverflowList.reloadData();
