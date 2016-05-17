@@ -30,6 +30,7 @@ public class FTPSettingsValidator {
 				ftpSettings.mameDataPath,
 				ftpSettings.snesDataPath,
 				ftpSettings.fusionDataPath,
+				ftpSettings.nesDataPath,
 				};
 	}
 	

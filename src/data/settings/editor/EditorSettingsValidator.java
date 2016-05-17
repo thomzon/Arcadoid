@@ -30,6 +30,8 @@ public class EditorSettingsValidator {
 			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.editorSettings.fusionRomsFolderPath == null || this.editorSettings.fusionRomsFolderPath.isEmpty() || !new File(this.editorSettings.fusionRomsFolderPath).exists()) {
 			result.errorType = ErrorType.FUSION_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.editorSettings.nesRomsFolderPath == null || this.editorSettings.nesRomsFolderPath.isEmpty() || !new File(this.editorSettings.nesRomsFolderPath).exists()) {
+			result.errorType = ErrorType.NES_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else {
 			result.success = true;
 		}

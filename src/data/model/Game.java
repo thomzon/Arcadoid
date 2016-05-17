@@ -25,7 +25,8 @@ public abstract class Game extends BaseItem {
 		MAME(1, Messages.get("platform.MAME")),
 		STEAM(2, Messages.get("platform.Steam")),
 		SNES(3, Messages.get("platform.Snes")),
-		FUSION(4, Messages.get("platform.Fusion"));
+		FUSION(4, Messages.get("platform.Fusion")),
+		NES(5, Messages.get("platform.Nes"));
 		
 		public final int intValue;
 		public final String stringValue;

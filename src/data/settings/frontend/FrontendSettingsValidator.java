@@ -30,6 +30,8 @@ public class FrontendSettingsValidator {
 			result.errorType = ErrorType.SNES_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.fusionRomsFolderPath == null || this.frontendSettings.fusionRomsFolderPath.isEmpty() || !new File(this.frontendSettings.fusionRomsFolderPath).exists()) {
 			result.errorType = ErrorType.FUSION_ROMS_FOLDER_PATH_NOT_FOUND;
+		} else if (this.frontendSettings.nesRomsFolderPath == null || this.frontendSettings.nesRomsFolderPath.isEmpty() || !new File(this.frontendSettings.nesRomsFolderPath).exists()) {
+			result.errorType = ErrorType.NES_ROMS_FOLDER_PATH_NOT_FOUND;
 		} else if (this.frontendSettings.mameExecutablePath == null || this.frontendSettings.mameExecutablePath.isEmpty() || !new File(this.frontendSettings.mameExecutablePath).exists()) {
 			result.errorType = ErrorType.MAME_EXECUTABLE_NOT_FOUND;
 		} else if (this.frontendSettings.steamExecutablePath == null || this.frontendSettings.steamExecutablePath.isEmpty() || !new File(this.frontendSettings.steamExecutablePath).exists()) {
@@ -38,6 +40,8 @@ public class FrontendSettingsValidator {
 			result.errorType = ErrorType.SNES9X_EXECUTABLE_NOT_FOUND;
 		} else if (this.frontendSettings.kegaExecutablePath == null || this.frontendSettings.kegaExecutablePath.isEmpty() || !new File(this.frontendSettings.kegaExecutablePath).exists()) {
 			result.errorType = ErrorType.KEGA_EXECUTABLE_NOT_FOUND;
+		} else if (this.frontendSettings.rocknesxExecutablePath == null || this.frontendSettings.rocknesxExecutablePath.isEmpty() || !new File(this.frontendSettings.rocknesxExecutablePath).exists()) {
+			result.errorType = ErrorType.ROCKNESX_EXECUTABLE_NOT_FOUND;
 		} else {
 			result.success = true;
 		}
