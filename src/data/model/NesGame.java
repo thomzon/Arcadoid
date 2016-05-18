@@ -45,7 +45,7 @@ public class NesGame extends Game {
 		String romsPath = Settings.getSetting(PropertyId.NES_ROMS_FOLDER_PATH);
 		File romsFolder = new File(romsPath);
 		File romFile = new File(romsFolder, this.romFileName());
-		String executable = "\"" + rocknesxPath + "\" \"" + romFile.getAbsolutePath() + "\"";
+		String executable = "\"" + rocknesxPath + "\" " + romFile.getAbsolutePath();
 		this.execute(executable, null);
 	}
 

@@ -73,6 +73,8 @@ abstract class PlatformSpecificGameFieldsHandler {
 				return new SnesGameFieldsHandler();
 			case FUSION:
 				return new FusionGameFieldsHandler();
+			case NES:
+				return new NesGameFieldsHandler();
 			default:
 				return null;
 		}

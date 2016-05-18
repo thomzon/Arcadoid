@@ -126,8 +126,8 @@ public class Settings
 		prop = new SortedProperties();
 		try	{
 			prop.load(new FileInputStream(CONFIG_FILE_PATH));
-		} catch (IOException e)	{
 			setDefaultValues();
+		} catch (IOException e)	{
 			try	{
 				saveSettings();
 			} catch (IOException e1) {
@@ -138,11 +138,15 @@ public class Settings
 	
 	private static void setDefaultValues() {
 		for (PropertyId property : PropertyId.values())	{
-			setSetting(property, "");
+			if (getSetting(property) == null) {
+				setSetting(property, "");
+			}
 		}
-		File artworksFolder = new File("Artworks");
-		artworksFolder.mkdir();
-		setSetting(PropertyId.ARTWORKS_FOLDER_PATH, artworksFolder.getAbsolutePath());
+		if (getSetting(PropertyId.ARTWORKS_FOLDER_PATH) == null) {
+			File artworksFolder = new File("Artworks");
+			artworksFolder.mkdir();
+			setSetting(PropertyId.ARTWORKS_FOLDER_PATH, artworksFolder.getAbsolutePath());
+		}
 	}
 	
 	/**
@@ -236,7 +240,8 @@ public class Settings
 	 * @throws IOException If any error occurs while saving.
 	 */
 	public static void saveSettings() throws IOException {
-		prop.store(new FileOutputStream(CONFIG_FILE_PATH), null);
+		FileOutputStream outputStream = new FileOutputStream(CONFIG_FILE_PATH);
+		prop.store(outputStream, null);
 	}
 	
 	/**

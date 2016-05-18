@@ -10,10 +10,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import data.access.ArcadoidData;
+import data.model.FusionGame;
 import data.model.Game;
 import data.model.Game.Platform;
-import data.model.FusionGame;
 import data.model.MameGame;
+import data.model.NesGame;
 import data.model.SnesGame;
 import data.model.SteamGame;
 import data.model.Tag;
@@ -58,6 +59,8 @@ public class GameDeserializer implements JsonDeserializer<Game> {
 				return this.createSnesGame(identifier, jsonObject);
 			case FUSION:
 				return this.createFusionGame(identifier, jsonObject);
+			case NES:
+				return this.createNesGame(identifier, jsonObject);
 			default:
 				return null;
 		}
@@ -86,6 +89,12 @@ public class GameDeserializer implements JsonDeserializer<Game> {
 		FusionGame fusionGame = new FusionGame(identifier);
 		fusionGame.setRomFileName(jsonObject.get(JsonConstants.PROPERTY_ROM_FILE_NAME).getAsString());
 		return fusionGame;
+	}
+	
+	private NesGame createNesGame(long identifier, JsonObject jsonObject) {
+		NesGame nesGame = new NesGame(identifier);
+		nesGame.setRomFileName(jsonObject.get(JsonConstants.PROPERTY_ROM_FILE_NAME).getAsString());
+		return nesGame;
 	}
 
 }

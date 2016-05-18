@@ -12,10 +12,11 @@ import com.enterprisedt.net.ftp.FTPFile;
 
 import data.access.ArcadoidData;
 import data.model.BaseItem;
+import data.model.FusionGame;
 import data.model.Game;
 import data.model.Game.Platform;
-import data.model.FusionGame;
 import data.model.MameGame;
+import data.model.NesGame;
 import data.model.SnesGame;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
@@ -56,9 +57,14 @@ public class FileUploadTracker extends FileOperationTracker {
 		if (!existingFusionRomsFiles.success) {
 			return existingFusionRomsFiles;
 		}
+		FileListingResult existingNesRomsFiles = this.transfer.getFilesList(this.ftpSettings.nesDataPath);
+		if (!existingNesRomsFiles.success) {
+			return existingNesRomsFiles;
+		}
 		this.compareLocalAndRemoteArtworks(existingArtworkFiles.foundFiles);
 		this.compareLocalAndRemoteSnesGames(existingSnesRomsFiles.foundFiles);
 		this.compareLocalAndRemoteFusionGames(existingFusionRomsFiles.foundFiles);
+		this.compareLocalAndRemoteNesGames(existingNesRomsFiles.foundFiles);
 		CompletionResult mameCompareResult = this.compareLocalAndRemoteMameRoms(existingMameRomsDirectories.foundFiles);
 		if (mameCompareResult != null) {
 			return mameCompareResult;
@@ -89,6 +95,12 @@ public class FileUploadTracker extends FileOperationTracker {
 		String romDirectoryPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
 		String next = this.nextFusionRomFileToTransfer();
 		return this.sendNextFile(this.fusionRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	public CompletionResult sendNextNesRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.NES_ROMS_FOLDER_PATH);
+		String next = this.nextNesRomFileToTransfer();
+		return this.sendNextFile(this.nesRomFilesToTransfer, romDirectoryPath, next);
 	}
 	
 	private CompletionResult sendNextFile(Map<String, Number> transferMap, String directoryPath, String nextFile) {
@@ -154,6 +166,15 @@ public class FileUploadTracker extends FileOperationTracker {
 		for (Game game : ArcadoidData.sharedInstance().getAllGamesForPlatform(Platform.FUSION)) {
 			FusionGame fusionGame = (FusionGame)game;
 			this.checkAndAddFileToListIfNeeded(fusionGame.romFileName(), romDirectoryPath, remoteFilesList, this.fusionRomFilesToTransfer);
+		}
+	}
+	
+	private void compareLocalAndRemoteNesGames(FTPFile[] remoteGames) {
+		Map<String, Number> remoteFilesList = DataTransfer.ftpFileListToFilesNameAndSize(remoteGames);
+		String romDirectoryPath = Settings.getSetting(PropertyId.NES_ROMS_FOLDER_PATH);
+		for (Game game : ArcadoidData.sharedInstance().getAllGamesForPlatform(Platform.NES)) {
+			NesGame nesGame = (NesGame)game;
+			this.checkAndAddFileToListIfNeeded(nesGame.romFileName(), romDirectoryPath, remoteFilesList, this.nesRomFilesToTransfer);
 		}
 	}
 	

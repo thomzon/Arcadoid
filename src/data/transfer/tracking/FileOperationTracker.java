@@ -28,6 +28,7 @@ abstract class FileOperationTracker {
 	Map<String, Number> artworksToTransfer = new HashMap<String, Number>();
 	Map<String, Number> snesRomFilesToTransfer = new HashMap<String, Number>();
 	Map<String, Number> fusionRomFilesToTransfer = new HashMap<String, Number>();
+	Map<String, Number> nesRomFilesToTransfer = new HashMap<String, Number>();
 	Map<String, Map<String, Number>> mameRomsToTransfer = new HashMap<String, Map<String, Number>>();
 	TrackerProgressCallable progressCallable;
 	TransferProgressListener progressListener;
@@ -152,6 +153,19 @@ abstract class FileOperationTracker {
 	
 	public CompletionResult prepareForFusionRomsOperation() {
 		return this.transfer.goToDirectory(this.ftpSettings.fusionDataPath);
+	}
+	
+	public String nextNesRomFileToTransfer() {
+		if (this.nesRomFilesToTransfer.isEmpty()) {
+			return null;
+		} else {
+			String next = (String)this.nesRomFilesToTransfer.keySet().toArray()[0];
+			return next;
+		}
+	}
+	
+	public CompletionResult prepareForNesRomsOperation() {
+		return this.transfer.goToDirectory(this.ftpSettings.nesDataPath);
 	}
 
 }

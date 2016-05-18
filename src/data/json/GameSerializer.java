@@ -8,9 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import data.model.Game;
 import data.model.FusionGame;
+import data.model.Game;
 import data.model.MameGame;
+import data.model.NesGame;
 import data.model.SnesGame;
 import data.model.SteamGame;
 import data.model.Tag;
@@ -41,6 +42,7 @@ public class GameSerializer implements JsonSerializer<Game> {
 		this.serializeSteamSpecificData(src, jsonObject);
 		this.serializeSnesSpecificData(src, jsonObject);
 		this.serializeFusionSpecificData(src, jsonObject);
+		this.serializeNesSpecificData(src, jsonObject);
 	}
 	
 	private void serializeMameSpecificData(Game src, JsonObject jsonObject) {
@@ -69,6 +71,13 @@ public class GameSerializer implements JsonSerializer<Game> {
 		if (src instanceof FusionGame) {
 			FusionGame fusionGame = (FusionGame)src;
 			jsonObject.addProperty(JsonConstants.PROPERTY_ROM_FILE_NAME, fusionGame.romFileName());
+		}
+	}
+	
+	private void serializeNesSpecificData(Game src, JsonObject jsonObject) {
+		if (src instanceof NesGame) {
+			NesGame nesGame = (NesGame)src;
+			jsonObject.addProperty(JsonConstants.PROPERTY_ROM_FILE_NAME, nesGame.romFileName());
 		}
 	}
 

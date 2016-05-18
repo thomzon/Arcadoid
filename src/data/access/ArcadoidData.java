@@ -10,11 +10,12 @@ import java.util.Map;
 
 import data.json.DataPersistence;
 import data.model.BaseItem;
+import data.model.FusionGame;
 import data.model.Game;
 import data.model.Game.Platform;
-import data.model.FusionGame;
 import data.model.MameGame;
 import data.model.NavigationItem;
+import data.model.NesGame;
 import data.model.SnesGame;
 import data.model.SteamGame;
 import data.model.Tag;
@@ -252,6 +253,8 @@ public class ArcadoidData {
 		case FUSION:
 			newGame = new FusionGame(currentGame);
 			break;
+		case NES:
+			newGame = new NesGame(currentGame);
 		}
 		this.allGames.set(this.allGames.indexOf(currentGame), newGame);
 		return newGame;

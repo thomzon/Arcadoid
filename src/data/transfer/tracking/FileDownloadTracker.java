@@ -51,10 +51,15 @@ public class FileDownloadTracker extends FileOperationTracker {
 		if (!existingFusionRomsFiles.success) {
 			return existingFusionRomsFiles;
 		}
+		FileListingResult existingNesRomsFiles = this.transfer.getFilesList(this.ftpSettings.nesDataPath);
+		if (!existingNesRomsFiles.success) {
+			return existingNesRomsFiles;
+		}
 		this.analyzeRemoteDataFile(existingDataFiles.foundFiles);
 		this.compareLocalAndRemoteFiles(existingArtworkFiles.foundFiles, Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), this.artworksToTransfer);
 		this.compareLocalAndRemoteFiles(existingSnesRomsFiles.foundFiles, Settings.getSetting(PropertyId.SNES_ROMS_FOLDER_PATH), this.snesRomFilesToTransfer);
 		this.compareLocalAndRemoteFiles(existingFusionRomsFiles.foundFiles, Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH), this.fusionRomFilesToTransfer);
+		this.compareLocalAndRemoteFiles(existingNesRomsFiles.foundFiles, Settings.getSetting(PropertyId.NES_ROMS_FOLDER_PATH), this.nesRomFilesToTransfer);
 		CompletionResult mameCompareResult = this.compareLocalAndRemoteMameRoms(existingMameRomsDirectories.foundFiles);
 		if (mameCompareResult != null) {
 			return mameCompareResult;
@@ -85,6 +90,12 @@ public class FileDownloadTracker extends FileOperationTracker {
 		String romDirectoryPath = Settings.getSetting(PropertyId.FUSION_ROMS_FOLDER_PATH);
 		String next = this.nextFusionRomFileToTransfer();
 		return this.getNextFile(this.fusionRomFilesToTransfer, romDirectoryPath, next);
+	}
+	
+	public CompletionResult getNextNesRomFile() {
+		String romDirectoryPath = Settings.getSetting(PropertyId.NES_ROMS_FOLDER_PATH);
+		String next = this.nextNesRomFileToTransfer();
+		return this.getNextFile(this.nesRomFilesToTransfer, romDirectoryPath, next);
 	}
 	
 	private CompletionResult getNextFile(Map<String, Number> transferMap, String directoryPath, String nextFile) {

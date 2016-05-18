@@ -172,6 +172,28 @@ public class LoadFromRepositoryService extends Service<Void> {
 						nextFileName = this.tracker.nextFusionRomFileToTransfer();
 					}
 				}
+				this.getNesRomsFiles();
+			}
+		}
+		
+		private void getNesRomsFiles() {
+			CompletionResult result = this.tracker.prepareForNesRomsOperation();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextNesRomFileToTransfer();
+				while (nextFileName != null) {
+					String newMessage = Messages.get("progress.body.downloadingNesRomFile", nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
+					result = this.tracker.getNextNesRomFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						nextFileName = this.tracker.nextNesRomFileToTransfer();
+					}
+				}
 				this.finish();
 			}
 		}

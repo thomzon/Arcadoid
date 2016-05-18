@@ -61,6 +61,7 @@ public class UIService {
 	
 	private int numberOfFTPContactAttempt = 0;
 	private ApplicationUpdateChecker updateChecker = new ApplicationUpdateChecker();
+	private Runnable delayedUIRequest = null;
 	
 	private UIService() {
 		this.createDimLayer();
@@ -99,6 +100,10 @@ public class UIService {
 		primaryStage.show();
 		this.displayGameNavigation(false);
 		this.checkForAppUpdate();
+		if (this.delayedUIRequest != null) {
+			this.delayedUIRequest.run();
+			this.delayedUIRequest = null;
+		}
 	}
 	
 	public void checkForAppUpdate() {
@@ -174,6 +179,12 @@ public class UIService {
 	 * @param popup FrontendPopup to display
 	 */
 	public void displayPopup(FrontendPopup popup) {
+		if (this.rootPane == null) {
+			this.delayedUIRequest = () -> {
+				this.displayPopup(popup);
+			};
+			return;
+		}
 		this.rootPane.getChildren().add(this.dimLayer);
 		this.rootPane.getChildren().add(popup);
 		if (this.displayedPane != null) {

@@ -172,6 +172,28 @@ public class SendToRepositoryService extends Service<Void> {
 						nextFileName = this.tracker.nextFusionRomFileToTransfer();
 					}
 				}
+				this.sendNesRomsFiles();
+			}
+		}
+		
+		private void sendNesRomsFiles() {
+			CompletionResult result = this.tracker.prepareForNesRomsOperation();
+			if (result != null && !result.success) {
+				completion.call(result);
+			} else {
+				String nextFileName = this.tracker.nextNesRomFileToTransfer();
+				while (nextFileName != null) {
+					String newMessage = Messages.get("progress.body.sendingNesRomFile", nextFileName);
+					updateMessage(newMessage);
+					progressCallable.setCurrentMessage(newMessage);
+					result = this.tracker.sendNextNesRomFile();
+					if (result != null && !result.success) {
+						completion.call(result);
+						return;
+					} else {
+						nextFileName = this.tracker.nextNesRomFileToTransfer();
+					}
+				}
 				this.finish();
 			}
 		}
