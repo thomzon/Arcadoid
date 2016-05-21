@@ -37,9 +37,9 @@
                         <Button fx:id="pickMameRomsFolderButton" mnemonicParsing="false" onAction="#pickMameRomsFolderAction" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                         <Button fx:id="clearMameRomsFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearMameRomsFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                         <Button fx:id="pickSnesRomsFolderButton" mnemonicParsing="false" onAction="#pickSnesRomsFolderAction" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                        <Button fx:id="clearSnesRomsFolderButton" mnemonicParsing="false" onAction="#clearSnesRomsFolderAction" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <Button fx:id="clearSnesRomsFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearSnesRomsFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
                         <Button fx:id="pickFusionRomsFolderButton" mnemonicParsing="false" onAction="#pickFusionRomsFolderAction" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                        <Button fx:id="clearFusionRomsFolderButton" mnemonicParsing="false" onAction="#clearFusionRomsFolderAction" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                        <Button fx:id="clearFusionRomsFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearFusionRomsFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                         <Label text="%field.snesRomsFolderPath" GridPane.rowIndex="2" />
                         <Label text="%field.fusionRomsFolderPath" GridPane.rowIndex="3" />
                         <Label fx:id="snesRomsFolderLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
@@ -47,7 +47,7 @@
                         <Label text="%field.nesRomsFolderPath" GridPane.rowIndex="4" />
                         <Label fx:id="nesRomsFolderLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                         <Button fx:id="pickNesRomsFolderButton" mnemonicParsing="false" onAction="#pickNesRomsFolderAction" text="..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
-                        <Button fx:id="clearNesRomsFolderButton" mnemonicParsing="false" onAction="#clearNesRomsFolderAction" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                        <Button fx:id="clearNesRomsFolderButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearNesRomsFolderAction" prefWidth="60.0" text="%common.clear" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                </children>

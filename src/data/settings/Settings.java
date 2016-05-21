@@ -129,6 +129,7 @@ public class Settings
 			setDefaultValues();
 		} catch (IOException e)	{
 			try	{
+				setDefaultValues();
 				saveSettings();
 			} catch (IOException e1) {
 				GlobalUtils.simpleErrorAlertForKeys("error.header.settingsSave", "error.body.initialSettingsSave", true);

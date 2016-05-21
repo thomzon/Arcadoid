@@ -149,11 +149,14 @@ public class SettingsPane extends FrontendPane {
 		case MAME_ROMS_FOLDER_PATH_NOT_FOUND:
 			messageKey = "error.body.mameRomsPathNotFound";
 			break;
-		case MAME_EXECUTABLE_NOT_FOUND:
-			messageKey = "error.body.mameExecutableNotFound";
+		case NES_ROMS_FOLDER_PATH_NOT_FOUND:
+			messageKey = "error.body.nesRomsPathNotFound";
 			break;
-		case STEAM_EXECUTABLE_NOT_FOUND:
-			messageKey = "error.body.steamExecutableNotFound";
+		case SNES_ROMS_FOLDER_PATH_NOT_FOUND:
+			messageKey = "error.body.snesRomsPathNotFound";
+			break;
+		case FUSION_ROMS_FOLDER_PATH_NOT_FOUND:
+			messageKey = "error.body.fusionRomsPathNotFound";
 			break;
 		default:
 			messageKey = "error.body.unexpectedSettingsCheckError";

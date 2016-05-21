@@ -27,11 +27,6 @@ public class CompletionCallable implements Callable<Void> {
 		SNES_ROMS_FOLDER_PATH_NOT_FOUND,
 		FUSION_ROMS_FOLDER_PATH_NOT_FOUND,
 		NES_ROMS_FOLDER_PATH_NOT_FOUND,
-		MAME_EXECUTABLE_NOT_FOUND,
-		STEAM_EXECUTABLE_NOT_FOUND,
-		SNES9X_EXECUTABLE_NOT_FOUND,
-		KEGA_EXECUTABLE_NOT_FOUND,
-		ROCKNESX_EXECUTABLE_NOT_FOUND,
 		CANNOT_PARSE_APPLICATION_UPDATE_DATA,
 		OTHER_ERROR;
 	}
@@ -48,6 +43,7 @@ public class CompletionCallable implements Callable<Void> {
 				try {
 					call();
 				} catch (Exception e) {
+					e.printStackTrace();
 					GlobalUtils.simpleErrorAlertForKeys("error.header.unknown", "error.body.unknownError", true);
 				}
 			}

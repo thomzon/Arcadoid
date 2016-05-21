@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import data.access.ArcadoidData;
-import data.settings.Messages;
 import data.transfer.CompletionResult;
 import utils.global.GlobalUtils;
 
@@ -47,7 +46,7 @@ public class TransferUtils {
 	
 	public static void handleErrorForFtpResult(CompletionResult result, String checkedAddress) {
 		String messageKey = null;
-		String headerKey = Messages.get("error.header.ftpCheckError");
+		String headerKey = "error.header.ftpCheckError";
 		String[] variables = new String[0];
 		switch (result.errorType) {
 		case OTHER_ERROR:

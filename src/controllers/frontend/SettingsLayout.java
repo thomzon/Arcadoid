@@ -25,9 +25,9 @@ public class SettingsLayout {
 	private Label		mameExecutablePathLabel, steamExecutablePathLabel, snes9xExecutablePathLabel, kegaExecutablePathLabel, rocknesxExecutablePathLabel;
 	private Button 		artworksFolderPathButton, mameRomsFolderPathButton, snesRomsFolderPathButton, fusionRomsFolderPathButton, nesRomsFolderPathButton;
 	private Button		mameExecutablePathButton, steamExecutablePathButton, snes9xExecutablePathButton, kegaExecutablePathButton, rocknesxExecutablePathButton;
-	private Label		ftpAddressTitleLabel, portNumberTitleLabel, ftpUserTitleLabel, ftpPasswordTitleLabel, remoteCatalogDataPathTitleLabel;
+	private Label		ftpAddressTitleLabel, portNumberTitleLabel, ftpUserTitleLabel, ftpPasswordTitleLabel, remoteApplicationsPathTitleLabel, remoteCatalogDataPathTitleLabel;
 	private Label		remoteArtworksDataPathTitleLabel, remoteMameDataPathTitleLabel, remoteSnesDataPathTitleLabel, remoteFusionDataPathTitleLabel, remoteNesDataPathTitleLabel;
-	private TextField	ftpAddressField, portNumberField, ftpUserField, ftpPasswordField, remoteCatalogDataPathField;
+	private TextField	ftpAddressField, portNumberField, ftpUserField, ftpPasswordField, remoteApplicationsPathField, remoteCatalogDataPathField;
 	private TextField	remoteArtworksDataPathField, remoteMameDataPathField, remoteSnesDataPathField, remoteFusionDataPathField, remoteNesDataPathField;
 	private Button		recordMissingInputsButton, recordAllInputsButton;
 	private Button		cancelButton, confirmButton;
@@ -50,6 +50,7 @@ public class SettingsLayout {
 		settings.mameRomsFolderPath = this.mameRomsFolderPathLabel.getText();
 		settings.snesRomsFolderPath = this.snesRomsFolderPathLabel.getText();
 		settings.fusionRomsFolderPath = this.fusionRomsFolderPathLabel.getText();
+		settings.nesRomsFolderPath = this.nesRomsFolderPathLabel.getText();
 		settings.mameExecutablePath = this.mameExecutablePathLabel.getText();
 		settings.steamExecutablePath = this.steamExecutablePathLabel.getText();
 		settings.snes9xExecutablePath = this.snes9xExecutablePathLabel.getText();
@@ -59,6 +60,7 @@ public class SettingsLayout {
 		ftpSettings.portNumber = this.portNumberField.getText();
 		ftpSettings.user = this.ftpUserField.getText();
 		ftpSettings.password = this.ftpPasswordField.getText();
+		ftpSettings.applicationPath = this.remoteApplicationsPathField.getText();
 		ftpSettings.catalogDataPath = this.remoteCatalogDataPathField.getText();
 		ftpSettings.artworksDataPath = this.remoteArtworksDataPathField.getText();
 		ftpSettings.mameDataPath = this.remoteMameDataPathField.getText();
@@ -150,6 +152,7 @@ public class SettingsLayout {
 		this.portNumberTitleLabel = UIUtils.createLabel("field.portNumber", true);
 		this.ftpUserTitleLabel = UIUtils.createLabel("field.username", true);
 		this.ftpPasswordTitleLabel = UIUtils.createLabel("field.password", true);
+		this.remoteApplicationsPathTitleLabel = UIUtils.createLabel("field.applicationPath", true);
 		this.remoteCatalogDataPathTitleLabel = UIUtils.createLabel("field.catalogDataPath", true);
 		this.remoteArtworksDataPathTitleLabel = UIUtils.createLabel("field.artworksDataPath", true);
 		this.remoteMameDataPathTitleLabel = UIUtils.createLabel("field.mameDataPath", true);
@@ -165,6 +168,8 @@ public class SettingsLayout {
 		this.ftpUserField.setText(settings.user);
 		this.ftpPasswordField = new PasswordField();
 		this.ftpPasswordField.setText(settings.password);
+		this.remoteApplicationsPathField = new TextField();
+		this.remoteApplicationsPathField.setText(settings.applicationPath);
 		this.remoteCatalogDataPathField = new TextField();
 		this.remoteCatalogDataPathField.setText(settings.catalogDataPath);
 		this.remoteArtworksDataPathField = new TextField();
@@ -178,17 +183,17 @@ public class SettingsLayout {
 		this.remoteNesDataPathField = new TextField();
 		this.remoteNesDataPathField.setText(settings.nesDataPath);
 		
-		UIUtils.assignStyleClassToNodes("settings-title", this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel,
-														  this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel, this.remoteFusionDataPathTitleLabel,
-														  this.remoteNesDataPathTitleLabel);
+		UIUtils.assignStyleClassToNodes("settings-title", this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteApplicationsPathTitleLabel,
+														  this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel,
+														  this.remoteFusionDataPathTitleLabel, this.remoteNesDataPathTitleLabel);
 		UIUtils.assignStyleClassToNodes("settings-group-title", this.ftpSettingsGroupTitle);
 		pane.getChildren().addAll(this.ftpSettingsGroupTitle);
-		pane.getChildren().addAll(this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteCatalogDataPathTitleLabel,
-								  this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel, this.remoteFusionDataPathTitleLabel,
-								  this.remoteNesDataPathTitleLabel);
-		pane.getChildren().addAll(this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField,
-								  this.remoteArtworksDataPathField, this.remoteMameDataPathField, this.remoteSnesDataPathField, this.remoteFusionDataPathField,
-								  this.remoteNesDataPathField);
+		pane.getChildren().addAll(this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteApplicationsPathTitleLabel,
+								  this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel,
+								  this.remoteFusionDataPathTitleLabel, this.remoteNesDataPathTitleLabel);
+		pane.getChildren().addAll(this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteApplicationsPathField,
+								  this.remoteCatalogDataPathField, this.remoteArtworksDataPathField, this.remoteMameDataPathField, this.remoteSnesDataPathField,
+								  this.remoteFusionDataPathField, this.remoteNesDataPathField);
 	}
 	
 	private void createInputAndConfirmButtons(SettingsPane pane) {
@@ -230,11 +235,11 @@ public class SettingsLayout {
 	
 	private double layoutFTPFieldsAtStartingHeight(double startingHeight) {
 		Label[] allTitles = new Label[]{
-				this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel,
+				this.ftpAddressTitleLabel, this.portNumberTitleLabel, this.ftpUserTitleLabel, this.ftpPasswordTitleLabel, this.remoteApplicationsPathTitleLabel,
 				this.remoteCatalogDataPathTitleLabel, this.remoteArtworksDataPathTitleLabel, this.remoteMameDataPathTitleLabel, this.remoteSnesDataPathTitleLabel,
 				this.remoteFusionDataPathTitleLabel, this.remoteNesDataPathTitleLabel};
 		Control[] allFields = new Control[]{
-				this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteCatalogDataPathField,
+				this.ftpAddressField, this.portNumberField, this.ftpUserField, this.ftpPasswordField, this.remoteApplicationsPathField, this.remoteCatalogDataPathField,
 				this.remoteArtworksDataPathField, this.remoteMameDataPathField, this.remoteSnesDataPathField, this.remoteFusionDataPathField,
 				this.remoteNesDataPathField};
 		return UIUtils.layoutControlPairsInGridWithTitleStartingAtPosition(this.ftpSettingsGroupTitle, allTitles, allFields, new Point2D(0, (float)startingHeight));
