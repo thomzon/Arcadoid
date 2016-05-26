@@ -7,7 +7,7 @@ package data.transfer.updater;
  *
  */
 public enum ApplicationExecutable {
-	EDITOR("ArcadoidEditor.jar"),
+	EDITOR("Editor.jar"),
 	FRONTEND("Arcadoid.jar"),
 	UPDATER("ArcadoidUpdater.jar");
 	

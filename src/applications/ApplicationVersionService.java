@@ -18,7 +18,7 @@ public class ApplicationVersionService {
 	 */
 	public static String EDITOR_VERSION_NUMBER = "5";
 	public static String FRONTEND_VERSION_NUMBER = "10";
-	public static String UPDATER_VERSION_NUMBER = "2";
+	public static String UPDATER_VERSION_NUMBER = "3";
 	
 	/**
 	 * Tries to update in file the version number linked to given property. If it fails, it will display
