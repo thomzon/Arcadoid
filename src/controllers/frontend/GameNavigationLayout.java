@@ -17,5 +17,7 @@ public interface GameNavigationLayout {
 	public void navigateToSiblingInItems(BaseItem item, List<BaseItem> items);
 	public void navigateToChildren(List<BaseItem> childrenItems);
 	public void navigateToParentWithSiblings(BaseItem parent, List<BaseItem> siblings);
+	public void startingGame();
+	public void stoppingGame();
 	
 }

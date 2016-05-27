@@ -86,6 +86,16 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	}
 	
 	@Override
+	public void startingGame() {
+		this.mouseBehaviour.suspendBehaviour();
+	}
+	
+	@Override
+	public void stoppingGame() {
+		this.mouseBehaviour.resumeBehaviour();
+	}
+	
+	@Override
 	public void navigateToSiblingInItems(BaseItem item, List<BaseItem> items) {
 		int itemIndex = items.indexOf(item);
 		if (itemIndex >= 0) {

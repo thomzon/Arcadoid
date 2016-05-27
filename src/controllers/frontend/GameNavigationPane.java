@@ -234,6 +234,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	
 	@Override
 	public void quitGame() {
+		this.layout.stoppingGame();
 		if (this.gameRunningMessagePopup != null) {
 			UIService.sharedInstance().discardPopup(this.gameRunningMessagePopup);
 			this.gameRunningMessagePopup = null;
@@ -243,6 +244,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	@Override
 	public void confirm() {
 		if (this.gameRunningMessagePopup != null) return;
+		this.layout.startingGame();
 		if (this.currentItem instanceof NavigationItem) {
 			this.navigateDown();
 		} else if (this.currentItem instanceof Game) {

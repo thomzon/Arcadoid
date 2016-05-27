@@ -19,6 +19,7 @@ public class MouseAutohideBehaviour {
 	private boolean behaviourActive;
 	private Node[] nodesToAutohide;
 	private Timeline hideCallTimeline;
+	private Timeline resumeTimeline;
 	
 	public void setupInPane(FrontendPane pane, Node[] nodesToAutohide) {
 		this.pane = pane;
@@ -42,6 +43,22 @@ public class MouseAutohideBehaviour {
 		this.behaviourActive = false;
 		this.cancelAutohideCall();
 		this.pane.getScene().setCursor(Cursor.DEFAULT);
+	}
+	
+	public void suspendBehaviour() {
+		if (this.resumeTimeline != null) {
+			this.resumeTimeline.stop();
+			this.resumeTimeline = null;
+		}
+		this.behaviourActive = false;
+	}
+	
+	public void resumeBehaviour() {
+		this.resumeTimeline = UIUtils.callMethodAfterTime(this, "doResumeBehaviour", 2000);
+	}
+	
+	public void doResumeBehaviour() {
+		this.behaviourActive = true;
 	}
 	
 	private void cancelAutohideCall() {
