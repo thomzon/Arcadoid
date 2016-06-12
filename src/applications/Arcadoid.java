@@ -6,6 +6,7 @@ import data.settings.Settings.PropertyId;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import utils.frontend.DemoModeService;
 import utils.frontend.GameLaunchService;
 
 /**
@@ -21,6 +22,7 @@ public class Arcadoid extends Application {
 		UIService.sharedInstance().startServiceInPrimaryStage(primaryStage);
 		PlayerInputService.sharedInstance().startService();
 		GameLaunchService.sharedInstance().startService();
+		DemoModeService.sharedInstance().startService();
 	}
 	
 	@Override

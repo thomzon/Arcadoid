@@ -7,6 +7,7 @@ package data.input;
  */
 public interface PlayerInputObserver {
 
+	default public void anyInputEntered() {}
 	default public void navigateUp() {}
 	default public void navigateDown() {}
 	default public void navigateLeft() {}

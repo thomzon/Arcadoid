@@ -50,7 +50,7 @@ public class MameGame extends Game {
 	@Override
 	public void execute() throws Exception {
 		String mamePath = Settings.getSetting(PropertyId.MAME_PATH);
-		String executable = mamePath + " " + this.gameName();
+		String executable = mamePath + " " + this.gameName() + " -skip_gameinfo";
 		this.execute(executable, new File(mamePath).getParentFile());
 	}
 

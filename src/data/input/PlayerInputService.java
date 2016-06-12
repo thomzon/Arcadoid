@@ -142,6 +142,11 @@ public class PlayerInputService implements KeyboardDelegate {
 
 	@Override
 	public void keyPressed(int keyCode, String keyName) {
+		Platform.runLater(() -> {
+			this.inputObservers.forEach((observer) -> {
+				observer.anyInputEntered();
+			});
+		});
 		if (this.keyCodeMatchesOneOfTheseProperties(keyCode, PropertyId.KEY_P1_UP, PropertyId.KEY_P2_UP)) {
 			Platform.runLater(() -> {
 				this.inputObservers.forEach((observer) -> {

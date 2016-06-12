@@ -120,7 +120,8 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (backgroundArtworkPath != null && backgroundArtworkPath.length() > 0) {
 			File backgroundImageFile = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), backgroundArtworkPath);
 			if (backgroundImageFile.exists()) {
-				backgroundImage = new Image(backgroundImageFile.toURI().toString(), false);
+				Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+				backgroundImage = new Image(backgroundImageFile.toURI().toString(), screenBounds.getWidth(), screenBounds.getHeight(), true, true);
 			}
 		}
 		this.setCurrentBackgroundImage(backgroundImage);
