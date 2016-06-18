@@ -22,6 +22,7 @@ public class DemoModeService implements PlayerInputObserver {
 	private Timeline countdownTimeline = null;
 	private Timeline nextDemoTimeline = null;
 	private boolean gameRunning = false;
+	private boolean externalGameRunning = false;
 	
 	private DemoModeService() {
 	}
@@ -39,22 +40,18 @@ public class DemoModeService implements PlayerInputObserver {
 	 */
 	public void startService() {
 		PlayerInputService.sharedInstance().addInputObserver(this);
-		this.startObservingExternalGameLaunches();
+		NotificationCenter.sharedInstance().addObserver(GameLaunchService.GAME_WILL_LAUNCH_NOTIFICATION, this, "externalGameLaunch");
 		this.startDemoLaunchCountdown();
 	}
 	
 	/**
-	 * Called when a game has been launched from outside the service.
+	 * Called when a game has been launched, cancels demo mode count down if game was not started from service itself.
 	 */
 	public void externalGameLaunch() {
-		this.gameRunning = true;
-		this.cancelDemoLaunchCountdown();
-		NotificationCenter.sharedInstance().removeObserver(this);
-	}
-	
-	private void startObservingExternalGameLaunches() {
-		NotificationCenter.sharedInstance().removeObserver(this);
-		NotificationCenter.sharedInstance().addObserver(GameLaunchService.GAME_WILL_LAUNCH_NOTIFICATION, this, "externalGameLaunch");
+		if (!this.gameRunning) {
+			this.externalGameRunning = true;
+			this.cancelDemoLaunchCountdown();
+		}
 	}
 	
 	private void startDemoLaunchCountdown() {
@@ -73,7 +70,7 @@ public class DemoModeService implements PlayerInputObserver {
 	}
 	
 	public void startDemoMode() {
-		NotificationCenter.sharedInstance().removeObserver(this);
+		this.gameRunning = true;
 		this.runRandomGameAndPrepareForNextDemo();
 	}
 	
@@ -93,15 +90,18 @@ public class DemoModeService implements PlayerInputObserver {
 	
 	@Override
 	public void anyInputEntered() {
-		if (!this.gameRunning) {
+		if (this.gameRunning) {
+			GameLaunchService.sharedInstance().quitCurrentGame();
+			this.quitGame();
+		} else if (!this.externalGameRunning) {
 			this.startDemoLaunchCountdown();
-		}
+		} 
 	}
 	
 	@Override
 	public void quitGame() {
 		this.gameRunning = false;
-		this.startObservingExternalGameLaunches();
+		this.externalGameRunning = false;
 		this.startDemoLaunchCountdown();
 	}
 	

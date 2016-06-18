@@ -40,9 +40,9 @@ public class UIUtils {
 	public static final double	DELAY_BETWEEN_CONNEXION_ATTEMPTS	= 1000;
 	public static final int		MUSIC_FADE_DURATION					= 1000;
 	public static final int		AUDIO_FEEDBACK_AUTOSTOP_DELAY		= 5000;
-	public static final int		TIME_BEFORE_DEMO_MODE_START			= 10000;
-	public static final int		MINIMUM_TIME_BETWEEN_DEMOS			= 20000;
-	public static final int		MAXIMUM_TIME_BETWEEN_DEMOS			= 60000;
+	public static final int		TIME_BEFORE_DEMO_MODE_START			= 30000;
+	public static final int		MINIMUM_TIME_BETWEEN_DEMOS			= 60000;
+	public static final int		MAXIMUM_TIME_BETWEEN_DEMOS			= 180000;
 	
 	/**
 	 * Assign given CSS class name to one or more nodes

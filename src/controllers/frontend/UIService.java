@@ -96,7 +96,7 @@ public class UIService {
 		Scene scene = new Scene(this.rootPane, screenBounds.getWidth(), screenBounds.getHeight());
 		scene.getStylesheets().add("css/frontend.css");
 		primaryStage.setScene(scene);
-//		primaryStage.setFullScreen(true);
+		primaryStage.setFullScreen(true);
 		primaryStage.show();
 		this.displayGameNavigation(false);
 		this.checkForAppUpdate();
