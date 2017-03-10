@@ -249,6 +249,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (this.currentItem instanceof NavigationItem) {
 			this.navigateDown();
 		} else if (this.currentItem instanceof Game) {
+			VolumeControlService.sharedInstance().stopAudioFeedback();
 			GameLaunchService.sharedInstance().runGame((Game)this.currentItem);
 			this.displayGameRunningMessage();
 		}

@@ -20,7 +20,7 @@ import data.model.Tag;
 
 /**
  * JsonDeserializer implementation to handle ArcadoidData object.
- * No new object is actually not created during deserialization.
+ * No new object is actually created during deserialization.
  * The ArcadoidData singleton is directly updated from data found in the JSON element.
  * @author Thomas Debouverie
  *

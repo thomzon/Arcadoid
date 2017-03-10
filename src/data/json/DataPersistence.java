@@ -10,10 +10,13 @@ import java.io.UnsupportedEncodingException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import data.access.ArcadoidData;
+import data.access.FrontendData;
 
 /**
  * Public access to saving and loading data from and to file.
@@ -23,11 +26,19 @@ import data.access.ArcadoidData;
  */
 public class DataPersistence {
 
-	public static void saveDataToFile(ArcadoidData data, String filePath) throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
+	public static void saveArcadoidDataToFile(ArcadoidData data, String filePath) throws IOException {
+		DataPersistence.saveDataToFileWithSerializer(data, filePath, new ArcadoidDataSerializer());
+	}
+	
+	public static void saveFrontendDataToFile(FrontendData data, String filePath) throws IOException {
+		DataPersistence.saveDataToFileWithSerializer(data, filePath, new FrontendDataSerializer());
+	}
+	
+	private static <T> void saveDataToFileWithSerializer(Object data, String filePath, JsonSerializer<T> serializer) throws IOException {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.setPrettyPrinting();
 		gsonBuilder.disableHtmlEscaping();
-		gsonBuilder.registerTypeAdapter(ArcadoidData.class, new ArcadoidDataSerializer());
+		gsonBuilder.registerTypeAdapter(data.getClass(), serializer);
 		Gson gson = gsonBuilder.create();
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8");
 		JsonWriter jsonWriter = new JsonWriter(writer);
@@ -35,9 +46,17 @@ public class DataPersistence {
 		jsonWriter.close();
 	}
 	
-	public static void loadDataFromFile(String filePath) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	public static void loadArcadoidDataFromFile(String filePath) throws UnsupportedEncodingException, FileNotFoundException {
+		DataPersistence.loadDataFromFileWithDeserializer(ArcadoidData.class, filePath, new ArcadoidDataDeserializer());
+	}
+	
+	public static void loadFrontendDataFromFile(String filePath) throws IOException {
+		DataPersistence.loadDataFromFileWithDeserializer(FrontendData.class, filePath, new FrontendDataDeserializer());
+	}
+	
+	private static <T> void loadDataFromFileWithDeserializer(Class<T> dataClass, String filePath, JsonDeserializer<T> deserializer) throws UnsupportedEncodingException, FileNotFoundException {
 		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(ArcadoidData.class, new ArcadoidDataDeserializer());
+		builder.registerTypeAdapter(dataClass, deserializer);
 		Gson gson = builder.create();
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
 		JsonReader jsonReader = new JsonReader(reader);

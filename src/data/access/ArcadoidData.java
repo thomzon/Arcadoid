@@ -378,14 +378,11 @@ public class ArcadoidData {
 	
 	/**
 	 * Saves all data to a serialized JSON file. Exceptions are forwarded from the DataPersitence layer.
-	 * @throws UnsupportedEncodingException
 	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @throws IllegalStateException
 	 */
-	public void saveData() throws UnsupportedEncodingException, IOException, FileNotFoundException, IllegalStateException {
+	public void saveData() throws IOException {
 		this.incrementArcadoidDataVersionNumber();
-		DataPersistence.saveDataToFile(this, DATA_FILE_PATH);
+		DataPersistence.saveArcadoidDataToFile(this, DATA_FILE_PATH);
 	}
 	
 	/**
@@ -395,11 +392,9 @@ public class ArcadoidData {
 	 * Exceptions are forwarded from the DataPersistence layer.
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws NullPointerException
 	 */
-	public void loadData() throws UnsupportedEncodingException, FileNotFoundException, IOException, NullPointerException {
-		DataPersistence.loadDataFromFile(DATA_FILE_PATH);
+	public void loadData() throws UnsupportedEncodingException, FileNotFoundException {
+		DataPersistence.loadArcadoidDataFromFile(DATA_FILE_PATH);
 		IdentifierProvider.updateHighestIdentifier();
 		NotificationCenter.sharedInstance().postNotification(DATA_LOADED_NOTIFICATION, null);
 	}
