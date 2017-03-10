@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import controllers.frontend.GameNavigationLayoutFactory.GameNavigationLayoutType;
 import data.access.ArcadoidData;
+import data.access.FrontendData;
 import data.access.NotificationCenter;
 import data.input.PlayerInputObserver;
 import data.input.PlayerInputService;
@@ -88,6 +89,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	private void initialAppearance() {
 		try {
 			ArcadoidData.sharedInstance().loadData();
+			FrontendData.sharedInstance().loadData();
 		} catch (FileNotFoundException e) {
 		} catch (Exception e) {
 			GlobalUtils.simpleErrorAlertForKeys("error.header.catalogLoad", "error.body.catalogLoad");
@@ -249,8 +251,10 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 		if (this.currentItem instanceof NavigationItem) {
 			this.navigateDown();
 		} else if (this.currentItem instanceof Game) {
+			Game game = (Game)this.currentItem;
 			VolumeControlService.sharedInstance().stopAudioFeedback();
-			GameLaunchService.sharedInstance().runGame((Game)this.currentItem);
+			FrontendData.sharedInstance().markGameAsSeen(game);
+			GameLaunchService.sharedInstance().runGame(game);
 			this.displayGameRunningMessage();
 		}
 	}

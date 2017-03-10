@@ -39,7 +39,7 @@ public class NavigationViewController implements Initializable {
 
 	@FXML private TreeView<NavigationItem> navigationTreeView;
 	@FXML private TextField navigationItemNameField;
-	@FXML private CheckBox showEligibleGamesCheckbox, mustMatchAllTagsCheckbox;
+	@FXML private CheckBox showEligibleGamesCheckbox, mustMatchAllTagsCheckbox, isFavoritesCheckbox, isUnseenGamesCheckbox;
 	@FXML private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
 	@FXML private ListView<Tag> availableTagsListView, assignedTagsListView;
 	
@@ -267,6 +267,14 @@ public class NavigationViewController implements Initializable {
 		this.availableTagsListView.getItems().addAll(selectedTags);
 		this.assignedTagsListView.getItems().removeAll(selectedTags);
 		this.saveAction();
+	}
+	
+	@FXML private void isFavoritesAction() {
+		
+	}
+	
+	@FXML private void isUnseenGamesAction() {
+		
 	}
 
 }

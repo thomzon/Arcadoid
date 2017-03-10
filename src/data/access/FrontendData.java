@@ -40,6 +40,7 @@ public class FrontendData {
 	 */
 	public void addFavorite(Game game) {
 		this.favoritesIdentifiers.add(game.getIdentifier());
+		this.discreteSave();
 	}
 	
 	/**
@@ -57,6 +58,7 @@ public class FrontendData {
 	 */
 	public void removeFavorite(Game game) {
 		this.favoritesIdentifiers.remove(game.getIdentifier());
+		this.discreteSave();
 	}
 	
 	/**
@@ -95,6 +97,7 @@ public class FrontendData {
 	 */
 	public void markGameAsSeen(Game game) {
 		this.seenGamesIdentifiers.add(game.getIdentifier());
+		this.discreteSave();
 	}
 	
 	/**
@@ -146,6 +149,16 @@ public class FrontendData {
 	 */
 	public void loadData() throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		DataPersistence.loadFrontendDataFromFile(LOCAL_DATA_FILE_PATH);
+	}
+	
+	/**
+	 * Saves without any info on outcome.
+	 */
+	private void discreteSave() {
+		try {
+			this.saveData();
+		} catch (Exception e) {
+		}
 	}
 	
 }

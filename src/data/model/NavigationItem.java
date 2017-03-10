@@ -20,6 +20,8 @@ public class NavigationItem extends BaseItem {
 	private List<BaseItem> allChildItems;
 	private boolean showEligibleGames = true;
 	private boolean gamesMustMatchAllTags = true;
+	private boolean isFavorites = false;
+	private boolean isUnseenGames = false;
 	
 	public NavigationItem(long identifier) {
 		super(identifier);
@@ -92,6 +94,22 @@ public class NavigationItem extends BaseItem {
 
 	public void setGamesMustMatchAllTags(boolean gamesMustMatchAllTags) {
 		this.gamesMustMatchAllTags = gamesMustMatchAllTags;
+	}
+
+	public boolean isFavorites() {
+		return isFavorites;
+	}
+
+	public void setFavorites(boolean isFavorites) {
+		this.isFavorites = isFavorites;
+	}
+
+	public boolean isUnseenGames() {
+		return isUnseenGames;
+	}
+
+	public void setUnseenGames(boolean isUnseenGames) {
+		this.isUnseenGames = isUnseenGames;
 	}
 
 	public boolean hasOwnName() {
