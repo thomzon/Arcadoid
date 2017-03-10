@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.frontend.UIUtils;
 import utils.transfer.LoadFromRepositoryHandler;
-import utils.transfer.TransferUtils;
 import views.frontend.FrontendPane;
 import views.frontend.FrontendPopup;
 
@@ -122,7 +121,10 @@ public class UIService {
 		if (result != null && !result.success) {
 			this.numberOfFTPContactAttempt += 1;
 			if (this.numberOfFTPContactAttempt > UIUtils.NUMBER_OF_FTP_ATTEMPT_AT_STARTUP) {
-				TransferUtils.showRepositoryOperationError(result);
+				// We previously showed an error message here via method TransferUtils.showRepositoryOperationError
+				// It was a bother when using the front-end with a turned off back-end
+				// Now we just stop checking
+				return;
 			} else {
 				UIUtils.callMethodAfterTime(this, "checkForAppUpdate", UIUtils.DELAY_BETWEEN_CONNEXION_ATTEMPTS);
 			}
