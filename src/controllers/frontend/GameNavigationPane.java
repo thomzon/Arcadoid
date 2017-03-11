@@ -262,7 +262,15 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 	@Override
 	public void addFavorite() {
 		if (this.gameRunningMessagePopup != null) return;
-		System.out.println("Add favorite !");
+		if (this.currentItem instanceof Game) {
+			Game game = (Game)this.currentItem;
+			if (FrontendData.sharedInstance().isFavorite(game)) {
+				FrontendData.sharedInstance().removeFavorite(game);
+			} else {
+				FrontendData.sharedInstance().addFavorite(game);
+			}
+			this.layout.reloadItem(this.currentItem);
+		}
 	}
 	
 	@Override

@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.json.DataPersistence;
+import data.model.BaseItem;
 import data.model.Game;
+import data.model.NavigationItem;
 
 public class FrontendData {
 
@@ -19,8 +21,12 @@ public class FrontendData {
 	
 	private List<Long> favoritesIdentifiers = new ArrayList<Long>();
 	private List<Long> seenGamesIdentifiers = new ArrayList<Long>();
+	private List<BaseItem> favoriteGames = new ArrayList<BaseItem>();
+	private List<BaseItem> unseenGames = new ArrayList<BaseItem>();
 	
 	private FrontendData() {
+		this.setAllFavorites(new ArrayList<Long>());
+		this.setAllSeenGamesIdentifiers(new ArrayList<Long>());
 	}
 
 	/**
@@ -40,6 +46,8 @@ public class FrontendData {
 	 */
 	public void addFavorite(Game game) {
 		this.favoritesIdentifiers.add(game.getIdentifier());
+		this.favoriteGames.add(game);
+		this.unseenGames.remove(game);
 		this.discreteSave();
 	}
 	
@@ -58,7 +66,12 @@ public class FrontendData {
 	 */
 	public void removeFavorite(Game game) {
 		this.favoritesIdentifiers.remove(game.getIdentifier());
-		this.discreteSave();
+		this.favoriteGames.remove(game);
+
+		if (!this.gameIsSeen(game)) {
+			this.unseenGames.add(game);
+			this.unseenGames.sort(BaseItem.defaultComparator());
+		}
 	}
 	
 	/**
@@ -73,14 +86,8 @@ public class FrontendData {
 	 * Get all games marked as favorite.
 	 * @return Favorite list.
 	 */
-	public List<Game> getAllFavorites() {
-		List<Game> favoriteGames = new ArrayList<Game>();
-		for (Game game : ArcadoidData.sharedInstance().getAllGames()) {
-			if (this.favoritesIdentifiers.contains(game.getIdentifier())) {
-				favoriteGames.add(game);
-			}
-		}
-		return favoriteGames;
+	public List<BaseItem> getAllFavorites() {
+		return new ArrayList<>(this.favoriteGames);
 	}
 	
 	/**
@@ -89,6 +96,14 @@ public class FrontendData {
 	 */
 	public void setAllFavorites(List<Long> favorites) {
 		this.favoritesIdentifiers = new ArrayList<>(favorites);
+		
+		List<BaseItem> favoriteGames = new ArrayList<BaseItem>();
+		for (Game game : ArcadoidData.sharedInstance().getAllGames()) {
+			if (this.favoritesIdentifiers.contains(game.getIdentifier())) {
+				favoriteGames.add(game);
+			}
+		}
+		this.favoriteGames = favoriteGames;
 	}
 	
 	/**
@@ -98,6 +113,7 @@ public class FrontendData {
 	public void markGameAsSeen(Game game) {
 		if (!this.gameIsSeen(game)) {
 			this.seenGamesIdentifiers.add(game.getIdentifier());
+			this.unseenGames.remove(game);
 			this.discreteSave();
 		}
 	}
@@ -115,14 +131,8 @@ public class FrontendData {
 	 * Get all games that were never seen.
 	 * @return Unseen games list.
 	 */
-	public List<Game> getAllUnseenGames() {
-		List<Game> unseenGames = new ArrayList<Game>();
-		for (Game game : ArcadoidData.sharedInstance().getAllGames()) {
-			if (!this.seenGamesIdentifiers.contains(game.getIdentifier())) {
-				unseenGames.add(game);
-			}
-		}
-		return unseenGames;
+	public List<BaseItem> getAllUnseenGames() {
+		return new ArrayList<>(this.unseenGames);
 	}
 	
 	/**
@@ -139,7 +149,31 @@ public class FrontendData {
 	 */
 	public void setAllSeenGamesIdentifiers(List<Long> seenGameIdentifiers) {
 		this.seenGamesIdentifiers = new ArrayList<>(seenGameIdentifiers);
+	
+		List<BaseItem> unseenGames = new ArrayList<BaseItem>();
+		for (Game game : ArcadoidData.sharedInstance().getAllGames()) {
+			if (!this.isFavorite(game) && !this.seenGamesIdentifiers.contains(game.getIdentifier())) {
+				unseenGames.add(game);
+			}
+		}
+		this.unseenGames = unseenGames;
 	}
+	
+	/**
+	 * If given item is a NavigationItem that must show favorites or unseen games,
+	 * updates its children with current favorites or unseen games.
+	 * @param item Item to check for update.
+	 */
+	public void updateNavigationItemChildrenIfRequired(BaseItem item) {
+		if (!(item instanceof NavigationItem)) return;
+		
+		NavigationItem navigationItem = (NavigationItem)item;
+		if (navigationItem.isFavorites()) {
+			navigationItem.setAllChildItems(this.getAllFavorites());
+		} else if (navigationItem.isUnseenGames()) {
+			navigationItem.setAllChildItems(this.getAllUnseenGames());
+		}
+	} 
 	
 	/**
 	 * Saves all data to a serialized JSON file. Exceptions are forwarded from the DataPersitence layer.

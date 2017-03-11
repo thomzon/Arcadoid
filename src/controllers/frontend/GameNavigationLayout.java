@@ -14,6 +14,7 @@ public interface GameNavigationLayout {
 	public void prepareForParentPaneDisappearance();
 	public void setupSettingsAccess();
 	public void reloadWithDisplayedItems(List<BaseItem> items);
+	public void reloadItem(BaseItem item);
 	public void navigateToSiblingInItems(BaseItem item, List<BaseItem> items);
 	public void navigateToChildren(List<BaseItem> childrenItems);
 	public void navigateToParentWithSiblings(BaseItem parent, List<BaseItem> siblings);

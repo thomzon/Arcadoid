@@ -16,8 +16,8 @@ public class ApplicationVersionService {
 	/**
 	 * Version number constants for all applications
 	 */
-	public static String EDITOR_VERSION_NUMBER = "5";
-	public static String FRONTEND_VERSION_NUMBER = "12";
+	public static String EDITOR_VERSION_NUMBER = "6";
+	public static String FRONTEND_VERSION_NUMBER = "15";
 	public static String UPDATER_VERSION_NUMBER = "3";
 	
 	/**

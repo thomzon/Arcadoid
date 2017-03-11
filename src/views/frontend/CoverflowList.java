@@ -64,6 +64,11 @@ public class CoverflowList extends Group {
 		this.scrollToItemAtIndexAnimated(0, false);
 	}
 	
+	public void reloadNodeAtIndex(int index) {
+		CoverflowItem node = this.visibleItems.get(index);
+		this.dataSource.updateNodeForItemAtIndex(node, index, this);
+	}
+	
 	/**
 	 * Centers item at given index.
 	 * @param index Index of item to center

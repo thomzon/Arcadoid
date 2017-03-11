@@ -2,9 +2,7 @@ package views.frontend;
 
 import java.io.File;
 
-import data.access.FrontendData;
 import data.model.BaseItem;
-import data.model.Game;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.beans.property.DoubleProperty;
@@ -31,13 +29,12 @@ public class CoverflowItem extends Parent {
 	public static final double HEIGHT = WIDTH + (WIDTH*REFLECTION_SIZE);
 	private static final double RADIUS_H = WIDTH / 2;
 	private static final double BACK = WIDTH / 10;
-	private static final double STATUS_INDICATOR_SIZE = 30;
 	
 	private PerspectiveTransform transform = new PerspectiveTransform();
 	private Label itemNameLabel = new Label();
 	private Reflection reflectionEffect = new Reflection();
 	private ImageView imageView = new ImageView();
-	private ImageView statusIndicatorImageView = new ImageView();
+	private StatusIndicatorContainer statusIndicatorContainer = new StatusIndicatorContainer();
 
 	/**
 	 * Angle determines rotation on its Y axis.
@@ -79,12 +76,8 @@ public class CoverflowItem extends Parent {
 		this.itemNameLabel.setLayoutY(150);
 		this.getChildren().addAll(this.itemNameLabel);
 		
-		this.statusIndicatorImageView.setFitHeight(STATUS_INDICATOR_SIZE);
-		this.statusIndicatorImageView.setFitWidth(STATUS_INDICATOR_SIZE);
-		this.statusIndicatorImageView.setPreserveRatio(true);
-		this.statusIndicatorImageView.setLayoutX(WIDTH - STATUS_INDICATOR_SIZE);
-		this.statusIndicatorImageView.setLayoutY(WIDTH - STATUS_INDICATOR_SIZE); 
-		this.getChildren().addAll(this.statusIndicatorImageView);
+		this.statusIndicatorContainer.setLayoutX(WIDTH);
+		this.getChildren().addAll(this.statusIndicatorContainer);
 	}
 	
 	public void setBaseItem(BaseItem item) {
@@ -109,22 +102,9 @@ public class CoverflowItem extends Parent {
 	}
 	
 	private void updateStatusIndicator(BaseItem item) {
-		if (item instanceof Game) {
-			Game game = (Game)item;
-			if (FrontendData.sharedInstance().isFavorite(game)) {
-				File favoriteIconFile = new File("images", "favorite_indicator.png");
-				Image image = new Image(favoriteIconFile.toURI().toString(), false);
-				this.statusIndicatorImageView.setImage(image);
-			} else if (!FrontendData.sharedInstance().gameIsSeen(game)) {
-				File newGameIconFile = new File("images", "new_indicator.png");
-				Image image = new Image(newGameIconFile.toURI().toString(), false);
-				this.statusIndicatorImageView.setImage(image);
-			} else {
-				this.statusIndicatorImageView.setImage(null);
-			}
-		} else {
-			this.statusIndicatorImageView.setImage(null);
-		}
+		this.statusIndicatorContainer.updateStatusIndicatorForItem(item);
+		double imageTotalHeight = this.imageTotalHeight();
+		this.statusIndicatorContainer.setLayoutY(imageTotalHeight);
 	}
 	
 	private void setDefaultImage() {
@@ -136,13 +116,18 @@ public class CoverflowItem extends Parent {
 	
 	private void setImage(Image image) {
 		this.imageView.setImage(image);
-		double totalHeight = this.imageView.getBoundsInParent().getHeight();
-		totalHeight = totalHeight / (REFLECTION_SIZE + 1);
+		double totalHeight = this.imageTotalHeight();
 		if (totalHeight < WIDTH) {
 			this.setLayoutY(WIDTH - totalHeight);
 		} else {
 			this.setLayoutY(0);
 		}
+	}
+	
+	private double imageTotalHeight() {
+		double totalHeight = this.imageView.getBoundsInParent().getHeight();
+		totalHeight = totalHeight / (REFLECTION_SIZE + 1);
+		return totalHeight;
 	}
 	
 	public final double getAngle() {

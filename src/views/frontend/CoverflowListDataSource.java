@@ -9,5 +9,6 @@ public interface CoverflowListDataSource {
 
 	public int numberOfItemsInCoverflowList(CoverflowList coverflowList);
 	public CoverflowItem nodeForItemAtIndex(int index, CoverflowList coverflowList);
+	public void updateNodeForItemAtIndex(CoverflowItem node, int index, CoverflowList coverflowList);
 	
 }

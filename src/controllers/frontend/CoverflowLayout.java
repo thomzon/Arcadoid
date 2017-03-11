@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.access.ArcadoidData;
+import data.access.FrontendData;
 import data.model.BaseItem;
 import data.model.NavigationItem;
 import javafx.geometry.Rectangle2D;
@@ -80,9 +81,16 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		this.displayedItems = items;
 		this.previousItems = null; 
 		this.parentItem = null;
-		this.setFocusedItem(items.get(0), true);
+		this.setFocusedItem(items.get(0));
 		this.focusedCoverflowList.reloadData();
 		this.previousCoverflowList.reloadData();
+	}
+	
+	@Override
+	public void reloadItem(BaseItem item) {
+		int itemIndex = this.displayedItems.indexOf(item);
+		if (itemIndex < 0) return;
+		this.focusedCoverflowList.reloadNodeAtIndex(itemIndex);
 	}
 	
 	@Override
@@ -100,7 +108,7 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 		int itemIndex = items.indexOf(item);
 		if (itemIndex >= 0) {
 			this.focusedCoverflowList.scrollToItemAtIndexAnimated(itemIndex, true);
-			this.setFocusedItem(item, false);
+			this.setFocusedItem(item);
 		}
 	}
 	
@@ -215,14 +223,11 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
         this.selectedTextContainer.setLayoutY(screenBounds.getHeight()/2 - CoverflowItem.HEIGHT);
 	}
 	
-	private void setFocusedItem(BaseItem item, boolean showChildrenImmediately) {
+	private void setFocusedItem(BaseItem item) {
 		this.focusedItem = item;
+		FrontendData.sharedInstance().updateNavigationItemChildrenIfRequired(item);
 		this.selectedText.setText(this.focusedItem.getName());
-		if (showChildrenImmediately) {
-			this.nextCoverflowList.reloadData();
-		} else {
-			this.nextCoverflowList.reloadData();
-		}
+		this.nextCoverflowList.reloadData();
 	}
 	
 	private void recycleCoverflowList(CoverflowList list) {
@@ -268,8 +273,13 @@ public class CoverflowLayout implements GameNavigationLayout, CoverflowListDataS
 	@Override
 	public CoverflowItem nodeForItemAtIndex(int index, CoverflowList coverflowList) {
 		CoverflowItem coverflowItem = CoverflowItemPool.dequeueItem();
-		coverflowItem.setBaseItem(this.relevantListForCoverflowList(coverflowList).get(index));
+		this.updateNodeForItemAtIndex(coverflowItem, index, coverflowList);
 		return coverflowItem;
+	}
+	
+	@Override
+	public void updateNodeForItemAtIndex(CoverflowItem node, int index, CoverflowList coverflowList) {
+		node.setBaseItem(this.relevantListForCoverflowList(coverflowList).get(index));
 	}
 	
 	private List<BaseItem> relevantListForCoverflowList(CoverflowList coverflowList) {

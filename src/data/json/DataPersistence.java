@@ -60,7 +60,7 @@ public class DataPersistence {
 		Gson gson = builder.create();
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
 		JsonReader jsonReader = new JsonReader(reader);
-		gson.fromJson(jsonReader, ArcadoidData.class);
+		gson.fromJson(jsonReader, dataClass);
 	}
 	
 	public static int getVersionNumberFromFile(String filePath) throws UnsupportedEncodingException, FileNotFoundException, IOException {
