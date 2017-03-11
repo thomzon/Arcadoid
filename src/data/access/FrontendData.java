@@ -96,8 +96,19 @@ public class FrontendData {
 	 * @param game Game to add to seen list.
 	 */
 	public void markGameAsSeen(Game game) {
-		this.seenGamesIdentifiers.add(game.getIdentifier());
-		this.discreteSave();
+		if (!this.gameIsSeen(game)) {
+			this.seenGamesIdentifiers.add(game.getIdentifier());
+			this.discreteSave();
+		}
+	}
+	
+	/**
+	 * Checks if given game has been seen already.
+	 * @param game Game to check.
+	 * @return True if given game has already been seen.
+	 */
+	public boolean gameIsSeen(Game game) {
+		return this.seenGamesIdentifiers.contains(game.getIdentifier());
 	}
 	
 	/**

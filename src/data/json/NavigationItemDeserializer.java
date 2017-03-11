@@ -27,8 +27,10 @@ public class NavigationItemDeserializer implements JsonDeserializer<NavigationIt
 		long identifier = BaseItemSerializer.identifierFromObject(jsonObject);
 		NavigationItem item = new NavigationItem(identifier);
 		BaseItemSerializer.deserializeFromObject(item, jsonObject);
-		item.setGamesMustMatchAllTags(jsonObject.get(JsonConstants.PROPERTY_MUST_MATCH_ALL_TAGS).getAsBoolean());
-		item.setShowEligibleGames(jsonObject.get(JsonConstants.PROPERTY_SHOW_GAMES).getAsBoolean());
+		item.setGamesMustMatchAllTags(this.getBooleanIfExistsForPropertyName(jsonObject, JsonConstants.PROPERTY_MUST_MATCH_ALL_TAGS, false));
+		item.setShowEligibleGames(this.getBooleanIfExistsForPropertyName(jsonObject, JsonConstants.PROPERTY_SHOW_GAMES, false));
+		item.setFavorites(this.getBooleanIfExistsForPropertyName(jsonObject, JsonConstants.PROPERTY_IS_FAVORITES, false));
+		item.setUnseenGames(this.getBooleanIfExistsForPropertyName(jsonObject, JsonConstants.PROPERTY_IS_NEW_GAMES, false));
 		this.deserializeAssignedTags(item, jsonObject);
 		return item;
 	}
@@ -48,6 +50,15 @@ public class NavigationItemDeserializer implements JsonDeserializer<NavigationIt
 			if (tag != null) {
 				item.getAssignedTags().add(tag);
 			}
+		}
+	}
+	
+	private boolean getBooleanIfExistsForPropertyName(JsonObject object, String propertyName, boolean defaultValue) {
+		JsonElement element = object.get(propertyName);
+		if (element == null) {
+			return defaultValue;
+		} else {
+			return element.getAsBoolean();
 		}
 	}
 

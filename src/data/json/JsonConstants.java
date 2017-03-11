@@ -23,6 +23,8 @@ public class JsonConstants {
 	static final String PROPERTY_PARENT_NAVIGATION_ITEM = "parent_item";
 	static final String PROPERTY_SHOW_GAMES = "show_games";
 	static final String PROPERTY_MUST_MATCH_ALL_TAGS = "must_match_all_tags";
+	static final String PROPERTY_IS_FAVORITES = "is_favorites";
+	static final String PROPERTY_IS_NEW_GAMES = "is_new_games";
 	static final String PROPERTY_FAVORITES = "favorites";
 	static final String PROPERTY_SEEN_GAMES = "seen_games";
 

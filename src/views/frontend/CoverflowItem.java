@@ -2,7 +2,9 @@ package views.frontend;
 
 import java.io.File;
 
+import data.access.FrontendData;
 import data.model.BaseItem;
+import data.model.Game;
 import data.settings.Settings;
 import data.settings.Settings.PropertyId;
 import javafx.beans.property.DoubleProperty;
@@ -29,11 +31,13 @@ public class CoverflowItem extends Parent {
 	public static final double HEIGHT = WIDTH + (WIDTH*REFLECTION_SIZE);
 	private static final double RADIUS_H = WIDTH / 2;
 	private static final double BACK = WIDTH / 10;
+	private static final double STATUS_INDICATOR_SIZE = 30;
 	
 	private PerspectiveTransform transform = new PerspectiveTransform();
 	private Label itemNameLabel = new Label();
 	private Reflection reflectionEffect = new Reflection();
 	private ImageView imageView = new ImageView();
+	private ImageView statusIndicatorImageView = new ImageView();
 
 	/**
 	 * Angle determines rotation on its Y axis.
@@ -74,10 +78,22 @@ public class CoverflowItem extends Parent {
 		this.itemNameLabel.setMaxWidth(200);
 		this.itemNameLabel.setLayoutY(150);
 		this.getChildren().addAll(this.itemNameLabel);
+		
+		this.statusIndicatorImageView.setFitHeight(STATUS_INDICATOR_SIZE);
+		this.statusIndicatorImageView.setFitWidth(STATUS_INDICATOR_SIZE);
+		this.statusIndicatorImageView.setPreserveRatio(true);
+		this.statusIndicatorImageView.setLayoutX(WIDTH - STATUS_INDICATOR_SIZE);
+		this.statusIndicatorImageView.setLayoutY(WIDTH - STATUS_INDICATOR_SIZE); 
+		this.getChildren().addAll(this.statusIndicatorImageView);
 	}
 	
 	public void setBaseItem(BaseItem item) {
 		this.itemNameLabel.setText(item.getName());
+		this.updateItemImage(item);
+		this.updateStatusIndicator(item);
+	}
+	
+	private void updateItemImage(BaseItem item) {
 		if (item.getThumbnailArtworkPath() != null && item.getThumbnailArtworkPath().length() > 0) {
 			File artworkFile = new File(Settings.getSetting(PropertyId.ARTWORKS_FOLDER_PATH), item.getThumbnailArtworkPath());
 			if (artworkFile.exists()) {
@@ -89,6 +105,25 @@ public class CoverflowItem extends Parent {
 			}
 		} else {
 			this.setDefaultImage();
+		}
+	}
+	
+	private void updateStatusIndicator(BaseItem item) {
+		if (item instanceof Game) {
+			Game game = (Game)item;
+			if (FrontendData.sharedInstance().isFavorite(game)) {
+				File favoriteIconFile = new File("images", "favorite_indicator.png");
+				Image image = new Image(favoriteIconFile.toURI().toString(), false);
+				this.statusIndicatorImageView.setImage(image);
+			} else if (!FrontendData.sharedInstance().gameIsSeen(game)) {
+				File newGameIconFile = new File("images", "new_indicator.png");
+				Image image = new Image(newGameIconFile.toURI().toString(), false);
+				this.statusIndicatorImageView.setImage(image);
+			} else {
+				this.statusIndicatorImageView.setImage(null);
+			}
+		} else {
+			this.statusIndicatorImageView.setImage(null);
 		}
 	}
 	

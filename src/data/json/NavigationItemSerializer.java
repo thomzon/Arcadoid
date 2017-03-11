@@ -30,6 +30,8 @@ public class NavigationItemSerializer implements JsonSerializer<NavigationItem> 
 		}
 		jsonObject.addProperty(JsonConstants.PROPERTY_SHOW_GAMES, src.getShowEligibleGames());
 		jsonObject.addProperty(JsonConstants.PROPERTY_MUST_MATCH_ALL_TAGS, src.getGamesMustMatchAllTags());
+		jsonObject.addProperty(JsonConstants.PROPERTY_IS_FAVORITES, src.isFavorites());
+		jsonObject.addProperty(JsonConstants.PROPERTY_IS_NEW_GAMES, src.isUnseenGames());
 		JsonArray tagsArray = new JsonArray();
 		for (Tag tag : src.getAssignedTags()) {
 			tagsArray.add(tag.getIdentifier());

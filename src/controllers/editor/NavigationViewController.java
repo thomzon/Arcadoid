@@ -16,6 +16,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -42,6 +43,7 @@ public class NavigationViewController implements Initializable {
 	@FXML private CheckBox showEligibleGamesCheckbox, mustMatchAllTagsCheckbox, isFavoritesCheckbox, isUnseenGamesCheckbox;
 	@FXML private Label thumbnailArtworkPathLabel, backgroundArtworkPathLabel;
 	@FXML private ListView<Tag> availableTagsListView, assignedTagsListView;
+	@FXML private Button assignTagButton, removeTagButton;
 	
 	private TreeItem<NavigationItem> dummyRoot;
 	private TreeItem<NavigationItem> editedItem;
@@ -135,10 +137,15 @@ public class NavigationViewController implements Initializable {
 		String currentName = this.editedItem.getValue().getName();
 		boolean currentShowEligibleGames = this.editedItem.getValue().getShowEligibleGames();
 		boolean currentMustMatchAllTags = this.editedItem.getValue().getGamesMustMatchAllTags();
+		boolean currentIsFavorites = this.editedItem.getValue().isFavorites();
+		boolean currentIsUnseenGames = this.editedItem.getValue().isUnseenGames();
 		this.navigationItemNameField.setText(currentName);
 		this.showEligibleGamesCheckbox.setSelected(currentShowEligibleGames);
 		this.mustMatchAllTagsCheckbox.setSelected(currentMustMatchAllTags);
+		this.isFavoritesCheckbox.setSelected(currentIsFavorites);
+		this.isUnseenGamesCheckbox.setSelected(currentIsUnseenGames);
 		this.ignoreSave = false;
+		this.updateControlsState();
 	}
 	
 	private void updateViewFromValues() {
@@ -171,6 +178,9 @@ public class NavigationViewController implements Initializable {
 			this.backgroundArtworkPathLabel.setTextFill(Color.RED);
 		}
 		this.mustMatchAllTagsCheckbox.setDisable(!navigationItem.getShowEligibleGames());
+		this.isFavoritesCheckbox.setSelected(navigationItem.isFavorites());
+		this.isUnseenGamesCheckbox.setSelected(navigationItem.isUnseenGames());
+		this.updateControlsState();
 	}
 	
 	private void doDeleteCurrentItem() {
@@ -190,6 +200,8 @@ public class NavigationViewController implements Initializable {
 		this.editedItem.getValue().setBackgroundArtworkPath(this.backgroundArtworkPathLabel.getText());
 		this.editedItem.getValue().setShowEligibleGames(this.showEligibleGamesCheckbox.isSelected());
 		this.editedItem.getValue().setGamesMustMatchAllTags(this.mustMatchAllTagsCheckbox.isSelected());
+		this.editedItem.getValue().setFavorites(this.isFavoritesCheckbox.isSelected());
+		this.editedItem.getValue().setUnseenGames(this.isUnseenGamesCheckbox.isSelected());
 		List<Tag> assignedTags = this.assignedTagsListView.getItems();
 		this.editedItem.getValue().getAssignedTags().setAll(assignedTags);
 		this.updateViewFromValues();
@@ -270,11 +282,52 @@ public class NavigationViewController implements Initializable {
 	}
 	
 	@FXML private void isFavoritesAction() {
-		
+		this.updateControlsState();
 	}
 	
 	@FXML private void isUnseenGamesAction() {
-		
+		this.updateControlsState();
+	}
+	
+	private void doUnassignAllTags() {
+		List<Tag> selectedTags = this.assignedTagsListView.getItems();
+		this.availableTagsListView.getItems().addAll(selectedTags);
+		this.assignedTagsListView.getItems().removeAll(selectedTags);
+		this.assignedTagsListView.getSelectionModel().clearSelection();
+	}
+	
+	private void updateControlsState() {
+		boolean normalAttributesDisabled = this.normalAttributesShouldBeDisabled();
+		if (normalAttributesDisabled) {
+			this.doUnassignAllTags();
+			this.mustMatchAllTagsCheckbox.setSelected(false);
+			this.showEligibleGamesCheckbox.setSelected(false);
+		}
+		this.mustMatchAllTagsCheckbox.setDisable(normalAttributesDisabled);
+		this.showEligibleGamesCheckbox.setDisable(normalAttributesDisabled);
+		this.availableTagsListView.setDisable(normalAttributesDisabled);
+		this.assignedTagsListView.setDisable(normalAttributesDisabled);
+		this.assignTagButton.setDisable(normalAttributesDisabled);
+		this.removeTagButton.setDisable(normalAttributesDisabled);
+	}
+	
+	private boolean normalAttributesShouldBeDisabled() {
+		boolean normalAttributesDisabled = false;
+		if (this.isFavoritesCheckbox.isSelected()) {
+			normalAttributesDisabled = true;
+			this.isUnseenGamesCheckbox.setSelected(false);
+			this.isUnseenGamesCheckbox.setDisable(true);
+			this.isFavoritesCheckbox.setDisable(false);
+		} else if (this.isUnseenGamesCheckbox.isSelected()) {
+			normalAttributesDisabled = true;
+			this.isFavoritesCheckbox.setSelected(false);
+			this.isFavoritesCheckbox.setDisable(true);
+			this.isUnseenGamesCheckbox.setDisable(false);
+		} else {
+			this.isFavoritesCheckbox.setDisable(false);
+			this.isUnseenGamesCheckbox.setDisable(false);
+		}
+		return normalAttributesDisabled;
 	}
 
 }
