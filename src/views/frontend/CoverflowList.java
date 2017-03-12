@@ -30,6 +30,8 @@ public class CoverflowList extends Group {
     private static final double SCALE_SMALL = 0.7;
     private static final double LEFT_SIDE_ANGLE = 60.0;//45.0;
     private static final double RIGHT_SIDE_ANGLE = 120.0;//135.0;
+    private static final int NUMBER_OF_ITEMS_TO_PRELOAD = 20;
+    private static final int NUMBER_OF_REMAINING_ITEMS_BEFORE_LOADING_NEXT = 10;
 	
 	private CoverflowListDataSource dataSource;
 	private List<CoverflowItem> visibleItems = new ArrayList<CoverflowItem>();
@@ -47,23 +49,19 @@ public class CoverflowList extends Group {
 	public void reloadData() {
 		this.stopItemScrollAnimations();
 		this.clearList();
-		int numberOfItems = this.numberOfItems();
+		int totalNumberOfItems = this.numberOfItems();
 		this.centeredIndex = 0;
-		for (int index = 0; index < numberOfItems; ++index) {
-			CoverflowItem newItem = this.nodeForIndex(index);
-			if (newItem != null) {
-				newItem.setReflection(this.focusedMode ? 0.5 : 0);
-				this.visibleItems.add(newItem);
-				this.getChildren().add(newItem);
-				newItem.toBack();
-				this.moveItemToPositionIndexAnimated(newItem, index, false);
-			}
-		}
+		int numberOfItemsToLoad = (totalNumberOfItems < NUMBER_OF_ITEMS_TO_PRELOAD) ? totalNumberOfItems : NUMBER_OF_ITEMS_TO_PRELOAD;
+		this.loadNodesFromTo(0, numberOfItemsToLoad);
 		// Force scroll forward then back, otherwise item at index 0 does not display its image correctly...
-		this.scrollToItemAtIndexAnimated(numberOfItems-1, false);
-		this.scrollToItemAtIndexAnimated(0, false);
+		this.doScrollToIndexAnimatedAndCheckToLoadNextNodes(totalNumberOfItems-1, false, false);
+		this.doScrollToIndexAnimatedAndCheckToLoadNextNodes(0, false, false);
 	}
 	
+	/**
+	 * Reload one node, without creating it anew.
+	 * @param index Index of node to reload.
+	 */
 	public void reloadNodeAtIndex(int index) {
 		CoverflowItem node = this.visibleItems.get(index);
 		this.dataSource.updateNodeForItemAtIndex(node, index, this);
@@ -75,24 +73,7 @@ public class CoverflowList extends Group {
 	 * @param animated If true, the move to centering the item will be animated
 	 */
 	public void scrollToItemAtIndexAnimated(int index, boolean animated) {
-		this.stopItemScrollAnimations();
-		this.centeredIndex = index;
-		if (animated) {
-			this.itemScrollAnimationsTimeline = new Timeline();
-		}
-		for (int visibleItemIndex = 0; visibleItemIndex < this.visibleItems.size(); ++visibleItemIndex) {
-			CoverflowItem item = this.visibleItems.get(visibleItemIndex);
-			int newItemIndex = visibleItemIndex - index;
-			this.moveItemToPositionIndexAnimated(item, newItemIndex, animated);
-			if (visibleItemIndex < this.centeredIndex) {
-				item.toFront();
-			} else {
-				item.toBack();
-			}
-		}
-		if (animated) {
-			this.itemScrollAnimationsTimeline.play();
-		}
+		this.doScrollToIndexAnimatedAndCheckToLoadNextNodes(index, animated, true);
 	}
 	
 	/**
@@ -138,6 +119,61 @@ public class CoverflowList extends Group {
 		} else {
 			return 0;
 		}
+	}
+	
+	private void loadNodesFromTo(int fromIndex, int toIndex) {
+		for (int index = fromIndex; index < toIndex; ++index) {
+			CoverflowItem newItem = this.nodeForIndex(index);
+			if (newItem != null) {
+				newItem.setReflection(this.focusedMode ? 0.5 : 0);
+				this.visibleItems.add(newItem);
+				this.getChildren().add(newItem);
+				newItem.toBack();
+				this.moveItemToPositionIndexAnimated(newItem, index, false);
+			}
+		}
+	}
+	
+	private void doScrollToIndexAnimatedAndCheckToLoadNextNodes(int index, boolean animated, boolean checkToLoadNextNodes) {
+		this.stopItemScrollAnimations();
+		if (checkToLoadNextNodes) {
+			this.checkIfNextNodesMustBeLoadedBeforeScrollingToItemAtIndex(index);
+		}
+		this.doScrollToIndexAnimated(index, animated);
+	}
+	
+	private void doScrollToIndexAnimated(int index, boolean animated) {
+		this.centeredIndex = index;
+		if (animated) {
+			this.itemScrollAnimationsTimeline = new Timeline();
+		}
+		for (int visibleItemIndex = 0; visibleItemIndex < this.visibleItems.size(); ++visibleItemIndex) {
+			CoverflowItem item = this.visibleItems.get(visibleItemIndex);
+			int newItemIndex = visibleItemIndex - index;
+			this.moveItemToPositionIndexAnimated(item, newItemIndex, animated);
+			if (visibleItemIndex < this.centeredIndex) {
+				item.toFront();
+			} else {
+				item.toBack();
+			}
+		}
+		if (animated) {
+			this.itemScrollAnimationsTimeline.play();
+		}
+	}
+	
+	private void checkIfNextNodesMustBeLoadedBeforeScrollingToItemAtIndex(int index) {
+		if (this.centeredIndex > index) return;
+		if (this.visibleItems.size() - index > NUMBER_OF_REMAINING_ITEMS_BEFORE_LOADING_NEXT) return;
+		if (this.numberOfItems() == this.visibleItems.size()) return;
+		
+		int totalNumberOfItems = this.numberOfItems();
+		int targetLoadedIndex = this.visibleItems.size() + NUMBER_OF_ITEMS_TO_PRELOAD;
+		if (targetLoadedIndex > totalNumberOfItems) {
+			targetLoadedIndex = totalNumberOfItems;
+		}
+		
+		this.loadNodesFromTo(this.visibleItems.size(), targetLoadedIndex);
 	}
 	
 	private CoverflowItem nodeForIndex(int index) {

@@ -152,7 +152,8 @@ public class FrontendData {
 	
 		List<BaseItem> unseenGames = new ArrayList<BaseItem>();
 		for (Game game : ArcadoidData.sharedInstance().getAllGames()) {
-			if (!this.isFavorite(game) && !this.seenGamesIdentifiers.contains(game.getIdentifier())) {
+			// A game must have tags to be displayed here, since it will otherwise not be displayed anywhere else
+			if (game.getAssignedTags().size() > 0 && !this.isFavorite(game) && !this.seenGamesIdentifiers.contains(game.getIdentifier())) {
 				unseenGames.add(game);
 			}
 		}

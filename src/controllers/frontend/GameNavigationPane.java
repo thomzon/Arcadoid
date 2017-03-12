@@ -254,6 +254,7 @@ public class GameNavigationPane extends FrontendPane implements PlayerInputObser
 			Game game = (Game)this.currentItem;
 			VolumeControlService.sharedInstance().stopAudioFeedback();
 			FrontendData.sharedInstance().markGameAsSeen(game);
+			this.layout.reloadItem(this.currentItem);
 			GameLaunchService.sharedInstance().runGame(game);
 			this.displayGameRunningMessage();
 		}

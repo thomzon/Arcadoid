@@ -55,6 +55,8 @@ public class AudioPlayer {
 	 * @param withFade If true, sound will smoothly fade out
 	 */
 	public void stopCurrentPlayback(boolean withFade) {
+		if (this.mediaPlayer == null) return;
+		
 		if (withFade) {
 			this.stopCurrentWithFade();
 		} else {
